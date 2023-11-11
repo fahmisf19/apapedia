@@ -5,9 +5,12 @@ import apap.tk.order.model.OrderItem;
 import apap.tk.order.repository.OrderDb;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,7 +38,8 @@ public class OrderRestServiceImpl implements OrderRestService{
 
     @Override
     public Order getOrderRestById(UUID id) {
-        return orderDb.findById(id).get();
+        Optional<Order> optionalOrder = orderDb.findById(id);
+        return optionalOrder.orElse(null);
     }
 
     @Override

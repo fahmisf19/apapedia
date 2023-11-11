@@ -8,6 +8,7 @@ import apap.tk.order.model.OrderItem;
 import apap.tk.order.restservice.OrderRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,7 +26,7 @@ public class OrderRestController {
     private OrderRestService orderRestService;
 
     @PostMapping(value = "order/create")
-    public Order restCreateOrder(@RequestBody CreateOrderRequestDTO orderDTO, BindingResult bindingResult) {
+    public ResponseEntity<Order> restCreateOrder(@RequestBody CreateOrderRequestDTO orderDTO, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"
@@ -43,12 +44,12 @@ public class OrderRestController {
             }
 
             orderRestService.createRestOrder(order);
-            return order;
+            return ResponseEntity.ok().body(order);
         }
     }
 
     @PutMapping(value = "order/{idOrder}/update")
-    public Order restUpdateOrder(@PathVariable("idOrder") UUID idOrder,
+    public ResponseEntity<Order> restUpdateOrder(@PathVariable("idOrder") UUID idOrder,
                                  @RequestBody UpdateOrderRequestDTO orderDTO,
                                  BindingResult bindingResult){
         if(bindingResult.hasFieldErrors()){
@@ -57,9 +58,9 @@ public class OrderRestController {
             );
         } else {
             var existingOrder = orderRestService.getOrderRestById(idOrder);
-            if (existingOrder.getListOrderItem() == null) {
+            if (existingOrder == null) {
                 throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Order list not found with id: " + idOrder
+                        HttpStatus.NOT_FOUND, "Order not found with id: " + idOrder
                 );
             }
             orderDTO.setId(idOrder);
@@ -74,7 +75,7 @@ public class OrderRestController {
             orderDTO.setUpdateAt(new Date());
             var order = orderMapper.updateOrderRequestDTOToOrder(orderDTO);
             orderRestService.updateRestOrder(order);
-            return order;
+            return ResponseEntity.ok().body(order);
         }
     }
 
