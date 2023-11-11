@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -76,6 +77,28 @@ public class OrderRestController {
             var order = orderMapper.updateOrderRequestDTOToOrder(orderDTO);
             orderRestService.updateRestOrder(order);
             return ResponseEntity.ok().body(order);
+        }
+    }
+
+    @GetMapping("order/getByCustomerId")
+    public ResponseEntity<List<Order>> getOrdersByCustomerId(@RequestParam UUID customerId) {
+        List<Order> orders = orderRestService.getOrdersByCustomerId(customerId);
+
+        if (orders.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("order/getBySellerId")
+    public ResponseEntity<List<Order>> getOrdersBySellerId(@RequestParam UUID sellerId) {
+        List<Order> orders = orderRestService.getOrdersBySellerId(sellerId);
+
+        if (orders.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(orders, HttpStatus.OK);
         }
     }
 

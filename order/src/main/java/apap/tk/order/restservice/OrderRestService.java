@@ -11,4 +11,6 @@ public interface OrderRestService {
     Order updateRestOrder(Order order);
     Order getOrderRestById(UUID id);
     Integer calculateTotalPrice(List<OrderItem> listOrderItem);
+    List<Order> getOrdersByCustomerId(UUID customerId);
+    List<Order> getOrdersBySellerId(UUID sellerId);
 }

@@ -48,4 +48,9 @@ public class OrderRestServiceImpl implements OrderRestService{
                 .map(orderItem -> orderItem.getProductPrice() * orderItem.getQuantity())
                 .reduce(0, Integer::sum);
     }
+
+    @Override
+    public List<Order> getOrdersByCustomerId(UUID customerId) { return orderDb.findByCustomerId(customerId); }
+    @Override
+    public List<Order> getOrdersBySellerId(UUID sellerId) { return orderDb.findBySellerId(sellerId); }
 }
