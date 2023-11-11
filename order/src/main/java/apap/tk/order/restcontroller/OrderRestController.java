@@ -1,0 +1,81 @@
+package apap.tk.order.restcontroller;
+
+import apap.tk.order.dto.OrderMapper;
+import apap.tk.order.dto.request.CreateOrderRequestDTO;
+import apap.tk.order.dto.request.UpdateOrderRequestDTO;
+import apap.tk.order.model.Order;
+import apap.tk.order.model.OrderItem;
+import apap.tk.order.restservice.OrderRestService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Date;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api")
+public class OrderRestController {
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private OrderRestService orderRestService;
+
+    @PostMapping(value = "order/create")
+    public Order restCreateOrder(@RequestBody CreateOrderRequestDTO orderDTO, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"
+            );
+        } else {
+            orderDTO.setCreatedAt(new Date());
+            orderDTO.setUpdateAt(new Date());
+            orderDTO.setStatus(0);
+            orderDTO.setTotalPrice(orderRestService.calculateTotalPrice(orderDTO.getListOrderItem()));
+            Order order = orderMapper.createOrderRequestDTOToOrder(orderDTO);
+            orderRestService.createRestOrder(order);
+
+            for (OrderItem orderItem : order.getListOrderItem()) {
+                orderItem.setOrder(order);
+            }
+
+            orderRestService.createRestOrder(order);
+            return order;
+        }
+    }
+
+    @PutMapping(value = "order/{idOrder}/update")
+    public Order restUpdateOrder(@PathVariable("idOrder") UUID idOrder,
+                                 @RequestBody UpdateOrderRequestDTO orderDTO,
+                                 BindingResult bindingResult){
+        if(bindingResult.hasFieldErrors()){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"
+            );
+        } else {
+            var existingOrder = orderRestService.getOrderRestById(idOrder);
+            if (existingOrder.getListOrderItem() == null) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Order list not found with id: " + idOrder
+                );
+            }
+            orderDTO.setId(idOrder);
+            orderDTO.setCreatedAt(existingOrder.getCreatedAt());
+            orderDTO.setCustomerId(existingOrder.getCustomerId());
+            orderDTO.setSellerId(existingOrder.getSellerId());
+            orderDTO.setTotalPrice(existingOrder.getTotalPrice());
+
+            // Set the updated listOrderItem from the DTO
+            orderDTO.setListOrderItem(existingOrder.getListOrderItem());
+
+            orderDTO.setUpdateAt(new Date());
+            var order = orderMapper.updateOrderRequestDTOToOrder(orderDTO);
+            orderRestService.updateRestOrder(order);
+            return order;
+        }
+    }
+
+}
