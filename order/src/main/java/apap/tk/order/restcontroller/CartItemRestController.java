@@ -28,7 +28,7 @@ public class CartItemRestController {
     private CartDb cartDb;
     
     @PostMapping("/cart-item/create")
-    public ResponseEntity<String> createCartItem(@RequestBody CreateCartItemRequestDTO cartItemDto) {
+    public ResponseEntity<CartItem> createCartItem(@RequestBody CreateCartItemRequestDTO cartItemDto) {
         var cartId = cartItemDto.getCartId();
         var cart = cartDb.findById(cartId).orElseThrow(() -> new ResponseStatusException
         (HttpStatus.NOT_FOUND, "Cart not found with id: " + cartId));
@@ -38,6 +38,6 @@ public class CartItemRestController {
         cartItem.setQuantity(cartItemDto.getQuantity());
         cartItem.setCart(cart);
         cartItemRestService.createRestCartItem(cartItem);
-        return ResponseEntity.ok("CartItem created successfully");
+        return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
     }
 }
