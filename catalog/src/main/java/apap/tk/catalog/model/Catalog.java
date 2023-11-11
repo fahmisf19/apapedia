@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,14 +25,18 @@ public class Catalog {
     @Id
     private UUID id = UUID.randomUUID();
     
-    // msh belom pix
-    @NotNull
-    @Column(name = "seller", nullable = false)
+    // msh belom fix
+    // @NotNull
+    @Column(name = "seller", nullable = true)
     private UUID seller;
     
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    // private Seller seller;
+
     @NotNull
     @Column(name = "price", nullable = false)
-    private int price;
+    private BigInteger price;
     
     @NotNull
     @Column(name = "productName", nullable = false)

@@ -9,25 +9,13 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-import java.math.BigInteger;
-
 import apap.tk.catalog.model.Category;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CreateCatalogRequestDTO {
-    private String productName;
+public class CreateCategoryRequestDTO {
+    private String name; 
 
-    private BigInteger price;
-
-    private String productDescription;
-
-    private int stock;
-
-    private MultipartFile image;
-
-    private Category category;
-
+    private List<Category> listCategory;
 }

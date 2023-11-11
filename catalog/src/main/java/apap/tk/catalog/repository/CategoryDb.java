@@ -4,11 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import apap.tk.catalog.model.Catalog;
+import apap.tk.catalog.model.Category;
 
 import java.util.UUID;
-import java.util.List;
  
 @Repository
-public interface CatalogDb extends JpaRepository<Catalog, UUID>{
-    List<Catalog> findBySellerId(UUID seller);
+public interface CategoryDb extends JpaRepository<Category, UUID>{
+
 }

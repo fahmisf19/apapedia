@@ -7,8 +7,22 @@ import org.mapstruct.MappingTarget;
 
 import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
 import apap.tk.catalog.model.Catalog;
+import java.io.IOException;
+
 
 @Mapper(componentModel = "spring")
 public interface CatalogMapper {
+    @Mapping(target = "image", ignore = true)
     Catalog CreateCatalogRequestDTOToCatalog(CreateCatalogRequestDTO createCatalogRequestDTO);   
+
+    @AfterMapping
+    default void mapImage(@MappingTarget Catalog catalog, CreateCatalogRequestDTO createCatalogRequestDTO) {
+        if (createCatalogRequestDTO.getImage() != null) {
+            try {
+                catalog.setImage(createCatalogRequestDTO.getImage().getBytes());
+            } catch (IOException e) {
+                System.err.println("Error while converting image to bytes: " + e.getMessage());
+            }
+        }
+    }
 }

@@ -8,7 +8,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import apap.tk.catalog.model.Catalog;
+import apap.tk.catalog.model.Category;
 import apap.tk.catalog.repository.CatalogDb;
+import apap.tk.catalog.repository.CategoryDb;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -16,16 +18,12 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class CatalogRestService {
+public class CategoryRestService {
     @Autowired
-    private CatalogDb catalogDb;
+    private CategoryDb categoryDb;
 
-    public Catalog createRestCatalog(Catalog catalog) { 
-        return catalogDb.save(catalog); 
+    public Category createRestCategory(Category category) { 
+        return categoryDb.save(category);
     };
-
-    public List<Catalog> retrieveListCatalogBySellerId(UUID sellerId) { 
-        return catalogDb.findBySellerId(sellerId);
-    }
 
 }
