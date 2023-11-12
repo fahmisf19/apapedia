@@ -18,7 +18,7 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "user")
 public class User {
-    
+
     @Id
     private UUID id = UUID.randomUUID();
 
