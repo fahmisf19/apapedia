@@ -28,15 +28,21 @@ public class CatalogRestController {
     @Autowired
     private CatalogRestService catalogRestService;
 
-    @PutMapping(value = "/catalog/{idCatalog}")
-    public Catalog updateCatalog(@PathVariable("idCatalog") UUID idCatalog, @RequestBody UpdateCatalogDTO updateCatalogDTO, BindingResult bindingResult) {
+    @PutMapping(value = "/catalog/{idCatalog}/update")
+    public ResponseEntity<Catalog> updateCatalog(@PathVariable("idCatalog") UUID idCatalog, @RequestBody UpdateCatalogDTO updateCatalogDTO, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST, "Request body has an invalid type or missing field");
         } else {
+            var existingCatalog = catalogRestService.getRestCatalogById(idCatalog);
+            if (existingCatalog == null){
+                throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Catalog not found with id: " + idCatalog
+                );
+            }
             var updateCatalog = catalogMapper.updateCatalogRequestDTOToCatalog(updateCatalogDTO); // Implement the mapping method.
             var catalog = catalogRestService.updateRestCatalog(idCatalog, updateCatalog); // Implement the update service method.
-            return catalog; // Return the updated catalog as JSON response.
+            return ResponseEntity.ok().body(catalog); // Return the updated catalog as JSON response.
         }
     }
 
