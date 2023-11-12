@@ -1,5 +1,6 @@
 package apap.tk.catalog;
 
+import java.math.BigInteger;
 import java.util.Locale;
 
 import org.springframework.boot.CommandLineRunner;
@@ -19,9 +20,6 @@ import jakarta.transaction.Transactional;
 
 
 
-
-
-
 @SpringBootApplication
 public class CatalogApplication {
 
@@ -31,22 +29,24 @@ public class CatalogApplication {
 
 	@Bean
 	@Transactional
-	CommandLineRunner run(CategoryRestService categoryRestService, CategoryMapper categoryMapper) {
+	CommandLineRunner run(CategoryRestService categoryRestService, CatalogRestService catalogRestService) {
 		return args -> {
 			var faker = new Faker(new Locale("in-ID"));
+			var categoryDTO = new Category();
+			var catalogDTO = new Catalog();
+			var fakeCategory = faker.name();
+			String fakeString = faker.lorem().sentence();
+			categoryDTO.setName(fakeCategory.name());
+			categoryRestService.addCategory(categoryDTO);
 
-			
-
-			for (int i = 0; i < 1; i++) {
-				
-				var categoryDTO = new CreateCategoryRequestDTO();
-				// buat dummy data karyawan
-				categoryDTO.setName("Makanan");
-				
-				var category = categoryMapper.createCategoryRequestDTOToCategory(categoryDTO);
-				category = categoryRestService. createRestCategory(category);
-
-			}
+			catalogDTO.setPrice(BigInteger.valueOf(faker.number().randomDigitNotZero()));
+			catalogDTO.setProductName(faker.commerce().productName());
+			catalogDTO.setProductDescription(faker.lorem().sentence());
+			catalogDTO.setStock(faker.number().numberBetween(1, 100));
+			byte[] byteArray = fakeString.getBytes();
+			catalogDTO.setCategory(categoryDTO);
+			catalogDTO.setImage(byteArray);
+			catalogRestService.createRestCatalog(catalogDTO);
 		};
 	}
 

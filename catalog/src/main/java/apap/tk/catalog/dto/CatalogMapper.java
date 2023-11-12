@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @Mapper(componentModel = "spring")
 public interface CatalogMapper {
-     Catalog updateCatalogRequestDTOToCatalog(UpdateCatalogDTO updateCatalogDTO);
+    Catalog updateCatalogRequestDTOToCatalog(UpdateCatalogDTO updateCatalogDTO);
 
     @Mapping(target = "image", ignore = true)
     Catalog CreateCatalogRequestDTOToCatalog(CreateCatalogRequestDTO createCatalogRequestDTO);   
