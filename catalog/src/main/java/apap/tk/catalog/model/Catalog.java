@@ -21,7 +21,7 @@ public class Catalog {
     // msh belom pix
     @NotNull
     @Column(name = "seller", nullable = false)
-    private UUID seller;
+    private UUID seller = UUID.randomUUID(); //hrsny merefer ke user
     
     @NotNull
     @Column(name = "price", nullable = false)
@@ -47,8 +47,8 @@ public class Catalog {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
-    @NotNull
-    @Column(name = "image", nullable = false)
+    // @NotNull
+    @Column(name = "image", nullable = true)
     private byte[] image;
     
 }
