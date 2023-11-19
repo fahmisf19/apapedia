@@ -1,8 +1,15 @@
 package apap.tk.order.restcontroller;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,15 +36,46 @@ public class CartItemRestController {
     
     @PostMapping("/cart-item/create")
     public ResponseEntity<CartItem> createCartItem(@RequestBody CreateCartItemRequestDTO cartItemDto) {
-        var cartId = cartItemDto.getCartId();
-        var cart = cartDb.findById(cartId).orElseThrow(() -> new ResponseStatusException
-        (HttpStatus.NOT_FOUND, "Cart not found with id: " + cartId));
+        try {
+            var cartId = cartItemDto.getCartId();
+            var cart = cartDb.findById(cartId).orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Cart not found with id: " + cartId));
 
-        var cartItem = new CartItem();
-        cartItem.setProductId(cartItemDto.getProductId());
-        cartItem.setQuantity(cartItemDto.getQuantity());
-        cartItem.setCart(cart);
-        cartItemRestService.createRestCartItem(cartItem);
-        return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
+            var cartItem = new CartItem();
+            cartItem.setProductId(cartItemDto.getProductId());
+            cartItem.setQuantity(cartItemDto.getQuantity());
+            cartItem.setCart(cart);
+            cartItemRestService.createRestCartItem(cartItem);
+            return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Cart not found with id: " + cartItemDto.getCartId());
+        }
     }
+
+    @GetMapping("/cart-item/{userId}")
+    private ResponseEntity<List<CartItem>> getCartItemByUserId(@PathVariable("userId") UUID userId) {
+        List<CartItem> listCartItem = cartItemRestService.getCartItemByUserId(userId);
+        if (listCartItem.isEmpty()) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "No items found for user with id: " + userId
+            );
+        }
+        return new ResponseEntity<>(listCartItem, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/cart-item/{idCartItem}")
+    private ResponseEntity<String> deleteCartItem(@PathVariable("idCartItem") UUID idCartItem){
+        CartItem cartItem = cartItemRestService.getCartItemById(idCartItem);
+        
+        if (cartItem == null) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Cart item not found with id: " + idCartItem
+            );
+        }
+    
+        cartItemRestService.deteleRestCartItem(cartItem);
+        return new ResponseEntity<>("Cart item has been deleted", HttpStatus.OK);
+    }      
+
 }
