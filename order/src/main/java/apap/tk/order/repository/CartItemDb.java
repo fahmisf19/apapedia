@@ -13,4 +13,5 @@ import jakarta.transaction.Transactional;
 @Transactional
 public interface CartItemDb extends JpaRepository<CartItem, UUID> {
     List<CartItem> findByCart_UserId(UUID userId);
+    
 }
