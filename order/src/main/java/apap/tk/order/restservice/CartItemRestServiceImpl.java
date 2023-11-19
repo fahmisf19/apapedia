@@ -33,6 +33,11 @@ public class CartItemRestServiceImpl implements CartItemRestService{
     }
 
     @Override
+    public void updateRestCartItem(CartItem cartItem) {
+        cartItemDb.save(cartItem);
+    }    
+
+    @Override
     public List<CartItem>  getCartItemByUserId(UUID userId) {
         return cartItemDb.findByCart_UserId(userId);
     }

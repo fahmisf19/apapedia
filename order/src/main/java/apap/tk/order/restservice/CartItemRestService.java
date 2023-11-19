@@ -8,6 +8,7 @@ import apap.tk.order.model.CartItem;
 public interface CartItemRestService {
     void createRestCartItem(CartItem cartItem);
     List<CartItem> getRestAllCartItem();
+    void updateRestCartItem(CartItem cartItem);
     CartItem getCartItemById(UUID Id);
     List<CartItem>  getCartItemByUserId(UUID userId);
     void deteleRestCartItem(CartItem cartItem);

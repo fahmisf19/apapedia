@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 // import apap.tk.order.dto.CartItemMapper;
 import apap.tk.order.dto.request.CreateCartItemRequestDTO;
+import apap.tk.order.dto.request.UpdateCartItemRequestDTO;
 import apap.tk.order.model.CartItem;
 import apap.tk.order.repository.CartDb;
 import apap.tk.order.restservice.CartItemRestService;
@@ -53,8 +55,33 @@ public class CartItemRestController {
         }
     }
 
+    @PutMapping("/cart-item/update")
+    public ResponseEntity<?> updateCartItemQuantity(@RequestBody UpdateCartItemRequestDTO updateDTO) {
+        try {
+            CartItem cartItem = cartItemRestService.getCartItemById(updateDTO.getCartItemId());
+    
+            if (cartItem == null) {
+                throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Cart item not found with id: " + updateDTO.getCartItemId()
+                );
+            }
+    
+            // Update quantity
+            cartItem.setQuantity(updateDTO.getNewQuantity());
+            cartItemRestService.updateRestCartItem(cartItem);
+    
+            return new ResponseEntity<>(cartItem, HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            // If it's a known exception, rethrow it
+            throw e;
+        } catch (Exception e) {
+            // Handle other unexpected exceptions
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
     @GetMapping("/cart-item/{userId}")
-    private ResponseEntity<List<CartItem>> getCartItemByUserId(@PathVariable("userId") UUID userId) {
+    public ResponseEntity<List<CartItem>> getCartItemByUserId(@PathVariable("userId") UUID userId) {
         List<CartItem> listCartItem = cartItemRestService.getCartItemByUserId(userId);
         if (listCartItem.isEmpty()) {
             throw new ResponseStatusException(
@@ -65,7 +92,7 @@ public class CartItemRestController {
     }
 
     @DeleteMapping("/cart-item/{idCartItem}")
-    private ResponseEntity<String> deleteCartItem(@PathVariable("idCartItem") UUID idCartItem){
+    public ResponseEntity<String> deleteCartItem(@PathVariable("idCartItem") UUID idCartItem){
         CartItem cartItem = cartItemRestService.getCartItemById(idCartItem);
         
         if (cartItem == null) {
