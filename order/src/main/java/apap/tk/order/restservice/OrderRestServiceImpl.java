@@ -9,9 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -53,4 +52,26 @@ public class OrderRestServiceImpl implements OrderRestService{
     public List<Order> getOrdersByCustomerId(UUID customerId) { return orderDb.findByCustomerId(customerId); }
     @Override
     public List<Order> getOrdersBySellerId(UUID sellerId) { return orderDb.findBySellerId(sellerId); }
+    @Override
+    public Map<Integer, Long> getSalesPerDayForCurrentMonth() {
+        // Get the first day of the current month
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date startDate = calendar.getTime();
+
+        // Get the last day of the current month
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date endDate = calendar.getTime();
+
+        // Fetch orders within the date range
+        List<Order> orders = orderDb.findByCreatedAtBetween(startDate, endDate);
+
+        // Group orders by day of the month and count the number of orders per day
+        return orders.stream()
+                .collect(Collectors.groupingBy(order -> {
+                    calendar.setTime(order.getCreatedAt());
+                    return calendar.get(Calendar.DAY_OF_MONTH);
+                }, Collectors.counting()));
+    }
 }
