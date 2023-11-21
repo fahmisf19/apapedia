@@ -3,18 +3,16 @@ package apap.tk.catalog.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Getter
 @Setter
@@ -22,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @Entity
 @Table(name = "category")
+@JsonIgnoreProperties(value = { "listCatalog" }, allowSetters = true)
 public class Category {
     @Id
     private UUID idCategory = UUID.randomUUID();
@@ -31,5 +30,6 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties
     List<Catalog> listCatalog = new ArrayList<>();
 }
