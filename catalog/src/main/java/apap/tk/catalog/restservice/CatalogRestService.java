@@ -70,8 +70,17 @@ public class CatalogRestService {
         return catalogDb.save(catalog); 
     };
 
-    public List<Catalog> retrieveListCatalogBySellerId(UUID sellerId) { 
-        return catalogDb.findBySellerId(sellerId);
+    // public List<Catalog> retrieveListCatalogBySellerId(UUID sellerId) { 
+    //     return catalogDb.findBySellerId(sellerId);
+    // }
+
+    public List<Catalog> findCatalogByName(String productName){
+        return catalogDb.findByProductNameContainingIgnoreCaseOrderByProductName(productName);
     }
+
+    public List<Catalog> findCatalogByPrice(Integer lowerLimitPrice, Integer higherLimitPrice){
+        return catalogDb.findByPriceBetween(lowerLimitPrice, higherLimitPrice);
+    }
+
 
 }

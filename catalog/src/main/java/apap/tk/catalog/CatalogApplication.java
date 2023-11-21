@@ -1,5 +1,6 @@
 package apap.tk.catalog;
 
+import java.math.BigInteger;
 import java.util.Locale;
 
 import org.springframework.boot.CommandLineRunner;
@@ -41,7 +42,7 @@ public class CatalogApplication {
 			categoryDTO.setName(fakeCategory.name());
 			categoryRestService.addCategory(categoryDTO);
 
-			catalogDTO.setPrice(faker.number().randomDigitNotZero());
+			catalogDTO.setPrice(BigInteger.valueOf(faker.number().randomDigitNotZero()));
 			catalogDTO.setProductName(faker.commerce().productName());
 			catalogDTO.setProductDescription(faker.lorem().sentence());
 			catalogDTO.setStock(faker.number().numberBetween(1, 100));
