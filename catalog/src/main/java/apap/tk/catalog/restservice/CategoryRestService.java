@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import apap.tk.catalog.model.Category;
 import apap.tk.catalog.repository.CategoryDb;
 import jakarta.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -15,5 +16,9 @@ public class CategoryRestService {
 
     public void addCategory(Category category){
         categoryDb.save(category);
+    }
+
+    public List<Category> getAllCategory(){
+        return categoryDb.findAll();
     }
 }

@@ -63,4 +63,12 @@ public class CatalogRestService {
         catalogDb.save(catalog); 
     }
 
+    public List<Catalog> findCatalogByName(String productName){
+        return catalogDb.findByProductNameContainingIgnoreCaseOrderByProductName(productName);
+    }
+
+    public List<Catalog> findCatalogByPrice(Integer lowerLimitPrice, Integer higherLimitPrice){
+        return catalogDb.findByPriceBetween(lowerLimitPrice, higherLimitPrice);
+    }
+
 }
