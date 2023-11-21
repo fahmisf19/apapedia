@@ -28,7 +28,7 @@ public class Catalog {
     // msh belom fix
     // @NotNull
     @Column(name = "seller", nullable = true)
-    private UUID seller;
+    private UUID seller = UUID.randomUUID();
     
     // @ManyToOne(fetch = FetchType.LAZY)
     // @JoinColumn(name = "seller_id", referencedColumnName = "id")

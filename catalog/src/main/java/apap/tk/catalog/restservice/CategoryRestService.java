@@ -27,8 +27,12 @@ public class CategoryRestService {
         return categoryDb.save(category);
     };
 
-      public void addCategory(Category category){
+    public void addCategory(Category category){
         categoryDb.save(category);
+    }
+
+    public List<Category> getAllCategory(){
+        return categoryDb.findAll();
     }
 
 }

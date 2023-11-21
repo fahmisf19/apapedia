@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,14 +92,37 @@ public class CatalogRestController {
     }
 
     // GET Catalog by seller id
-    @GetMapping(value = "/catalog/{sellerId}")
-    private List<Catalog> retrieveListCatalog(@PathVariable("sellerId") String sellerId) {
-        try {
-            return catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
+    // @GetMapping(value = "/catalog/{sellerId}")
+    // private List<Catalog> retrieveListCatalog(@PathVariable("sellerId") String sellerId) {
+    //     try {
+    //         return catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
+    //     } catch (NoSuchElementException e) {
+    //         throw new ResponseStatusException(
+    //           HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"  
+    //         );
+    //     }
+    // }
+
+    @GetMapping(value = "/catalog/search-catalog-name")
+    public List<Catalog> filterCatalogName(@RequestParam("catalog") String catalog) {
+        try{
+            List<Catalog> catalogs = catalogRestService.findCatalogByName(catalog);
+            return catalogs;
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
-              HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"  
-            );
+                HttpStatus.NOT_FOUND, "catalog's name not found");
         }
     }
+
+    @GetMapping(value = "/catalog/search-catalog-price")
+    public List<Catalog> filterCatalogPrice(@RequestParam("lowerLimitPrice") Integer lowerLimitPrice, @RequestParam("higherLimitPrice") Integer higherLimitPrice) {
+        try{
+            List<Catalog> catalogs = catalogRestService.findCatalogByPrice(lowerLimitPrice, higherLimitPrice);
+            return catalogs;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "catalog that's in range price between " + lowerLimitPrice + " - " + higherLimitPrice + " not found");
+        }
+    }
+
 }
