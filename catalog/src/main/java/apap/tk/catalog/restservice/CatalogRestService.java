@@ -12,6 +12,12 @@ import apap.tk.catalog.repository.CatalogDb;
 import apap.tk.catalog.repository.CategoryDb;
 import jakarta.transaction.Transactional;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import reactor.core.publisher.Mono;
+
 @Service
 @Transactional
 public class CatalogRestService {
@@ -59,16 +65,13 @@ public class CatalogRestService {
         catalogDb.save(catalog);
     }
 
-    public void createRestCatalog(Catalog catalog) { 
-        catalogDb.save(catalog); 
-    }
 
-    public List<Catalog> findCatalogByName(String productName){
-        return catalogDb.findByProductNameContainingIgnoreCaseOrderByProductName(productName);
-    }
+    public Catalog createRestCatalog(Catalog catalog) { 
+        return catalogDb.save(catalog); 
+    };
 
-    public List<Catalog> findCatalogByPrice(Integer lowerLimitPrice, Integer higherLimitPrice){
-        return catalogDb.findByPriceBetween(lowerLimitPrice, higherLimitPrice);
+    public List<Catalog> retrieveListCatalogBySellerId(UUID sellerId) { 
+        return catalogDb.findBySellerId(sellerId);
     }
 
 }

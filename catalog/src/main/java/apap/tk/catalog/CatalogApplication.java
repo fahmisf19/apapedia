@@ -13,7 +13,14 @@ import apap.tk.catalog.model.Catalog;
 import apap.tk.catalog.model.Category;
 import apap.tk.catalog.restservice.CatalogRestService;
 import apap.tk.catalog.restservice.CategoryRestService;
+import apap.tk.catalog.dto.CategoryMapper;
+import apap.tk.catalog.dto.request.CreateCategoryRequestDTO;
 import jakarta.transaction.Transactional;
+
+
+
+
+
 
 @SpringBootApplication
 public class CatalogApplication {
