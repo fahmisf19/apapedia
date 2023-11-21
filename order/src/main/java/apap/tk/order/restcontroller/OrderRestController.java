@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -100,6 +101,12 @@ public class OrderRestController {
         } else {
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("order/sales-per-day")
+    public ResponseEntity<Map<Integer, Long>> getSalesPerDayForCurrentMonth() {
+        Map<Integer, Long> salesPerDay = orderRestService.getSalesPerDayForCurrentMonth();
+        return new ResponseEntity<>(salesPerDay, HttpStatus.OK);
     }
 
 }
