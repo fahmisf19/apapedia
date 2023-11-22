@@ -2,50 +2,50 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
-  <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
-
+    <meta charset="UTF-8">
 </head>
 
 <body>
-  <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-primary">
-    <a class="navbar-brand fw-bold text-light ms-3" href="/">SILOGISTIK</a>
-    
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-white p-2">
+    <a href="/" class="navbar-brand d-flex align-items-center fw-bold text-primary ms-3">
+        <svg class="mx-2" width="45" height="40" viewBox="0 0 69 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M27.1111 4.38562L11.9608 30.3518L26.5131 36.0817L40.4674 12.1601L27.1111 4.38562Z" fill="#4154F1"/>
+            <circle cx="34.0882" cy="7.77451" r="7.77451" fill="#4154F1"/>
+            <circle cx="19.3366" cy="32.8921" r="7.77451" fill="#4154F1"/>
+            <path d="M40.6667 24.7189L25.5164 50.6851L40.0686 56.415L54.0229 32.4934L40.6667 24.7189Z" fill="#4154F1"/>
+            <circle cx="47.6438" cy="28.1078" r="7.77451" fill="#4154F1"/>
+            <circle cx="32.8922" cy="53.2255" r="7.77451" fill="#4154F1"/>
+            <circle cx="8.77124" cy="52.2288" r="8.77124" fill="#4154F1"/>
+            <circle cx="59.4053" cy="52.2288" r="8.77124" fill="#4154F1"/>
+        </svg>
+
+        <span class="d-none d-lg-block">APAPEDIA</span>
+    </a>
     <button
-      class="navbar-toggler"
-      type = "button"
-      data-toggle="collapse"
-      data-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
     >
-      <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-light" href="#" th:classappend="${isGudangActive} ? 'active' : ''" th:style="${isGudangActive} ? 'font-weight: bold;' : ''" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" th:href="@{/gudang}" th:classappend="${isDaftarGudangActive} ? 'active' : ''">Daftar Gudang</a></li>
-            <li><a class="dropdown-item" th:href="@{/gudang/cari-barang}" th:classappend="${isCariBarangActive} ? 'active' : ''">Cari Barang</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light" th:href="@{/barang}" th:classappend="${isBarangActive} ? 'active' : ''" th:style="${isBarangActive} ? 'font-weight: bold;' : ''">Barang</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light" th:href="@{/permintaan-pengiriman}" th:classappend="${isPermintaanPengirimanActive} ? 'active' : ''" th:style="${isPermintaanPengirimanActive} ? 'font-weight: bold;' : ''">Permintaan Pengiriman</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light" th:href="@{/filter-permintaan-pengiriman}" th:classappend="${isBonusActive} ? 'active' : ''" th:style="${isBonusActive} ? 'font-weight: bold;' : ''">Bonus</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+    <nav class="header-nav ms-auto">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a th:href="@{/login-register}" class="nav-link ms-3 font-weight-bold">
+                    <svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.1458 15.625C16.1458 10.735 20.11 6.77081 25 6.77081C29.89 6.77081 33.8541 10.735 33.8541 15.625C33.8541 20.515 29.89 24.4791 25 24.4791C20.11 24.4791 16.1458 20.515 16.1458 15.625ZM25 9.89581C21.8358 9.89581 19.2708 12.4609 19.2708 15.625C19.2708 18.7891 21.8358 21.3541 25 21.3541C28.1641 21.3541 30.7291 18.7891 30.7291 15.625C30.7291 12.4609 28.1641 9.89581 25 9.89581Z" fill="#012970"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.6667 30.7292C14.0779 30.7292 11.9792 32.8279 11.9792 35.4167V37.8923C11.9792 37.93 12.0065 37.9621 12.0437 37.9681C20.6244 39.3692 29.3756 39.3692 37.9563 37.9681C37.9936 37.9621 38.0209 37.93 38.0209 37.8923V35.4167C38.0209 32.8279 35.9221 30.7292 33.3334 30.7292H32.6231C32.5684 30.7292 32.5138 30.7379 32.4615 30.7548L30.6584 31.3438C26.9817 32.5442 23.0184 32.5442 19.3416 31.3438L17.5385 30.7548C17.4863 30.7379 17.4317 30.7292 17.3768 30.7292H16.6667ZM8.85419 35.4167C8.85419 31.1019 12.352 27.6042 16.6667 27.6042H17.3768C17.7612 27.6042 18.1431 27.665 18.5085 27.7842L20.3117 28.3731C23.3581 29.3677 26.6419 29.3677 29.6884 28.3731L31.4915 27.7842C31.8569 27.665 32.2388 27.6042 32.6231 27.6042H33.3334C37.6481 27.6042 41.1459 31.1019 41.1459 35.4167V37.8923C41.1459 39.4615 40.0086 40.7994 38.4598 41.0523C29.5456 42.5077 20.4544 42.5077 11.5402 41.0523C9.99144 40.7994 8.85419 39.4615 8.85419 37.8923V35.4167Z" fill="#012970"/>
+                    </svg>
+                    Login / Register
+                </a>
+            </li>
+        </ul>
+    </nav>
+</nav>
 </body>
 
 </html>

@@ -8,54 +8,61 @@
   <title>Home</title>
 </head>
 
-<body>
-  <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-  <div class="container text-center">
-    <div class="row pt-5 pb-2">
-      
-      <img th:src="@{/images/Logo.png}" class="mx-auto my-1" alt="Logo" th:style="'width: 150px;'">
-      <h2 class="fw-bold ms-3">APAPEDIA</h2>
-      
-    </div>
-    <div class="row row-cols-1 row-cols-md-4 g-4 my-4">
-      <div class="col">
-        <div class="card text-white bg-primary h-80">
-          <div class="card-body">
-            <h5 class="card-title">Gudang</h5>
-            <h1 class="card-text" th:text="${jumlahGudang}"></h1>
-            <p class="card-text">Gudang</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card text-white bg-primary h-80">
-          <div class="card-body">
-            <h5 class="card-title">Barang</h5>
-            <h1 class="card-text" th:text="${jumlahBarang}"></h1>
-            <p class="card-text">Barang</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card text-white bg-primary h-100">
-          <div class="card-body">
-            <h5 class="card-title">Permintaan Pengiriman</h5>
-            <h1 class="card-text" th:text="${jumlahPermintaanPengiriman}"></h1>
-            <p class="card-text">Permintaan Pengiriman</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card text-white bg-primary h-100">
-          <div class="card-body">
-            <h5 class="card-title">Karyawan</h5>
-            <h1 class="card-text" th:text="${jumlahKaryawan}"></h1>
-            <p class="card-text">Karyawan</p>
-          </div>
+<body class="bg-light">
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div class="container-fluid m-5">
+  <div class="row">
+    <!-- Left Part (2 columns) -->
+    <div class="col-md-2">
+      <div class="container-sm mx-auto rounded border border-primary bg-white">
+        <h5 class="mt-2">Filter</h5>
+        <div class="container-sm">
+          <form th:action="@{/api/catalog/search-catalog-price}" method="GET">
+            <div class="mb-3">
+              <h6>Harga</h6>
+            </div>
+            <div class="mb-3">
+              <input class="form-control" type="number" id="lowerLimitPrice" name="lowerLimitPrice" placeholder="Minimum" />
+            </div>
+            <div class="mb-3">
+              <input class="form-control" type="number" id="higherLimitPrice" name="higherLimitPrice" placeholder="Maximum" />
+            </div>
+            <div class="text-center mt-1 mb-3">
+              <button class="btn btn-primary" type="submit">Terapkan</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
 
+    <!-- Right Part (10 columns) -->
+    <div class="col-md-10">
+      <div class="container-sm row">
+        <div class="col-md-6">
+          <form th:action="@{/catalog/search-catalog-name}" method="GET">
+            <div id="search-field">
+              <input class="form-control" type="search" id="catalog" name="catalog" placeholder="Cari di APAPEDIA" />
+            </div>
+          </form>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-3 d-flex align-items-center">
+          <span class="me-2">Urutkan:</span>
+          <form th:action="@{/api/catalog/get-catalog}" method="GET">
+            <select class="form-select custom-select" name="sortBy" onchange="this.form.submit()">
+              <option value="nameAsc">Nama: A - Z</option>
+              <option value="nameDesc">Nama: Z - A</option>
+              <option value="priceAsc">Harga: Rendah - Tinggi</option>
+              <option value="priceDesc">Harga: Tinggi - Rendah</option>
+            </select>
+            <noscript><input type="submit" value="Submit"></noscript>
+          </form>
+        </div>
+        <div class="col-md-1"></div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 
 </html>
