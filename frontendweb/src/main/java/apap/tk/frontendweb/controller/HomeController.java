@@ -14,8 +14,8 @@ public class HomeController {
     HomeService homeService;
     @GetMapping("/")
     public String home(Model model) {
-        var salesPerDay = homeService.getChartSales();
-        model.addAttribute(salesPerDay);
+//        var salesPerDay = homeService.getChartSales();
+//        model.addAttribute(salesPerDay);
         return "home/home";
     }
 }
