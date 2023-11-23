@@ -8,6 +8,7 @@ import apap.tk.order.model.OrderItem;
 import apap.tk.order.restservice.OrderRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -103,7 +104,11 @@ public class OrderRestController {
         }
     }
 
-    @GetMapping("order/sales-per-day")
+    @RequestMapping(
+            value = "order/sales-per-day",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = {RequestMethod.GET}
+    )
     public ResponseEntity<Map<Integer, Long>> getSalesPerDayForCurrentMonth() {
         Map<Integer, Long> salesPerDay = orderRestService.getSalesPerDayForCurrentMonth();
         return new ResponseEntity<>(salesPerDay, HttpStatus.OK);

@@ -3,6 +3,12 @@
 
 <head>
   <meta charset="UTF-8">
+  <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+          integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+  ></script>
   <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
   <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
   <title>Home</title>
@@ -10,64 +16,245 @@
 
 <body class="bg-light">
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-<div class="container-fluid m-5">
-  <div class="row">
-    <!-- Left Part (2 columns) -->
-    <div class="col-md-2">
-      <div class="container-sm mx-auto rounded border border-primary bg-white">
-        <h5 class="mt-2">Filter</h5>
-        <div class="container-sm">
-          <form th:action="@{/api/catalog/search-catalog-price}" method="GET">
-            <div class="mb-3">
-              <h6>Harga</h6>
-            </div>
-            <div class="mb-3">
-              <input class="form-control" type="number" id="lowerLimitPrice" name="lowerLimitPrice" placeholder="Minimum" />
-            </div>
-            <div class="mb-3">
-              <input class="form-control" type="number" id="higherLimitPrice" name="higherLimitPrice" placeholder="Maximum" />
-            </div>
-            <div class="text-center mt-1 mb-3">
-              <button class="btn btn-primary" type="submit">Terapkan</button>
-            </div>
-          </form>
+<div class="container-fluid" style="max-width:1500px">
+  <!-- Sales Graph -->
+  <div th:if="${sellerId != null}" class="container m-5">
+    <div class="row">
+      <div class="text-center pt-5">
+        <div class="row justify-content-center m-2">
+          <canvas id="chartSales"></canvas>
         </div>
       </div>
     </div>
+  </div>
+  <div class="container m-5">
+    <div class="row">
+      <div class="text-center mb-2">
+        <a type="button"
+           class="btn btn-md btn-primary"
+           th:href="@{catalog/add}">+ Tambah Produk</a>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid m-5">
+    <div class="row">
+      <!-- Left Part (2 columns) FILTER -->
+      <div class="col-md-2">
+        <div class="container-sm mx-auto rounded border border-primary bg-white">
+          <h5 class="mt-2">Filter</h5>
+          <div class="container-sm">
+            <form th:action="@{/api/catalog/search-catalog-price}" method="GET">
+              <div class="mb-3">
+                <h6>Rp50.000</h6>
+              </div>
+              <div class="mb-3">
+                <input class="form-control" type="number" id="lowerLimitPrice" name="lowerLimitPrice" placeholder="Minimum" />
+              </div>
+              <div class="mb-3">
+                <input class="form-control" type="number" id="higherLimitPrice" name="higherLimitPrice" placeholder="Maximum" />
+              </div>
+              <div class="text-center mt-1 mb-3">
+                <button class="btn btn-primary" type="submit">Terapkan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
-    <!-- Right Part (10 columns) -->
-    <div class="col-md-10">
-      <div class="container-sm row">
-        <div class="col-md-6">
-          <form th:action="@{/catalog/search-catalog-name}" method="GET">
-            <div class="input-group">
+      <!-- Right Part (10 columns) -->
+      <div class="col-md-9">
+        <!--   Search Bar dan Urutkan   -->
+        <div class="container-sm row">
+          <!--    Search Bar    -->
+          <div class="col-md-6">
+            <form th:action="@{/catalog/search-catalog-name}" method="GET">
+              <div class="input-group">
               <span class="input-group-text">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                   <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                 </svg>
               </span>
-              <input class="form-control search-input-icon" style="border-left: none" type="search" id="catalog" name="catalog" placeholder="Cari di APAPEDIA" />
+                <input class="form-control search-input-icon" style="border-left: none" type="search" id="catalog" name="catalog" placeholder="Cari di APAPEDIA" />
+              </div>
+            </form>
+          </div>
+          <div class="col-md-3"></div>
+          <!--    Urutkan    -->
+          <div class="col-md-3 d-flex align-items-center">
+            <span class="me-2">Urutkan:</span>
+            <form th:action="@{/api/catalog/get-catalog}" method="GET">
+              <select class="form-select custom-select" name="sortBy" onchange="this.form.submit()">
+                <option value="nameAsc">Nama: A - Z</option>
+                <option value="nameDesc">Nama: Z - A</option>
+                <option value="priceAsc">Rp50.000: Rendah - Tinggi</option>
+                <option value="priceDesc">Rp50.000: Tinggi - Rendah</option>
+              </select>
+              <noscript><input type="submit" value="Submit"></noscript>
+            </form>
+          </div>
+
+        </div>
+        <!--   If the product is fixed, change this to iterate it   -->
+        <!--   Card Product   -->
+        <div class="container-sm row mt-3">
+          <div class="col-md-2">
+            <div class="card rounded">
+              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
+              <div class="card-body">
+                <p class="card-title mb-0">Kamera Murah</p>
+                <h6>Rp50.000</h6>
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
+                  </div>
+                </div>
+              </div>
             </div>
-          </form>
+          </div>
+          <div class="col-md-2">
+            <div class="card rounded">
+              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
+              <div class="card-body">
+                <p class="card-title mb-0">Kamera Murah</p>
+                <h6>Rp50.000</h6>
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="card rounded">
+              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
+              <div class="card-body">
+                <p class="card-title mb-0">Kamera Murah</p>
+                <h6>Rp50.000</h6>
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="card rounded">
+              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
+              <div class="card-body">
+                <p class="card-title mb-0">Kamera Murah</p>
+                <h6>Rp50.000</h6>
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="card rounded">
+              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
+              <div class="card-body">
+                <p class="card-title mb-0">Kamera Murah</p>
+                <h6>Rp50.000</h6>
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="card rounded">
+              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
+              <div class="card-body">
+                <p class="card-title mb-0">Kamera Murah</p>
+                <h6>Rp50.000</h6>
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-3 d-flex align-items-center">
-          <span class="me-2">Urutkan:</span>
-          <form th:action="@{/api/catalog/get-catalog}" method="GET">
-            <select class="form-select custom-select" name="sortBy" onchange="this.form.submit()">
-              <option value="nameAsc">Nama: A - Z</option>
-              <option value="nameDesc">Nama: Z - A</option>
-              <option value="priceAsc">Harga: Rendah - Tinggi</option>
-              <option value="priceDesc">Harga: Tinggi - Rendah</option>
-            </select>
-            <noscript><input type="submit" value="Submit"></noscript>
-          </form>
-        </div>
-        <div class="col-md-1"></div>
       </div>
     </div>
   </div>
 </div>
-</body>
 
+
+<script th:inline="javascript">
+  var salesPerDay = [[${salesPerDay}]];
+  var labels = Object.keys(salesPerDay);
+  var chartData = labels.map(function(key) {
+      return salesPerDay[key];
+  });
+  var colors = [
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 206, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(25, 159, 64, 0.2)',
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 206, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(25, 159, 64, 0.2)',
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 206, 86, 0.2)'
+  ];
+  var borderColors = [
+      'rgba(255, 99, 132, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(75, 192, 192, 1)',
+      'rgba(153, 102, 255, 1)',
+      'rgba(255, 159, 64, 1)',
+      'rgba(255, 99, 132, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(75, 192, 192, 1)',
+      'rgba(153, 102, 255, 1)',
+      'rgba(255, 159, 64, 1)',
+      'rgba(255, 99, 132, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+  ];
+  const ctx = document.getElementById('chartSales');
+
+  new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: labels,
+          datasets: [{
+              label: 'Rating',
+              data: chartData,
+              backgroundColor: colors,
+              borderColors: borderColors,
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                  stepSize: 0.5, // Set the step size to 0.5
+                  beginAtZero: true
+              }
+              }
+          }
+      }
+  });
+</script>
+
+</body>
 </html>

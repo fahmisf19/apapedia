@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @Transactional
@@ -67,11 +68,18 @@ public class OrderRestServiceImpl implements OrderRestService{
         // Fetch orders within the date range
         List<Order> orders = orderDb.findByCreatedAtBetween(startDate, endDate);
 
-        // Group orders by day of the month and count the number of orders per day
-        return orders.stream()
+        // Initialize a map with all days of the month and set the count to 0
+        Map<Integer, Long> salesPerDay = IntStream.rangeClosed(1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+                .boxed()
+                .collect(Collectors.toMap(day -> day, day -> 0L));
+
+        // Update the counts based on the fetched orders
+        salesPerDay.putAll(orders.stream()
                 .collect(Collectors.groupingBy(order -> {
                     calendar.setTime(order.getCreatedAt());
                     return calendar.get(Calendar.DAY_OF_MONTH);
-                }, Collectors.counting()));
+                }, Collectors.counting())));
+
+        return salesPerDay;
     }
 }
