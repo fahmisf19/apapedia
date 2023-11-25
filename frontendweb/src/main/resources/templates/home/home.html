@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" th:href="@{/img/icon.png}" />
   <script
           src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
           integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
@@ -45,7 +46,7 @@
           <div class="container-sm">
             <form th:action="@{/api/catalog/search-catalog-price}" method="GET">
               <div class="mb-3">
-                <h6>Rp50.000</h6>
+                <h6>Harga</h6>
               </div>
               <div class="mb-3">
                 <input class="form-control" type="number" id="lowerLimitPrice" name="lowerLimitPrice" placeholder="Minimum" />
@@ -86,8 +87,8 @@
               <select class="form-select custom-select" name="sortBy" onchange="this.form.submit()">
                 <option value="nameAsc">Nama: A - Z</option>
                 <option value="nameDesc">Nama: Z - A</option>
-                <option value="priceAsc">Rp50.000: Rendah - Tinggi</option>
-                <option value="priceDesc">Rp50.000: Tinggi - Rendah</option>
+                <option value="priceAsc">Harga: Rendah - Tinggi</option>
+                <option value="priceDesc">Harga: Tinggi - Rendah</option>
               </select>
               <noscript><input type="submit" value="Submit"></noscript>
             </form>
