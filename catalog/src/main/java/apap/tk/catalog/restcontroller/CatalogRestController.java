@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,6 +26,7 @@ import apap.tk.catalog.model.Catalog;
 import apap.tk.catalog.restservice.CatalogRestService;
 import jakarta.validation.Valid;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -75,27 +77,32 @@ public class CatalogRestController {
     
     // POST catalog
     @PostMapping(value = "/catalog/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Catalog restAddCatalog(@Valid @RequestBody CreateCatalogRequestDTO catalogDTO, BindingResult bindingResult) {
-        if (bindingResult.hasFieldErrors()) {
-            throw new ResponseStatusException(
-              HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"  
-            );
-        } else {
-            // if (image != null) {
-            //     catalogDTO.setImage(image);
-            // }
-
-            var catalog = catalogMapper.CreateCatalogRequestDTOToCatalog(catalogDTO);
+    public ResponseEntity<Catalog> restAddCatalog(@Valid @RequestPart("catalogDTO") CreateCatalogRequestDTO catalogDTO, @RequestPart("image")MultipartFile image) {
+        // Proses data catalogDTO dan image
+        if (catalogDTO != null && image != null) {
+            catalogDTO.setImage(image);
+            var catalog = catalogMapper.createCatalogRequestDTOToCatalog(catalogDTO);
             catalogRestService.createRestCatalog(catalog);
-            return catalog;
+            return new ResponseEntity<>(catalog, HttpStatus.CREATED);
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"
+            );
         }
     }
 
-    // GET Catalog by seller id
+
+    // // GET Catalog by seller id
     // @GetMapping(value = "/catalog/{sellerId}")
-    // private List<Catalog> retrieveListCatalog(@PathVariable("sellerId") String sellerId) {
+    // private ResponseEntity<List<Catalog>> getCatalogsBySellerId(@PathVariable("sellerId") String sellerId) {
     //     try {
-    //         return catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
+    //         List<Catalog> listCatalog = catalogRestService.getListCatalogBySellerId(UUID.fromString(sellerId));
+    //         if (listCatalog.isEmpty()) {
+    //             throw new ResponseStatusException(
+    //                 HttpStatus.NOT_FOUND, "No items found for user with id: " + sellerId
+    //             );
+    //         }
+    //         return new ResponseEntity<>(listCatalog, HttpStatus.OK);
     //     } catch (NoSuchElementException e) {
     //         throw new ResponseStatusException(
     //           HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"  
@@ -125,4 +132,45 @@ public class CatalogRestController {
         }
     }
 
+    // GET All Catalog (default by name ASC) 
+    @GetMapping("catalog/getAll")
+    public ResponseEntity<List<Catalog>> getListCatalog() {
+        try {
+            // Mendapatkan daftar katalog dari CatalogDb, diurutkan berdasarkan nama secara default
+            List<Catalog> catalogList = catalogRestService.getAllCatalog();
+            return new ResponseEntity<>(catalogList, HttpStatus.OK);
+        } catch (Exception e) {
+            // Tangani pengecualian jika terjadi kesalahan
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // GET Catalog by Catalog ID
+    @GetMapping("catalog/getByCatalogId")
+    public ResponseEntity<Catalog> getCatalogByCatalogId(@RequestParam UUID catalogId) {
+        Catalog catalog = catalogRestService.getRestCatalogById(catalogId);
+    
+        if (catalog == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(catalog, HttpStatus.OK);
+        }
+    }
+
+    // GET Catalog List Sort by Price or Name and Ascending or Descending Order
+    @GetMapping("/getAllSorted")
+    public ResponseEntity<List<Catalog>> getAllCatalogSorted(
+            @RequestParam(defaultValue = "productName") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
+        try {
+            // Mendapatkan daftar katalog yang diurutkan
+            List<Catalog> catalogList = catalogRestService.getAllCatalogSorted(sortBy, sortOrder);
+
+            // Mengembalikan daftar katalog dalam ResponseEntity
+            return new ResponseEntity<>(catalogList, HttpStatus.OK);
+        } catch (Exception e) {
+            // Tangani pengecualian jika terjadi kesalahan
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }   
 }

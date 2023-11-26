@@ -16,7 +16,7 @@ public interface CatalogMapper {
      Catalog updateCatalogRequestDTOToCatalog(UpdateCatalogDTO updateCatalogDTO);
 
     @Mapping(target = "image", ignore = true)
-    Catalog CreateCatalogRequestDTOToCatalog(CreateCatalogRequestDTO createCatalogRequestDTO);   
+    Catalog createCatalogRequestDTOToCatalog(CreateCatalogRequestDTO createCatalogRequestDTO);   
 
     @AfterMapping
     default void mapImage(@MappingTarget Catalog catalog, CreateCatalogRequestDTO createCatalogRequestDTO) {

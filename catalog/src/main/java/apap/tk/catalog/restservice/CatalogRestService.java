@@ -17,6 +17,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
+import org.springframework.data.domain.Sort;
+
 
 @Service
 @Transactional
@@ -28,7 +30,7 @@ public class CatalogRestService {
     private CategoryDb categoryDb;
 
     public List<Catalog> getAllCatalog(){
-        return catalogDb.findAll();
+        return catalogDb.findAllByOrderByProductName();
     }
 
     public Catalog getRestCatalogById(UUID id){
@@ -37,7 +39,6 @@ public class CatalogRestService {
                 return catalog;
             }
         }
-
         return null;
     }
 
@@ -70,7 +71,7 @@ public class CatalogRestService {
         return catalogDb.save(catalog); 
     };
 
-    // public List<Catalog> retrieveListCatalogBySellerId(UUID sellerId) { 
+    // public List<Catalog> getListCatalogBySellerId(UUID sellerId) { 
     //     return catalogDb.findBySellerId(sellerId);
     // }
 
@@ -82,5 +83,12 @@ public class CatalogRestService {
         return catalogDb.findByPriceBetween(lowerLimitPrice, higherLimitPrice);
     }
 
+    public List<Catalog> getAllCatalogSorted(String sortBy, String sortOrder) {
+        // Menentukan metode sort berdasarkan harga atau nama
+        Sort sort = Sort.by(sortOrder.equals("asc") ? Sort.Order.asc(sortBy) : Sort.Order.desc(sortBy));
+
+        // Mengambil semua katalog dari database dengan urutan yang ditentukan
+        return catalogDb.findAll(sort);
+    }
 
 }
