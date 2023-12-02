@@ -12,5 +12,5 @@ import java.util.UUID;
 public interface OrderDb extends JpaRepository<Order, UUID> {
     List<Order> findByCustomerId(UUID customerId);
     List<Order> findBySellerId(UUID sellerId);
-    List<Order> findByCreatedAtBetween(Date startDate, Date endDate);
+    List<Order> findByCreatedAtBetweenAndSellerId(Date startDate, Date endDate, UUID sellerId);
 }
