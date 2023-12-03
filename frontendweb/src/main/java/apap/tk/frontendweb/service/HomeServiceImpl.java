@@ -14,13 +14,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class HomeServiceImpl implements HomeService{
     @Override
-    public Map<Integer, Long> getChartSales() {
+    public Map<Integer, Long> getChartSales(UUID sellerId) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8082/api/order/sales-per-day"))
+                .uri(URI.create("http://localhost:8082/api/order/sales-per-day/"+sellerId))
                 .header("Accept", "application/json")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
