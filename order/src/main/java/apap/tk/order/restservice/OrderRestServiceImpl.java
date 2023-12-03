@@ -54,7 +54,7 @@ public class OrderRestServiceImpl implements OrderRestService{
     @Override
     public List<Order> getOrdersBySellerId(UUID sellerId) { return orderDb.findBySellerId(sellerId); }
     @Override
-    public Map<Integer, Long> getSalesPerDayForCurrentMonth() {
+    public Map<Integer, Long> getSalesPerDayForCurrentMonth(UUID sellerId) {
         // Get the first day of the current month
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -65,8 +65,8 @@ public class OrderRestServiceImpl implements OrderRestService{
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         Date endDate = calendar.getTime();
 
-        // Fetch orders within the date range
-        List<Order> orders = orderDb.findByCreatedAtBetween(startDate, endDate);
+        // Fetch orders within the date range and for the specified sellerId
+        List<Order> orders = orderDb.findByCreatedAtBetweenAndSellerId(startDate, endDate, sellerId);
 
         // Initialize a map with all days of the month and set the count to 0
         Map<Integer, Long> salesPerDay = IntStream.rangeClosed(1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
