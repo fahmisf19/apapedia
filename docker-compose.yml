@@ -1,15 +1,114 @@
+# version: '3.8'
+# services:
+#   db:
+#     image: postgres:14-alpine
+#     ports:
+#       - '15001:5432'
+#     restart: 'no'
+#     environment:
+#       - POSTGRES_USER=postgres
+#       - POSTGRES_PASSWORD=secret99
+#     volumes: 
+#       - db:/var/lib/postgresql/data
+# volumes:
+#   db:
+#     driver: local
+
 version: '3.8'
-services:
-  db:
+services: 
+  catalog-web: #Catalog
+    build:
+      context: ./catalog
+    restart: always
+    ports:
+      - "10133:8081"
+    volumes:
+      - ./file-storage:/file-storage
+      - ./log:/log
+    # env_file:
+    #   - user/.env
+    depends_on:
+      - catalog-db
+    networks:
+      - frontend-network
+      - backend-network
+
+  catalog-db:
     image: postgres:14-alpine
     ports:
-      - '15001:5432'
+      - '15133:5432'
     restart: 'no'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secret99
-    volumes: 
+    volumes:
       - db:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+  order-web: # Order
+    build:
+      context: ./order
+    restart: always
+    ports:
+      - "10134:8082"
+    volumes:
+      - ./file-storage:/file-storage
+      - ./log:/log
+    # env_file:
+    #   - user/.env
+    depends_on:
+      - order-db
+    networks:
+      - frontend-network
+      - backend-network
+
+  order-db:
+    image: postgres:14-alpine
+    ports:
+      - '15134:5432'
+    restart: 'no'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret99
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - backend-network
+  
+  frontend-web: #Frontend
+    build:
+      context: ./frontendweb
+    restart: always
+    ports:
+      - "10135:8083"
+    volumes:
+      - ./file-storage:/file-storage
+      - ./log:/log
+    # env_file:
+    #   - user/.env
+    # depends_on:
+    #   - frontend-db
+    networks:
+      - frontend-network
+      - backend-network
+
 volumes:
   db:
     driver: local
+
+# volumes:
+#   # db:
+#   #   driver: local
+#   catalog-db-data:
+#     driver: local
+#   order-db-data:
+#     driver: local
+#   # frontend-db-data:
+#   #   driver: local
+
+networks:
+  frontend-network:
+    driver: bridge
+  backend-network:
+    driver: bridge
