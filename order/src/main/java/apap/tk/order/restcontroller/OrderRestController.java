@@ -109,9 +109,9 @@ public class OrderRestController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = {RequestMethod.GET}
     )
-    public ResponseEntity<Map<Integer, Long>> getSalesPerDayForCurrentMonth(@PathVariable UUID sellerId) {
-        Map<Integer, Long> salesPerDay = orderRestService.getSalesPerDayForCurrentMonth(sellerId);
-        return new ResponseEntity<>(salesPerDay, HttpStatus.OK);
+    public ResponseEntity<Map<Integer, Long>> getQuantityPerDayForCurrentMonth(@PathVariable UUID sellerId) {
+        Map<Integer, Long> quantityPerDay = orderRestService.getQuantityPerDayForCurrentMonth(sellerId);
+        return new ResponseEntity<>(quantityPerDay, HttpStatus.OK);
     }
 
 }

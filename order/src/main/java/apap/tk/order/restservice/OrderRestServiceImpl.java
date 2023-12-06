@@ -54,7 +54,7 @@ public class OrderRestServiceImpl implements OrderRestService{
     @Override
     public List<Order> getOrdersBySellerId(UUID sellerId) { return orderDb.findBySellerId(sellerId); }
     @Override
-    public Map<Integer, Long> getSalesPerDayForCurrentMonth(UUID sellerId) {
+    public Map<Integer, Long> getQuantityPerDayForCurrentMonth(UUID sellerId) {
         // Get the first day of the current month
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -68,18 +68,20 @@ public class OrderRestServiceImpl implements OrderRestService{
         // Fetch orders within the date range and for the specified sellerId
         List<Order> orders = orderDb.findByCreatedAtBetweenAndSellerId(startDate, endDate, sellerId);
 
-        // Initialize a map with all days of the month and set the count to 0
-        Map<Integer, Long> salesPerDay = IntStream.rangeClosed(1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+        // Initialize a map with all days of the month and set the quantity to 0
+        Map<Integer, Long> quantityPerDay = IntStream.rangeClosed(1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
                 .boxed()
                 .collect(Collectors.toMap(day -> day, day -> 0L));
 
-        // Update the counts based on the fetched orders
-        salesPerDay.putAll(orders.stream()
-                .collect(Collectors.groupingBy(order -> {
-                    calendar.setTime(order.getCreatedAt());
-                    return calendar.get(Calendar.DAY_OF_MONTH);
-                }, Collectors.counting())));
+        // Update the quantities based on the fetched orders
+        for (Order order : orders) {
+            for (OrderItem orderItem : order.getListOrderItem()) {
+                calendar.setTime(order.getCreatedAt());
+                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                quantityPerDay.merge(dayOfMonth, Long.valueOf(orderItem.getQuantity()), Long::sum);
+            }
+        }
 
-        return salesPerDay;
+        return quantityPerDay;
     }
 }
