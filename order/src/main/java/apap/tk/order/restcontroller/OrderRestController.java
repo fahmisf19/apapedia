@@ -105,7 +105,7 @@ public class OrderRestController {
     }
 
     @RequestMapping(
-            value = "order/sales-per-day/{sellerId}",
+            value = "order/quantity-per-day/{sellerId}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = {RequestMethod.GET}
     )

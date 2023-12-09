@@ -16,4 +16,5 @@ public interface OrderRestService {
     List<Order> getOrdersByCustomerId(UUID customerId);
     List<Order> getOrdersBySellerId(UUID sellerId);
     Map<Integer, Long> getQuantityPerDayForCurrentMonth(UUID sellerId);
+    void updateOrderStatus(UUID orderId, Integer newStatus);
 }

@@ -21,7 +21,7 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public Map<Integer, Long> getChartSales(UUID sellerId) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8082/api/order/sales-per-day/"+sellerId))
+                .uri(URI.create("http://localhost:8082/api/order/quantity-per-day/"+sellerId))
                 .header("Accept", "application/json")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
