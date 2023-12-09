@@ -8,4 +8,5 @@ import apap.tk.frontendweb.dto.response.order.ReadOrderResponseDTO;
 
 public interface OrderService {
     List<ReadOrderResponseDTO> getListOrder(UUID sellerId) throws IOException, InterruptedException;
+    void updateOrderStatus(UUID orderId, Integer newStatus) throws IOException, InterruptedException;
 }
