@@ -39,16 +39,40 @@
                         <td th:text="${order.id}"></td>
                         <td th:text="${order.createdAt}"></td>
                         <td>
-                            <span th:if="${order.status == 0}">Untuk di proses dan kirim</span>
-                            <span th:unless="${order.status == 0}">Dikirimkan</span>
+                            <span th:if="${order.status == 0}">Menunggu konfirmasi penjual</span>
+                            <span th:if="${order.status == 1}">Dikonfirmasi penjual</span>
+                            <span th:if="${order.status == 2}">Menunggu kurir</span>
+                            <span th:if="${order.status == 3}">Dalam perjalanan</span>
+                            <span th:if="${order.status == 4}">Barang diterima</span>
+                            <span th:if="${order.status == 5}">Selesai</span>
                         </td>
                         <td th:text="'Rp ' + ${#numbers.formatDecimal(order.totalPrice, 0, 2, 'COMMA')}"></td>
-                        <td><a th:href="@{'/update-status/' + ${order.id}}" class="btn btn-md btn-primary">Update Status</a></td>
+                        <!-- <td><a th:href="@{'/update-status/' + ${order.id}}" class="btn btn-md btn-primary">Update Status</a></td> -->
+                        <!-- <td>
+                            <button data-order-id="${order.id}" data-current-status="${order.status}"
+                                onclick="updateStatus(this)"
+                                class="btn btn-md btn-primary">Update Status
+                            </button>                    
+                        </td>                         -->
+                        <td>
+                            <button th:attr="data-order-id=${#strings.toString(order.id)}, data-current-status=${order.status}" 
+                                onclick="updateStatus(this)"
+                                class="btn btn-md btn-primary">Update Status
+                            </button>    
+                        </td>
+                        <!-- ini kalau misal status udah 5 trs nanti buttonnya jadi disable -->
+                        <!-- <td>
+                            <button data-order-id="${order.id}" data-current-status="${order.status}"
+                                onclick="updateStatus(this)"
+                                class="btn btn-md btn-primary" th:disabled="${order.status == 5}">Update Status
+                            </button>                    
+                        </td> -->
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    <div id="error-container" style="color: red;"></div>
     <script>
         $(document).ready(function () {
             $('#orderTable').DataTable({
@@ -68,8 +92,61 @@
         //   $('#gudangTable thead th').css('color', 'black');
             
         });
+
+        
+        // function updateStatus(button) {
+        //     var orderId = button.getAttribute("data-order-id");
+        //     var currentStatus = parseInt(button.getAttribute("data-current-status"));
+        //     var newStatus = currentStatus + 1;
+
+        //     // Panggil endpoint untuk pembaruan status
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/order/update-status/" + orderId + "/" + newStatus,
+        //         success: function (response) {
+        //             // Handle success, jika diperlukan
+        //             alert("Status updated successfully!");
+        //             location.reload(); // Refresh halaman setelah pembaruan status
+        //         },
+        //         // error: function (error) {
+        //         //     // Handle error, jika diperlukan
+        //         //     alert("Failed to update status: " + error.responseText);
+        //         // }
+        //         error: function (error) {
+        //             error.responseText;
+        //         }
+        //     });
+        // }
+
+        function updateStatus(button) {
+            var orderId = button.getAttribute("data-order-id");
+            // Debugging statement
+            console.log("Order ID:", orderId);
+            var currentStatus = parseInt(button.getAttribute("data-current-status"));
+            var newStatus = currentStatus + 1;
+
+            // Bersihkan pesan kesalahan sebelumnya (jika ada)
+            document.getElementById("error-container").innerText = "";
+
+            // Panggil endpoint untuk pembaruan status
+            $.ajax({
+                type: "POST",
+                url: "/order/update-status/" + orderId + "/" + newStatus,
+                success: function (response) {
+                    // Handle success, jika diperlukan
+                    alert("Status updated successfully!");
+                    location.reload(); // Refresh halaman setelah pembaruan status
+                },
+                error: function (error) {
+                    // Handle error, jika diperlukan
+                    document.getElementById("error-container").innerText = "Failed to update status: " + error.responseText;
+                }
+            });
+        }
     </script>
 
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
 
 </html>

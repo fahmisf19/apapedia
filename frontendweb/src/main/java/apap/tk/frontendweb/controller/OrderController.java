@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import apap.tk.frontendweb.dto.response.order.ReadOrderResponseDTO;
@@ -48,4 +50,17 @@ public class OrderController {
         model.addAttribute("orderList", orderList);
         return "order/order-history";
     }
+
+    @PostMapping("order/update-status/{orderId}/{newStatus}")
+    public String updateOrderStatus(@PathVariable UUID orderId, @PathVariable Integer newStatus) {
+        try {
+            orderService.updateOrderStatus(orderId, newStatus);
+            // Lakukan hal lain yang diperlukan setelah update status
+            return "redirect:../../viewall";
+        } catch (Exception e) {
+            // Handle error jika diperlukan
+            return "redirect:../../viewall?error=true";
+        }
+    }
+    
 }
