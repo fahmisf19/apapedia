@@ -114,4 +114,13 @@ public class OrderRestController {
         return new ResponseEntity<>(quantityPerDay, HttpStatus.OK);
     }
 
+    @PatchMapping(value = "order/{idOrder}/updateStatus")
+    public ResponseEntity<Order> restUpdateOrderStatus(
+            @PathVariable("idOrder") UUID idOrder,
+            @RequestParam("newStatus") Integer newStatus
+    ) {
+        orderRestService.updateOrderStatus(idOrder, newStatus);
+        return ResponseEntity.ok().build();
+    }
+
 }

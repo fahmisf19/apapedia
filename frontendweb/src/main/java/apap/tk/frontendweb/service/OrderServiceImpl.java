@@ -38,4 +38,14 @@ public class OrderServiceImpl implements OrderService {
         .collectList()
         .block();
     }
+
+    @Override
+    public void updateOrderStatus(UUID orderId, Integer newStatus) throws IOException, InterruptedException {
+        webClientOrder.patch()
+                .uri(uriBuilder -> uriBuilder.path("order/" + orderId + "/updateStatus").queryParam("newStatus", newStatus).build())
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+    
 }

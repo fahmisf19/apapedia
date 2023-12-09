@@ -23,8 +23,10 @@ import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
 import apap.tk.catalog.dto.request.UpdateCatalogDTO;
 import apap.tk.catalog.model.Catalog;
 import apap.tk.catalog.restservice.CatalogRestService;
+import ch.qos.logback.core.model.Model;
 import jakarta.validation.Valid;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -74,22 +76,31 @@ public class CatalogRestController {
     }
     
     // POST catalog
-    @PostMapping(value = "/catalog/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Catalog restAddCatalog(@Valid @RequestBody CreateCatalogRequestDTO catalogDTO, BindingResult bindingResult) {
+    @PostMapping(value = "/catalog/create")
+    public Catalog addCatalog(@RequestBody CreateCatalogRequestDTO createCatalogRequestDTO, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             throw new ResponseStatusException(
-              HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"  
-            );
+                HttpStatus.BAD_REQUEST, "Request body has an invalid type or missing field");
         } else {
-            // if (image != null) {
-            //     catalogDTO.setImage(image);
-            // }
-
-            var catalog = catalogMapper.CreateCatalogRequestDTOToCatalog(catalogDTO);
+            
+            var catalog = catalogMapper.createCatalogRequestDTOToCatalog(createCatalogRequestDTO); // Implement the mapping method.
+            catalog.setPrice(createCatalogRequestDTO.getPrice());
+            catalog.setProductName(createCatalogRequestDTO.getProductName());
+            catalog.setProductDescription(createCatalogRequestDTO.getProductDescription());
+            catalog.setStock(createCatalogRequestDTO.getStock());
+            catalog.setCategory(createCatalogRequestDTO.getCategory());
+            catalog.setImage(createCatalogRequestDTO.getImage());
             catalogRestService.createRestCatalog(catalog);
             return catalog;
         }
     }
+
+    @GetMapping(value = "/catalog/get-all")
+    public List<Catalog> getAllCatalogs() {
+        return catalogRestService.getAllCatalog();
+    }
+    
+
 
     // GET Catalog by seller id
     // @GetMapping(value = "/catalog/{sellerId}")
@@ -124,5 +135,21 @@ public class CatalogRestController {
                 HttpStatus.NOT_FOUND, "catalog that's in range price between " + lowerLimitPrice + " - " + higherLimitPrice + " not found");
         }
     }
+
+    @GetMapping(value = "/catalog/{id}")
+    public ResponseEntity<Catalog> findCatalogById(@PathVariable("id") UUID id) {
+        try {
+            Catalog catalog = catalogRestService.getRestCatalogById(id);
+            if (catalog != null) {
+                return ResponseEntity.ok().body(catalog);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Catalog with ID " + id + " not found");
+        }
+    }
+
 
 }
