@@ -20,9 +20,6 @@ import jakarta.transaction.Transactional;
 
 
 
-
-
-
 @SpringBootApplication
 public class CatalogApplication {
 

@@ -17,21 +17,23 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class HomeServiceImpl implements HomeService{
+public class HomeServiceImpl implements HomeService {
     @Override
     public Map<Integer, Long> getChartSales(UUID sellerId) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8082/api/order/sales-per-day/"+sellerId))
+                .uri(URI.create("http://localhost:8082/api/order/quantity-per-day/"+sellerId))
                 .header("Accept", "application/json")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         try {
-            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request,
+                    HttpResponse.BodyHandlers.ofString());
 
             // Assuming the response body is a JSON string like {"1": 0, "2": 0, ...}
             ObjectMapper objectMapper = new ObjectMapper();
             Map<Integer, Long> salesPerDay = objectMapper.readValue(response.body(),
-                    new TypeReference<Map<Integer, Long>>() {});
+                    new TypeReference<Map<Integer, Long>>() {
+                    });
 
             return salesPerDay;
         } catch (IOException | InterruptedException e) {

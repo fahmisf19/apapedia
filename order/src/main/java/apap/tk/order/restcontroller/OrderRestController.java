@@ -105,13 +105,22 @@ public class OrderRestController {
     }
 
     @RequestMapping(
-            value = "order/sales-per-day/{sellerId}",
+            value = "order/quantity-per-day/{sellerId}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = {RequestMethod.GET}
     )
-    public ResponseEntity<Map<Integer, Long>> getSalesPerDayForCurrentMonth(@PathVariable UUID sellerId) {
-        Map<Integer, Long> salesPerDay = orderRestService.getSalesPerDayForCurrentMonth(sellerId);
-        return new ResponseEntity<>(salesPerDay, HttpStatus.OK);
+    public ResponseEntity<Map<Integer, Long>> getQuantityPerDayForCurrentMonth(@PathVariable UUID sellerId) {
+        Map<Integer, Long> quantityPerDay = orderRestService.getQuantityPerDayForCurrentMonth(sellerId);
+        return new ResponseEntity<>(quantityPerDay, HttpStatus.OK);
+    }
+
+    @PatchMapping(value = "order/{idOrder}/updateStatus")
+    public ResponseEntity<Order> restUpdateOrderStatus(
+            @PathVariable("idOrder") UUID idOrder,
+            @RequestParam("newStatus") Integer newStatus
+    ) {
+        orderRestService.updateOrderStatus(idOrder, newStatus);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping(value = "order/{idOrder}/updateStatus")

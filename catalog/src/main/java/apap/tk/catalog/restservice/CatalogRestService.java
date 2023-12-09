@@ -1,11 +1,13 @@
 package apap.tk.catalog.restservice;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
 import apap.tk.catalog.model.Catalog;
 import apap.tk.catalog.model.Category;
 import apap.tk.catalog.repository.CatalogDb;
@@ -14,6 +16,7 @@ import jakarta.transaction.Transactional;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
@@ -66,8 +69,8 @@ public class CatalogRestService {
     }
 
 
-    public Catalog createRestCatalog(Catalog catalog) { 
-        return catalogDb.save(catalog); 
+    public void createRestCatalog(Catalog catalog) { 
+        catalogDb.save(catalog); 
     };
 
     // public List<Catalog> retrieveListCatalogBySellerId(UUID sellerId) { 
