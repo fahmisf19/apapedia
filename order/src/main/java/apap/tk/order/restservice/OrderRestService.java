@@ -15,6 +15,5 @@ public interface OrderRestService {
     Integer calculateTotalPrice(List<OrderItem> listOrderItem);
     List<Order> getOrdersByCustomerId(UUID customerId);
     List<Order> getOrdersBySellerId(UUID sellerId);
-    Map<Integer, Long> getSalesPerDayForCurrentMonth(UUID sellerId);
-    void updateOrderStatus(UUID orderId, Integer newStatus);
+    Map<Integer, Long> getQuantityPerDayForCurrentMonth(UUID sellerId);
 }
