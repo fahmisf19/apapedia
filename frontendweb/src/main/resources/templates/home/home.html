@@ -23,7 +23,7 @@
     <div class="row rounded bg-white" style="-webkit-box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1); -moz-box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1); box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);">
       <div class="text-center">
         <div class="row justify-content-center m-2">
-          <canvas id="salesChart" width="500px" height="150px"></canvas>
+          <canvas id="salesChart" class="img-fluid" style="height: 12px; width: auto;"></canvas>
         </div>
       </div>
     </div>
@@ -189,20 +189,20 @@
 </div>
 
 <script th:inline="javascript">
-  var salesPerDay = [[${salesPerDay}]];
-  var labels = Object.keys(salesPerDay);
+  var quantityPerDay = [[${quantityPerDay}]];
+  var labels = Object.keys(quantityPerDay);
   var chartData = labels.map(function(key) {
-      return salesPerDay[key];
+      return quantityPerDay[key];
   });
   var color = '#012970';
   const ctx = document.getElementById('salesChart').getContext("2d");
 
-  new Chart(ctx, {
+ new Chart(ctx, {
       type: 'line',
       data: {
           labels: labels,
           datasets: [{
-              label: 'Penjualan',
+              label: 'Total Barang Terjual per Hari',
               data: chartData,
               backgroundColor: color,
               borderColor: color,
@@ -224,10 +224,10 @@
               y: {
                   title: {
                       display: true,
-                      text: 'Penjualan'
+                      text: 'Total Barang Terjual per Hari'
                   },
                   ticks: {
-                      stepSize: 5,
+                      stepSize: 10,
                       beginAtZero: true
                   }
               }
@@ -235,7 +235,7 @@
           plugins: {
               title: {
                   display: true,
-                  text: 'Grafik Penjualan pada Bulan Ini',
+                  text: 'Grafik Total Barang Terjual per Hari pada Bulan Ini',
                   font: {
                       size: 16
                   }

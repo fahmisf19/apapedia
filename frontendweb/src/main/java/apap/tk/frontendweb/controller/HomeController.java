@@ -16,9 +16,9 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
-        var salesPerDay = homeService.getChartSales(sellerId);
+        var quantityPerDay = homeService.getChartSales(sellerId);
         model.addAttribute("sellerId", sellerId);
-        model.addAttribute("salesPerDay", salesPerDay);
+        model.addAttribute("quantityPerDay", quantityPerDay);
         return "home/home";
     }
 }
