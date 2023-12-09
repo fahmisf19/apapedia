@@ -34,19 +34,19 @@ public class Catalog {
     // @JoinColumn(name = "seller_id", referencedColumnName = "id")
     // private Seller seller;
 
-    @NotNull
+    // @NotNull
     @Column(name = "price", nullable = false)
     private BigInteger price;
     
-    @NotNull
+    // @NotNull
     @Column(name = "productName", nullable = false)
     private String productName;
     
-    @NotNull
+    // @NotNull
     @Column(name = "productDescription", nullable = false)
     private String productDescription;
   
-    @NotNull
+    // @NotNull
     @Column(name = "stock", nullable = false)
     private int stock;
 
@@ -54,7 +54,7 @@ public class Catalog {
     @JoinColumn(name = "id_category", referencedColumnName = "idCategory")
     Category category;
 
-    @NotNull
+    // @NotNull
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 

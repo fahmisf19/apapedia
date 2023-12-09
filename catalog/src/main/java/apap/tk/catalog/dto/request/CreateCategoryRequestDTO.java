@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.hibernate.validator.constraints.UUID;
+
 import apap.tk.catalog.model.Category;
 
 @AllArgsConstructor
