@@ -30,7 +30,7 @@ public class CatalogController {
     @Autowired
     CategoryService categoryService;
 
-    @GetMapping("/form")
+    @GetMapping("/catalog/create-catalog")
     public String showCatalogForm(Model model) {
         List<CategoryDTO> categories = categoryService.getAllCategories();
 

@@ -17,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateCatalogRequestDTO {
     private String productName;
+    private UUID seller;
     private BigInteger price;
     private String productDescription;
     private int stock;

@@ -31,7 +31,7 @@ public class CatalogRestService {
     private CategoryDb categoryDb;
 
     public List<Catalog> getAllCatalog(){
-        return catalogDb.findAll();
+        return catalogDb.findAllByOrderByProductName();
     }
 
     public Catalog getRestCatalogById(UUID id){
@@ -73,17 +73,24 @@ public class CatalogRestService {
         catalogDb.save(catalog); 
     };
 
-    // public List<Catalog> retrieveListCatalogBySellerId(UUID sellerId) { 
-    //     return catalogDb.findBySellerId(sellerId);
-    // }
+     public List<Catalog> retrieveListCatalogBySellerId(UUID sellerId) {
+         return catalogDb.findBySellerOrderByProductName(sellerId);
+     }
 
     public List<Catalog> findCatalogByName(String productName){
         return catalogDb.findByProductNameContainingIgnoreCaseOrderByProductName(productName);
+    }
+
+    public List<Catalog> findCatalogBySellerAndName(UUID seller, String productName){
+        return catalogDb.findBySellerAndProductNameContainingIgnoreCaseOrderByProductName(seller, productName);
     }
 
     public List<Catalog> findCatalogByPrice(Integer lowerLimitPrice, Integer higherLimitPrice){
         return catalogDb.findByPriceBetween(lowerLimitPrice, higherLimitPrice);
     }
 
+    public List<Catalog> findCatalogBySellerAndPrice(UUID sellerId, Integer lowerLimitPrice, Integer higherLimitPrice){
+        return catalogDb.findBySellerAndPriceBetween(sellerId, lowerLimitPrice, higherLimitPrice);
+    }
 
 }

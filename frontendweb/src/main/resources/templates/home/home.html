@@ -33,7 +33,7 @@
       <div class="text-center mb-2">
         <a type="button"
            class="btn btn-md btn-primary"
-           th:href="@{catalog/add}">+ Tambah Produk</a>
+           th:href="@{catalog/create-catalog}">+ Tambah Produk</a>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
         <div class="container-sm mx-auto rounded border border-primary bg-white">
           <h5 class="mt-2">Filter</h5>
           <div class="container-sm">
-            <form th:action="@{/api/catalog/search-catalog-price}" method="GET">
+            <form th:action="@{/search-catalog-price}" method="GET">
               <div class="mb-3">
                 <h6>Harga</h6>
               </div>
@@ -68,7 +68,7 @@
         <div class="container-sm row">
           <!--    Search Bar    -->
           <div class="col-md-6">
-            <form th:action="@{/catalog/search-catalog-name}" method="GET">
+            <form th:action="@{/search-catalog-name}" method="GET">
               <div class="input-group">
               <span class="input-group-text">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -98,90 +98,21 @@
         <!--   If the product is fixed, change this to iterate it   -->
         <!--   Card Product   -->
         <div class="container-sm row mt-3">
-          <div class="col-md-2">
+          <div th:each="catalog : ${catalogList}" class="col-md-2">
             <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
+              <img th:src="'data:image/png;base64,' + ${catalog.image}" alt="" class="rounded-top">
               <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
+                <p class="card-title mb-0" th:text="${catalog.productName}"></p>
+                <h6 th:text="'Rp' + ${catalog.price}"></h6>
                 <div class="row mt-3">
                   <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
+                    <a th:href="@{'#'}" class="btn btn-card btn-primary float-end">Ubah</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
