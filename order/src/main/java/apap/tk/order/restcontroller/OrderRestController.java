@@ -122,5 +122,4 @@ public class OrderRestController {
         orderRestService.updateOrderStatus(idOrder, newStatus);
         return ResponseEntity.ok().build();
     }
-
 }
