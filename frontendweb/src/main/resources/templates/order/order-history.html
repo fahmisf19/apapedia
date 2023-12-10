@@ -28,8 +28,10 @@
                         <th style="color: #012970;">#</th>
                         <th style="color: #012970;">Order ID</th>
                         <th style="color: #012970;">Created At</th>
-                        <th style="color: #012970;">Status</th>
+                        <th style="color: #012970;">Updated At</th>
+                        <th style="color: #012970;">Order Item</th>
                         <th style="color: #012970;">Total Price</th>
+                        <th style="color: #012970;">Status</th>
                         <th style="color: #012970;">Actions</th>
                     </tr>                    
                 </thead>
@@ -38,6 +40,14 @@
                         <td th:text="${status.index + 1}"></td>
                         <td th:text="${order.id}"></td>
                         <td th:text="${order.createdAt}"></td>
+                        <td th:text="${order.updateAt}"></td>
+                        <td>
+                            <th:block th:each="orderItem, itemStatus : ${order.listOrderItem}">
+                                <p th:text="${orderItem.productName} +', quantity: '+${orderItem.quantity}"></p>
+                            </th:block>
+                        </td>
+                                               
+                        <td th:text="'Rp ' + ${#numbers.formatDecimal(order.totalPrice, 0, 2, 'COMMA')}"></td>
                         <td>
                             <span th:if="${order.status == 0}">Menunggu konfirmasi penjual</span>
                             <span th:if="${order.status == 1}">Dikonfirmasi penjual</span>
@@ -46,14 +56,6 @@
                             <span th:if="${order.status == 4}">Barang diterima</span>
                             <span th:if="${order.status == 5}">Selesai</span>
                         </td>
-                        <td th:text="'Rp ' + ${#numbers.formatDecimal(order.totalPrice, 0, 2, 'COMMA')}"></td>
-                        <!-- <td><a th:href="@{'/update-status/' + ${order.id}}" class="btn btn-md btn-primary">Update Status</a></td> -->
-                        <!-- <td>
-                            <button data-order-id="${order.id}" data-current-status="${order.status}"
-                                onclick="updateStatus(this)"
-                                class="btn btn-md btn-primary">Update Status
-                            </button>                    
-                        </td>                         -->
                         <td>
                             <button th:attr="data-order-id=${#strings.toString(order.id)}, data-current-status=${order.status}" 
                                 onclick="updateStatus(this)"
@@ -86,37 +88,8 @@
                     var counter = startIndex + index + 1;
                     $('td:eq(0)', row).html(counter);
                 }
-            });
-
-        //   // Apply custom CSS to change title column text color
-        //   $('#gudangTable thead th').css('color', 'black');
-            
+            });            
         });
-
-        
-        // function updateStatus(button) {
-        //     var orderId = button.getAttribute("data-order-id");
-        //     var currentStatus = parseInt(button.getAttribute("data-current-status"));
-        //     var newStatus = currentStatus + 1;
-
-        //     // Panggil endpoint untuk pembaruan status
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "/order/update-status/" + orderId + "/" + newStatus,
-        //         success: function (response) {
-        //             // Handle success, jika diperlukan
-        //             alert("Status updated successfully!");
-        //             location.reload(); // Refresh halaman setelah pembaruan status
-        //         },
-        //         // error: function (error) {
-        //         //     // Handle error, jika diperlukan
-        //         //     alert("Failed to update status: " + error.responseText);
-        //         // }
-        //         error: function (error) {
-        //             error.responseText;
-        //         }
-        //     });
-        // }
 
         function updateStatus(button) {
             var orderId = button.getAttribute("data-order-id");
@@ -144,7 +117,6 @@
             });
         }
     </script>
-
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>

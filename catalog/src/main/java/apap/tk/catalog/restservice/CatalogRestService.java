@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
+import org.springframework.data.domain.Sort;
+
 
 @Service
 @Transactional
@@ -40,7 +43,6 @@ public class CatalogRestService {
                 return catalog;
             }
         }
-
         return null;
     }
 
@@ -89,8 +91,35 @@ public class CatalogRestService {
         return catalogDb.findByPriceBetween(lowerLimitPrice, higherLimitPrice);
     }
 
+    public List<Catalog> getAllCatalogSorted(String sortBy, String sortOrder) {
+        // Menentukan metode sort berdasarkan harga atau nama
+        Sort sort = Sort.by(sortOrder.equals("asc") ? Sort.Order.asc(sortBy) : Sort.Order.desc(sortBy));
+
+        // Mengambil semua katalog dari database dengan urutan yang ditentukan
+        return catalogDb.findAll(sort);
+    }
+    
     public List<Catalog> findCatalogBySellerAndPrice(UUID sellerId, Integer lowerLimitPrice, Integer higherLimitPrice){
         return catalogDb.findBySellerAndPriceBetween(sellerId, lowerLimitPrice, higherLimitPrice);
     }
 
+    public List<Catalog> getSellerSortedCatalogList(UUID sellerId, String sortBy, String sortOrder) {
+        List<Catalog> catalogList;
+        if("price".equalsIgnoreCase(sortBy)) {
+            if("asc".equalsIgnoreCase(sortOrder)) {
+                catalogList = catalogDb.findBySellerOrderByPrice(sellerId);
+            } else {
+                catalogList = catalogDb.findBySellerOrderByPriceDesc(sellerId);
+            }
+        } else if("productName".equalsIgnoreCase(sortBy)) {
+            if("asc".equalsIgnoreCase(sortOrder)) {
+                catalogList = catalogDb.findBySellerOrderByProductName(sellerId);
+            } else {
+                catalogList = catalogDb.findBySellerOrderByProductNameDesc(sellerId);
+            }
+        } else {
+            catalogList = catalogDb.findAll();
+        }
+        return catalogList;
+    }
 }

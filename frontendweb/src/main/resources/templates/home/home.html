@@ -10,6 +10,7 @@
           crossorigin="anonymous"
           referrerpolicy="no-referrer"
   ></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
   <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
   <title>Home</title>
@@ -83,12 +84,13 @@
           <!--    Urutkan    -->
           <div class="col-md-3 d-flex align-items-center">
             <span class="me-2">Urutkan:</span>
-            <form th:action="@{/api/catalog/get-catalog}" method="GET">
-              <select class="form-select custom-select" name="sortBy" onchange="this.form.submit()">
-                <option value="nameAsc">Nama: A - Z</option>
-                <option value="nameDesc">Nama: Z - A</option>
-                <option value="priceAsc">Harga: Rendah - Tinggi</option>
-                <option value="priceDesc">Harga: Tinggi - Rendah</option>
+            <form th:action="@{/get-catalog}" method="GET">
+              <select class="form-select custom-select" name="sort" onchange="this.form.submit()">
+                <option value="" selected disabled>Pilih Opsi</option>
+                <option value="productName-asc">Nama: A - Z</option>
+                <option value="productName-desc">Nama: Z - A</option>
+                <option value="price-asc">Harga: Rendah - Tinggi</option>
+                <option value="price-desc">Harga: Tinggi - Rendah</option>
               </select>
               <noscript><input type="submit" value="Submit"></noscript>
             </form>
@@ -98,12 +100,15 @@
         <!--   If the product is fixed, change this to iterate it   -->
         <!--   Card Product   -->
         <div class="container-sm row mt-3">
-          <div th:each="catalog : ${catalogList}" class="col-md-2">
-            <div class="card rounded">
-              <img th:src="'data:image/png;base64,' + ${catalog.image}" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0" th:text="${catalog.productName}"></p>
+          <div th:each="catalog, iterStat : ${catalogList}" class="col-md-2" th:style="${iterStat.index >= 6} ? 'margin-top: 20px;' : 'margin-top: 10px;'">
+            <div class="card rounded" style="height: 280px; display: flex; flex-direction: column;">
+              <!--              <img th:src="'data:image/png;base64,' + ${catalog.image}" alt="" class="rounded-top" style="max-height: 150px; width: 100%; object-fit: cover;">-->
+              <img src="https://images.pexels.com/photos/1459505/pexels-photo-1459505.jpeg" alt="" class="rounded-top" style="height: 100px; width: 100%; object-fit: cover;">
+              <div class="card-body" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                <!-- Use a utility method to truncate productName if it exceeds 24 characters -->
+                <p class="card-title mb-0 pb-1" th:utext="${#strings.length(catalog.productName) > 24 ? #strings.substring(catalog.productName, 0, 20) + '...' : catalog.productName}"></p>
                 <h6 th:text="'Rp' + ${catalog.price}"></h6>
+                <h6 th:text="${catalog.category.name}" style="font-weight: lighter; font-size: smaller;"></h6>
                 <div class="row mt-3">
                   <div class="col-md-12">
                     <a th:href="@{'#'}" class="btn btn-card btn-primary float-end">Ubah</a>
@@ -112,6 +117,7 @@
               </div>
             </div>
           </div>
+        </div>
 
         </div>
       </div>
@@ -175,8 +181,6 @@
       }
   });
 </script>
-
-
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
