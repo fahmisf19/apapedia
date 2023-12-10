@@ -1,11 +1,14 @@
 package apap.tk.catalog.restservice;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
 import apap.tk.catalog.model.Catalog;
 import apap.tk.catalog.model.Category;
 import apap.tk.catalog.repository.CatalogDb;
@@ -14,6 +17,7 @@ import jakarta.transaction.Transactional;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
@@ -67,16 +71,20 @@ public class CatalogRestService {
     }
 
 
-    public Catalog createRestCatalog(Catalog catalog) { 
-        return catalogDb.save(catalog); 
+    public void createRestCatalog(Catalog catalog) { 
+        catalogDb.save(catalog); 
     };
 
-    // public List<Catalog> getListCatalogBySellerId(UUID sellerId) { 
-    //     return catalogDb.findBySellerId(sellerId);
-    // }
+     public List<Catalog> retrieveListCatalogBySellerId(UUID sellerId) {
+         return catalogDb.findBySellerOrderByProductName(sellerId);
+     }
 
     public List<Catalog> findCatalogByName(String productName){
         return catalogDb.findByProductNameContainingIgnoreCaseOrderByProductName(productName);
+    }
+
+    public List<Catalog> findCatalogBySellerAndName(UUID seller, String productName){
+        return catalogDb.findBySellerAndProductNameContainingIgnoreCaseOrderByProductName(seller, productName);
     }
 
     public List<Catalog> findCatalogByPrice(Integer lowerLimitPrice, Integer higherLimitPrice){
@@ -90,5 +98,40 @@ public class CatalogRestService {
         // Mengambil semua katalog dari database dengan urutan yang ditentukan
         return catalogDb.findAll(sort);
     }
+    
+    public List<Catalog> findCatalogBySellerAndPrice(UUID sellerId, Integer lowerLimitPrice, Integer higherLimitPrice){
+        return catalogDb.findBySellerAndPriceBetween(sellerId, lowerLimitPrice, higherLimitPrice);
+    }
 
+    public List<Catalog> getSortedCatalogList(String sortBy, String sortOrder) {
+         List<Catalog> catalogList;
+         if("price".equalsIgnoreCase(sortBy)) {
+             catalogList = catalogDb.findAll(Sort.by(Sort.Direction.fromString(sortOrder), "price"));
+         } else if("name".equalsIgnoreCase(sortBy)) {
+             catalogList = catalogDb.findAll(Sort.by(Sort.Direction.fromString(sortOrder), "productName"));
+         } else {
+             catalogList = catalogDb.findAll();
+         }
+         return catalogList;
+    }
+
+    public List<Catalog> getSellerSortedCatalogList(UUID sellerId, String sortBy, String sortOrder) {
+        List<Catalog> catalogList;
+        if("price".equalsIgnoreCase(sortBy)) {
+            if("asc".equalsIgnoreCase(sortOrder)) {
+                catalogList = catalogDb.findBySellerOrderByPrice(sellerId);
+            } else {
+                catalogList = catalogDb.findBySellerOrderByPriceDesc(sellerId);
+            }
+        } else if("name".equalsIgnoreCase(sortBy)) {
+            if("asc".equalsIgnoreCase(sortOrder)) {
+                catalogList = catalogDb.findBySellerOrderByProductName(sellerId);
+            } else {
+                catalogList = catalogDb.findBySellerOrderByProductNameDesc(sellerId);
+            }
+        } else {
+            catalogList = catalogDb.findAll();
+        }
+        return catalogList;
+    }
 }

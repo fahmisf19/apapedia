@@ -10,6 +10,7 @@
           crossorigin="anonymous"
           referrerpolicy="no-referrer"
   ></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
   <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
   <title>Home</title>
@@ -19,11 +20,11 @@
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="container-fluid" style="max-width:1500px">
   <!-- Sales Graph -->
-  <div th:if="${sellerId != null}" class="container m-5">
-    <div class="row">
-      <div class="text-center pt-5">
+  <div th:if="${sellerId} != null" class="container m-5">
+    <div class="row rounded bg-white" style="-webkit-box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1); -moz-box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1); box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);">
+      <div class="text-center">
         <div class="row justify-content-center m-2">
-          <canvas id="chartSales"></canvas>
+          <canvas id="salesChart" class="img-fluid" style="height: 12px; width: auto;"></canvas>
         </div>
       </div>
     </div>
@@ -33,7 +34,7 @@
       <div class="text-center mb-2">
         <a type="button"
            class="btn btn-md btn-primary"
-           th:href="@{catalog/add}">+ Tambah Produk</a>
+           th:href="@{catalog/create-catalog}">+ Tambah Produk</a>
       </div>
     </div>
   </div>
@@ -44,7 +45,7 @@
         <div class="container-sm mx-auto rounded border border-primary bg-white">
           <h5 class="mt-2">Filter</h5>
           <div class="container-sm">
-            <form th:action="@{/api/catalog/search-catalog-price}" method="GET">
+            <form th:action="@{/search-catalog-price}" method="GET">
               <div class="mb-3">
                 <h6>Harga</h6>
               </div>
@@ -68,7 +69,7 @@
         <div class="container-sm row">
           <!--    Search Bar    -->
           <div class="col-md-6">
-            <form th:action="@{/catalog/search-catalog-name}" method="GET">
+            <form th:action="@{/search-catalog-name}" method="GET">
               <div class="input-group">
               <span class="input-group-text">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -83,12 +84,13 @@
           <!--    Urutkan    -->
           <div class="col-md-3 d-flex align-items-center">
             <span class="me-2">Urutkan:</span>
-            <form th:action="@{/api/catalog/get-catalog}" method="GET">
-              <select class="form-select custom-select" name="sortBy" onchange="this.form.submit()">
-                <option value="nameAsc">Nama: A - Z</option>
-                <option value="nameDesc">Nama: Z - A</option>
-                <option value="priceAsc">Harga: Rendah - Tinggi</option>
-                <option value="priceDesc">Harga: Tinggi - Rendah</option>
+            <form th:action="@{/get-catalog}" method="GET">
+              <select class="form-select custom-select" name="sort" onchange="this.form.submit()">
+                <option value="" selected disabled>Pilih Opsi</option>
+                <option value="name-asc">Nama: A - Z</option>
+                <option value="name-desc">Nama: Z - A</option>
+                <option value="price-asc">Harga: Rendah - Tinggi</option>
+                <option value="price-desc">Harga: Tinggi - Rendah</option>
               </select>
               <noscript><input type="submit" value="Submit"></noscript>
             </form>
@@ -98,159 +100,78 @@
         <!--   If the product is fixed, change this to iterate it   -->
         <!--   Card Product   -->
         <div class="container-sm row mt-3">
-          <div class="col-md-2">
+          <div th:each="catalog : ${catalogList}" class="col-md-2">
             <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
+              <img th:src="'data:image/png;base64,' + ${catalog.image}" alt="" class="rounded-top">
               <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
+                <p class="card-title mb-0" th:text="${catalog.productName}"></p>
+                <h6 th:text="'Rp' + ${catalog.price}"></h6>
                 <div class="row mt-3">
                   <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
+                    <a th:href="@{'#'}" class="btn btn-card btn-primary float-end">Ubah</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="card rounded">
-              <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" alt="" class="rounded-top">
-              <div class="card-body">
-                <p class="card-title mb-0">Kamera Murah</p>
-                <h6>Rp50.000</h6>
-                <div class="row mt-3">
-                  <div class="col-md-12">
-                    <a href="#" class="btn btn-card btn-primary float-end">Ubah</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
   </div>
 </div>
 
-
 <script th:inline="javascript">
-  var salesPerDay = [[${salesPerDay}]];
-  var labels = Object.keys(salesPerDay);
+  var quantityPerDay = [[${quantityPerDay}]];
+  var labels = Object.keys(quantityPerDay);
   var chartData = labels.map(function(key) {
-      return salesPerDay[key];
+      return quantityPerDay[key];
   });
-  var colors = [
-      'rgba(255, 99, 132, 0.2)',
-      'rgba(54, 162, 235, 0.2)',
-      'rgba(255, 206, 86, 0.2)',
-      'rgba(75, 192, 192, 0.2)',
-      'rgba(153, 102, 255, 0.2)',
-      'rgba(25, 159, 64, 0.2)',
-      'rgba(255, 99, 132, 0.2)',
-      'rgba(54, 162, 235, 0.2)',
-      'rgba(255, 206, 86, 0.2)',
-      'rgba(75, 192, 192, 0.2)',
-      'rgba(153, 102, 255, 0.2)',
-      'rgba(25, 159, 64, 0.2)',
-      'rgba(255, 99, 132, 0.2)',
-      'rgba(54, 162, 235, 0.2)',
-      'rgba(255, 206, 86, 0.2)'
-  ];
-  var borderColors = [
-      'rgba(255, 99, 132, 1)',
-      'rgba(54, 162, 235, 1)',
-      'rgba(255, 206, 86, 1)',
-      'rgba(75, 192, 192, 1)',
-      'rgba(153, 102, 255, 1)',
-      'rgba(255, 159, 64, 1)',
-      'rgba(255, 99, 132, 1)',
-      'rgba(54, 162, 235, 1)',
-      'rgba(255, 206, 86, 1)',
-      'rgba(75, 192, 192, 1)',
-      'rgba(153, 102, 255, 1)',
-      'rgba(255, 159, 64, 1)',
-      'rgba(255, 99, 132, 1)',
-      'rgba(54, 162, 235, 1)',
-      'rgba(255, 206, 86, 1)',
-  ];
-  const ctx = document.getElementById('chartSales');
+  var color = '#012970';
+  const ctx = document.getElementById('salesChart').getContext("2d");
 
-  new Chart(ctx, {
-      type: 'bar',
+ new Chart(ctx, {
+      type: 'line',
       data: {
           labels: labels,
           datasets: [{
-              label: 'Rating',
+              label: 'Total Barang Terjual per Hari',
               data: chartData,
-              backgroundColor: colors,
-              borderColors: borderColors,
-              borderWidth: 1
+              backgroundColor: color,
+              borderColor: color,
+              borderWidth: 1,
+              pointBackgroundColor: color,
+              pointBorderColor: color,
+              pointRadius: 5,
+              pointHoverRadius: 8
           }]
       },
       options: {
           scales: {
+              x: {
+                  title: {
+                      display: true,
+                      text: 'Tanggal'
+                  }
+              },
               y: {
-                  beginAtZero: true,
+                  title: {
+                      display: true,
+                      text: 'Total Barang Terjual per Hari'
+                  },
                   ticks: {
-                  stepSize: 0.5, // Set the step size to 0.5
-                  beginAtZero: true
+                      stepSize: 10,
+                      beginAtZero: true
+                  }
               }
+          },
+          plugins: {
+              title: {
+                  display: true,
+                  text: 'Grafik Total Barang Terjual per Hari pada Bulan Ini',
+                  font: {
+                      size: 16
+                  }
               }
           }
       }
