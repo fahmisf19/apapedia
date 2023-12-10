@@ -179,6 +179,21 @@ public class CatalogRestController {
         }
     }
 
+    @GetMapping(value = "/catalog/{id}")
+    public ResponseEntity<Catalog> findCatalogById(@PathVariable("id") UUID id) {
+        try {
+            Catalog catalog = catalogRestService.getRestCatalogById(id);
+            if (catalog != null) {
+                return ResponseEntity.ok().body(catalog);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Catalog with ID " + id + " not found");
+        }
+    }
+
     // GET Catalog List Sort by Price or Name and Ascending or Descending Order
     @GetMapping("/catalog/sort-by")
     public ResponseEntity<List<Catalog>> getAllCatalogSorted(
