@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project_tk/catalog/ProductDetailPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +33,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+
+      routes: {
+        '/catalog/productDetail': (context) => ProductDetailPage(productId: "07ed63cb-f32a-4d97-a97b-60d2a827ebdf",),
+        // ... routes lainnya
+      },
+      
     );
   }
 }
@@ -85,6 +92,27 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+      ),
+        drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ), child: null,
+              // ... drawer header content
+            ),
+            ListTile(
+              title: Text('Product Detail'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, '/catalog/productDetail'); // Navigate to ProductDetailPage
+              },
+            ),
+            // ... other drawer items
+          ],
+        ),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
