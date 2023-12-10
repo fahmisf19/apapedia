@@ -54,7 +54,7 @@ public class OrderRestServiceImpl implements OrderRestService{
     @Override
     public List<Order> getOrdersBySellerId(UUID sellerId) { return orderDb.findBySellerId(sellerId); }
     @Override
-    public Map<Integer, Long> getSalesPerDayForCurrentMonth() {
+    public Map<Integer, Long> getSalesPerDayForCurrentMonth(UUID sellerId) {
         // Get the first day of the current month
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -65,8 +65,8 @@ public class OrderRestServiceImpl implements OrderRestService{
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         Date endDate = calendar.getTime();
 
-        // Fetch orders within the date range
-        List<Order> orders = orderDb.findByCreatedAtBetween(startDate, endDate);
+        // Fetch orders within the date range and for the specified sellerId
+        List<Order> orders = orderDb.findByCreatedAtBetweenAndSellerId(startDate, endDate, sellerId);
 
         // Initialize a map with all days of the month and set the count to 0
         Map<Integer, Long> salesPerDay = IntStream.rangeClosed(1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
@@ -82,4 +82,38 @@ public class OrderRestServiceImpl implements OrderRestService{
 
         return salesPerDay;
     }
+
+    // @Override
+    // public void updateOrderStatus(UUID orderId, Integer newStatus) {
+    //     Order order = getOrderRestById(orderId);
+    //     if (order == null) {
+    //         throw new ResponseStatusException(
+    //                 HttpStatus.NOT_FOUND, "Order not found with id: " + orderId
+    //         );
+    //     }
+    
+    //     order.setStatus(newStatus);
+    //     orderDb.save(order);
+    // }
+        
+    @Override
+    public void updateOrderStatus(UUID orderId, Integer newStatus) {
+        Order order = getOrderRestById(orderId);
+        if (order == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Order not found with id: " + orderId
+            );
+        }
+    
+        if (newStatus > 4) {
+            // Jika status adalah 5, atur kembali ke 0
+            order.setStatus(0);
+        } else {
+            // Jika status adalah 0 hingga 4, atur status seperti biasa
+            order.setStatus(newStatus);
+        }
+    
+        orderDb.save(order);
+    }
+    
 }
