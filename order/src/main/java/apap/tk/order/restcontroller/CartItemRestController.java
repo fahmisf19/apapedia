@@ -47,6 +47,8 @@ public class CartItemRestController {
             cartItem.setProductId(cartItemDto.getProductId());
             cartItem.setQuantity(cartItemDto.getQuantity());
             cartItem.setCart(cart);
+            cartItem.setProductName(cartItemDto.getProductName());
+            cartItem.setProductPrice(cartItemDto.getProductPrice());
             cartItemRestService.createRestCartItem(cartItem);
             return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
