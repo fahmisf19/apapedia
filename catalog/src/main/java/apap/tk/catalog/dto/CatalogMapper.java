@@ -1,7 +1,10 @@
 package apap.tk.catalog.dto;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
+import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
 import apap.tk.catalog.dto.request.UpdateCatalogDTO;
 import apap.tk.catalog.model.Catalog;
 
@@ -9,4 +12,7 @@ import apap.tk.catalog.model.Catalog;
 public interface CatalogMapper {
     Catalog updateCatalogRequestDTOToCatalog(UpdateCatalogDTO updateCatalogDTO);
 
+    Catalog createCatalogRequestDTOToCatalog(CreateCatalogRequestDTO createCatalogRequestDTO);
+
+    // Hapus method @AfterMapping karena penggunaan @Mapping(target = "image", ignore = true) sudah mencakupnya
 }

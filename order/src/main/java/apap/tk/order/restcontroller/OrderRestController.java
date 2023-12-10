@@ -8,6 +8,7 @@ import apap.tk.order.model.OrderItem;
 import apap.tk.order.restservice.OrderRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -102,4 +104,22 @@ public class OrderRestController {
         }
     }
 
+    @RequestMapping(
+            value = "order/quantity-per-day/{sellerId}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = {RequestMethod.GET}
+    )
+    public ResponseEntity<Map<Integer, Long>> getQuantityPerDayForCurrentMonth(@PathVariable UUID sellerId) {
+        Map<Integer, Long> quantityPerDay = orderRestService.getQuantityPerDayForCurrentMonth(sellerId);
+        return new ResponseEntity<>(quantityPerDay, HttpStatus.OK);
+    }
+
+    @PatchMapping(value = "order/{idOrder}/updateStatus")
+    public ResponseEntity<Order> restUpdateOrderStatus(
+            @PathVariable("idOrder") UUID idOrder,
+            @RequestParam("newStatus") Integer newStatus
+    ) {
+        orderRestService.updateOrderStatus(idOrder, newStatus);
+        return ResponseEntity.ok().build();
+    }
 }

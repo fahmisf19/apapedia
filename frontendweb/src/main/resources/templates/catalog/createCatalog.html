@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/img/icon.png}" />
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>    
+    <title>Add Catalog</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald&display=swap">
+    <style>
+        body {
+            font-family: 'Oswald', sans-serif;
+        }
+    </style>
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+    
+            reader.onload = function(event) {
+                const binaryString = event.target.result;
+    
+                // Convert binary string to base64
+                const base64String = btoa(binaryString);
+    
+                // Send the base64 string to server using AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "/add",
+                    data: {
+                        image: base64String
+                    },
+                    success: function(response) {
+                        // Handle success response
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        // Handle error response
+                        console.error(error);
+                    }
+                });
+            };
+    
+            reader.readAsBinaryString(file);
+        }
+    </script>  
+    
+</head>
+<body>
+    <h1>Add Catalog</h1>
+    <form action="/add" th:action="@{/add}" th:object="${catalogDTO}" method="post" enctype="multipart/form-data">
+        <!-- <input type="hidden" th:field="*{id}" th:value="${null}" >
+        <input type="hidden" th:field="*{seller}" th:value="${null}" > -->
+
+        <label>Product Name:</label>
+        <input type="text" th:field="*{productName}" />
+
+        <label>Price:</label>
+        <input type="number" th:field="*{price}" />
+
+        <label>Product Description:</label>
+        <input type="text" th:field="*{productDescription}" />
+
+        <label>Stock:</label>
+        <input type="number" th:field="*{stock}" />
+
+        <input type="hidden" id="imageByteArray" name="image" />
+
+        <label>Image:</label>
+        <input type="file" id="imageBase64" onchange="handleFileSelect(event)" />
+
+        <label>Category:</label>
+        <select th:field="*{category.idCategory}">
+            <option th:each="category : ${categories}" th:value="${category.idCategory}" th:text="${category.name}"></option>
+        </select>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
