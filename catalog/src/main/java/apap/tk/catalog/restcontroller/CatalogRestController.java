@@ -84,6 +84,7 @@ public class CatalogRestController {
         } else {
             
             var catalog = catalogMapper.createCatalogRequestDTOToCatalog(createCatalogRequestDTO); // Implement the mapping method.
+            catalog.setSeller(createCatalogRequestDTO.getSeller());
             catalog.setPrice(createCatalogRequestDTO.getPrice());
             catalog.setProductName(createCatalogRequestDTO.getProductName());
             catalog.setProductDescription(createCatalogRequestDTO.getProductDescription());
@@ -99,20 +100,17 @@ public class CatalogRestController {
     public List<Catalog> getAllCatalogs() {
         return catalogRestService.getAllCatalog();
     }
-    
 
-
-    // GET Catalog by seller id
-    // @GetMapping(value = "/catalog/{sellerId}")
-    // private List<Catalog> retrieveListCatalog(@PathVariable("sellerId") String sellerId) {
-    //     try {
-    //         return catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
-    //     } catch (NoSuchElementException e) {
-    //         throw new ResponseStatusException(
-    //           HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"  
-    //         );
-    //     }
-    // }
+     @GetMapping(value = "/catalog/sellerId/{sellerId}")
+     private List<Catalog> retrieveListCatalog(@PathVariable("sellerId") String sellerId) {
+         try {
+             return catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
+         } catch (NoSuchElementException e) {
+             throw new ResponseStatusException(
+               HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"
+             );
+         }
+     }
 
     @GetMapping(value = "/catalog/search-catalog-name")
     public List<Catalog> filterCatalogName(@RequestParam("catalog") String catalog) {
@@ -125,6 +123,17 @@ public class CatalogRestController {
         }
     }
 
+    @GetMapping(value = "/catalog/search-catalog-name/{sellerId}")
+    public List<Catalog> filterCatalogSellerAndName(@PathVariable("sellerId") UUID sellerId, @RequestParam("catalog") String catalog) {
+        try{
+            List<Catalog> catalogs = catalogRestService.findCatalogBySellerAndName(sellerId, catalog);
+            return catalogs;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "catalog's name not found");
+        }
+    }
+
     @GetMapping(value = "/catalog/search-catalog-price")
     public List<Catalog> filterCatalogPrice(@RequestParam("lowerLimitPrice") Integer lowerLimitPrice, @RequestParam("higherLimitPrice") Integer higherLimitPrice) {
         try{
@@ -133,6 +142,17 @@ public class CatalogRestController {
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "catalog that's in range price between " + lowerLimitPrice + " - " + higherLimitPrice + " not found");
+        }
+    }
+
+    @GetMapping(value = "/catalog/search-catalog-price/{sellerId}")
+    public List<Catalog> filterCatalogSellerPrice(@PathVariable("sellerId") UUID sellerId, @RequestParam("lowerLimitPrice") Integer lowerLimitPrice, @RequestParam("higherLimitPrice") Integer higherLimitPrice) {
+        try{
+            List<Catalog> catalogs = catalogRestService.findCatalogBySellerAndPrice(sellerId, lowerLimitPrice, higherLimitPrice);
+            return catalogs;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "catalog that's in range price between " + lowerLimitPrice + " - " + higherLimitPrice + " not found");
         }
     }
 
@@ -151,5 +171,13 @@ public class CatalogRestController {
         }
     }
 
+    @GetMapping(value = "/catalog/sort-by")
+    public List<Catalog> getSortedCatalogList(@RequestParam String sortBy, @RequestParam String sortOrder) {
+        return catalogRestService.getSortedCatalogList(sortBy, sortOrder);
+    }
 
+    @GetMapping(value = "/catalog/sort-by/{sellerId}")
+    public List<Catalog> getSellerSortedCatalogList(@PathVariable UUID sellerId, @RequestParam String sortBy, @RequestParam String sortOrder) {
+        return catalogRestService.getSellerSortedCatalogList(sellerId, sortBy, sortOrder);
+    }
 }
