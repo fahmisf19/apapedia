@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
@@ -91,6 +92,38 @@ public class CatalogRestService {
 
     public List<Catalog> findCatalogBySellerAndPrice(UUID sellerId, Integer lowerLimitPrice, Integer higherLimitPrice){
         return catalogDb.findBySellerAndPriceBetween(sellerId, lowerLimitPrice, higherLimitPrice);
+    }
+
+    public List<Catalog> getSortedCatalogList(String sortBy, String sortOrder) {
+         List<Catalog> catalogList;
+         if("price".equalsIgnoreCase(sortBy)) {
+             catalogList = catalogDb.findAll(Sort.by(Sort.Direction.fromString(sortOrder), "price"));
+         } else if("name".equalsIgnoreCase(sortBy)) {
+             catalogList = catalogDb.findAll(Sort.by(Sort.Direction.fromString(sortOrder), "productName"));
+         } else {
+             catalogList = catalogDb.findAll();
+         }
+         return catalogList;
+    }
+
+    public List<Catalog> getSellerSortedCatalogList(UUID sellerId, String sortBy, String sortOrder) {
+        List<Catalog> catalogList;
+        if("price".equalsIgnoreCase(sortBy)) {
+            if("asc".equalsIgnoreCase(sortOrder)) {
+                catalogList = catalogDb.findBySellerOrderByPrice(sellerId);
+            } else {
+                catalogList = catalogDb.findBySellerOrderByPriceDesc(sellerId);
+            }
+        } else if("name".equalsIgnoreCase(sortBy)) {
+            if("asc".equalsIgnoreCase(sortOrder)) {
+                catalogList = catalogDb.findBySellerOrderByProductName(sellerId);
+            } else {
+                catalogList = catalogDb.findBySellerOrderByProductNameDesc(sellerId);
+            }
+        } else {
+            catalogList = catalogDb.findAll();
+        }
+        return catalogList;
     }
 
 }

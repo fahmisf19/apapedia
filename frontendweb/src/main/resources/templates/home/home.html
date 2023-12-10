@@ -10,6 +10,7 @@
           crossorigin="anonymous"
           referrerpolicy="no-referrer"
   ></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
   <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
   <title>Home</title>
@@ -83,12 +84,13 @@
           <!--    Urutkan    -->
           <div class="col-md-3 d-flex align-items-center">
             <span class="me-2">Urutkan:</span>
-            <form th:action="@{/api/catalog/get-catalog}" method="GET">
-              <select class="form-select custom-select" name="sortBy" onchange="this.form.submit()">
-                <option value="nameAsc">Nama: A - Z</option>
-                <option value="nameDesc">Nama: Z - A</option>
-                <option value="priceAsc">Harga: Rendah - Tinggi</option>
-                <option value="priceDesc">Harga: Tinggi - Rendah</option>
+            <form th:action="@{/get-catalog}" method="GET">
+              <select class="form-select custom-select" name="sort" onchange="this.form.submit()">
+                <option value="" selected disabled>Pilih Opsi</option>
+                <option value="name-asc">Nama: A - Z</option>
+                <option value="name-desc">Nama: Z - A</option>
+                <option value="price-asc">Harga: Rendah - Tinggi</option>
+                <option value="price-desc">Harga: Tinggi - Rendah</option>
               </select>
               <noscript><input type="submit" value="Submit"></noscript>
             </form>
@@ -175,8 +177,6 @@
       }
   });
 </script>
-
-
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>

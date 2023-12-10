@@ -171,5 +171,13 @@ public class CatalogRestController {
         }
     }
 
+    @GetMapping(value = "/catalog/sort-by")
+    public List<Catalog> getSortedCatalogList(@RequestParam String sortBy, @RequestParam String sortOrder) {
+        return catalogRestService.getSortedCatalogList(sortBy, sortOrder);
+    }
 
+    @GetMapping(value = "/catalog/sort-by/{sellerId}")
+    public List<Catalog> getSellerSortedCatalogList(@PathVariable UUID sellerId, @RequestParam String sortBy, @RequestParam String sortOrder) {
+        return catalogRestService.getSellerSortedCatalogList(sellerId, sortBy, sortOrder);
+    }
 }

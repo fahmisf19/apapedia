@@ -17,8 +17,6 @@ public class HomeController {
     @Autowired
     HomeService homeService;
 
-    @Autowired
-    CatalogService catalogService;
     @GetMapping("/")
     public String home(Model model) {
         UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
@@ -30,10 +28,10 @@ public class HomeController {
             model.addAttribute("sellerId", sellerId);
             model.addAttribute("quantityPerDay", quantityPerDay);
 
-            List<CatalogDTO> catalogList = catalogService.getCatalogBySellerId(sellerId);
+            List<CatalogDTO> catalogList = homeService.getCatalogBySellerId(sellerId);
             model.addAttribute("catalogList", catalogList);
         } else {
-            List<CatalogDTO> catalogList = catalogService.getAllCatalog();
+            List<CatalogDTO> catalogList = homeService.getAllCatalog();
             model.addAttribute("catalogList", catalogList);
         }
         return "home/home";
@@ -49,10 +47,10 @@ public class HomeController {
             model.addAttribute("sellerId", sellerId);
             model.addAttribute("quantityPerDay", quantityPerDay);
 
-            List<CatalogDTO> catalogList = catalogService.searchCatalogSeller(sellerId, name);
+            List<CatalogDTO> catalogList = homeService.searchCatalogSeller(sellerId, name);
             model.addAttribute("catalogList", catalogList);
         } else {
-            List<CatalogDTO> catalogList = catalogService.searchCatalog(name);
+            List<CatalogDTO> catalogList = homeService.searchCatalog(name);
             model.addAttribute("catalogList", catalogList);
         }
 
@@ -72,14 +70,34 @@ public class HomeController {
             model.addAttribute("sellerId", sellerId);
             model.addAttribute("quantityPerDay", quantityPerDay);
 
-            List<CatalogDTO> catalogList = catalogService.searchCatalogPriceSeller(sellerId, lowerLimitPrice, higherLimitPrice);
+            List<CatalogDTO> catalogList = homeService.searchCatalogPriceSeller(sellerId, lowerLimitPrice, higherLimitPrice);
             model.addAttribute("catalogList", catalogList);
         } else {
-            List<CatalogDTO> catalogList = catalogService.searchCatalogPrice(lowerLimitPrice, higherLimitPrice);
+            List<CatalogDTO> catalogList = homeService.searchCatalogPrice(lowerLimitPrice, higherLimitPrice);
             model.addAttribute("catalogList", catalogList);
         }
+        return "home/home";
+    }
+    @GetMapping("/get-catalog")
+    public String filterCatalogPrice(@RequestParam("sort") String sort, Model model) {
+        UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
+//        sellerId = null;
 
+        String[] parts = sort.split("-");
+        String sortBy = parts[0];
+        String sortOrder = parts[1];
 
+        if (sellerId != null) {
+            var quantityPerDay = homeService.getChartSales(sellerId);
+            model.addAttribute("sellerId", sellerId);
+            model.addAttribute("quantityPerDay", quantityPerDay);
+
+            List<CatalogDTO> catalogList = homeService.getSortedCatalogListSeller(sellerId, sortBy, sortOrder);
+            model.addAttribute("catalogList", catalogList);
+        } else {
+            List<CatalogDTO> catalogList = homeService.getSortedCatalogList(sortBy, sortOrder);
+            model.addAttribute("catalogList", catalogList);
+        }
         return "home/home";
     }
 }
