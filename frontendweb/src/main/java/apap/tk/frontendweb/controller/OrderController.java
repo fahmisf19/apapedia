@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import apap.tk.frontendweb.dto.response.order.ReadOrderResponseDTO;
 import apap.tk.frontendweb.service.OrderService;
@@ -19,27 +18,6 @@ import apap.tk.frontendweb.service.OrderService;
 public class OrderController {
     @Autowired
     OrderService orderService;
-    
-    // @GetMapping("order/viewall")
-    // public String listOrder(Model model) {
-    //     var date = LocalDate.now();
-    //     int year = date.getYear();
-    //     int month = date.getMonthValue();
-
-    //     try {
-    //         Map<String, Float> mapBuku = new HashMap<>();
-    //         List<ReadBukuChartResponseDTO> listBuku = bukuRestService.chartBuku(month, year);
-    //         for (ReadBukuChartResponseDTO buku : listBuku) {
-    //             mapBuku.put(buku.getName(), buku.getRating());
-    //         }
-    //         model.addAttribute("listBuku", mapBuku);
-    //         return "view-buku-chart";
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return "viewall-buku";
-    //     }
-
-    // }
 
     @GetMapping("order/viewall")
     // public String getOrderHistory(Model model, @RequestParam("sellerId") UUID sellerId) throws IOException, InterruptedException {
