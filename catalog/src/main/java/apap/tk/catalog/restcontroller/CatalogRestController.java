@@ -97,15 +97,10 @@ public class CatalogRestController {
     }
 
     // GET Catalog by seller id
-    @GetMapping(value = "/catalog/{sellerId}")
+    @GetMapping(value = "/catalog/sellerId/{sellerId}")
     private ResponseEntity<List<Catalog>> getCatalogsBySellerId(@PathVariable("sellerId") String sellerId) {
         try {
             List<Catalog> listCatalog = catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
-            if (listCatalog.isEmpty()) {
-                throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "No items found for user with id: " + sellerId
-                );
-            }
             return new ResponseEntity<>(listCatalog, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
@@ -113,22 +108,6 @@ public class CatalogRestController {
             );
         }
     }
-
-    @GetMapping(value = "/catalog/get-all")
-    public List<Catalog> getAllCatalogs() {
-        return catalogRestService.getAllCatalog();
-    }
-
-     @GetMapping(value = "/catalog/sellerId/{sellerId}")
-     private List<Catalog> retrieveListCatalog(@PathVariable("sellerId") String sellerId) {
-         try {
-             return catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
-         } catch (NoSuchElementException e) {
-             throw new ResponseStatusException(
-               HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"
-             );
-         }
-     }
 
     @GetMapping(value = "/catalog/search-catalog-name")
     public List<Catalog> filterCatalogName(@RequestParam("catalog") String catalog) {
@@ -163,9 +142,20 @@ public class CatalogRestController {
         }
     }
 
+    @GetMapping(value = "/catalog/search-catalog-price/{sellerId}")
+    public List<Catalog> filterCatalogSellerPrice(@PathVariable("sellerId") UUID sellerId, @RequestParam("lowerLimitPrice") Integer lowerLimitPrice, @RequestParam("higherLimitPrice") Integer higherLimitPrice) {
+        try{
+            List<Catalog> catalogs = catalogRestService.findCatalogBySellerAndPrice(sellerId, lowerLimitPrice, higherLimitPrice);
+            return catalogs;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "catalog that's in range price between " + lowerLimitPrice + " - " + higherLimitPrice + " not found");
+        }
+    }
+
 
     // GET All Catalog (default by name ASC) 
-    @GetMapping("catalog/getAll")
+    @GetMapping("/catalog/getAll")
     public ResponseEntity<List<Catalog>> getListCatalog() {
         try {
             // Mendapatkan daftar katalog dari CatalogDb, diurutkan berdasarkan nama secara default
@@ -178,7 +168,7 @@ public class CatalogRestController {
     }
 
     // GET Catalog by Catalog ID
-    @GetMapping("catalog/getByCatalogId")
+    @GetMapping("/catalog/getByCatalogId")
     public ResponseEntity<Catalog> getCatalogByCatalogId(@RequestParam UUID catalogId) {
         Catalog catalog = catalogRestService.getRestCatalogById(catalogId);
     
@@ -190,7 +180,7 @@ public class CatalogRestController {
     }
 
     // GET Catalog List Sort by Price or Name and Ascending or Descending Order
-    @GetMapping("/getAllSorted")
+    @GetMapping("/catalog/sort-by")
     public ResponseEntity<List<Catalog>> getAllCatalogSorted(
             @RequestParam(defaultValue = "productName") String sortBy,
             @RequestParam(defaultValue = "asc") String sortOrder) {
@@ -204,5 +194,10 @@ public class CatalogRestController {
             // Tangani pengecualian jika terjadi kesalahan
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }  
+    }
+
+    @GetMapping(value = "/catalog/sort-by/{sellerId}")
+    public List<Catalog> getSellerSortedCatalogList(@PathVariable UUID sellerId, @RequestParam String sortBy, @RequestParam String sortOrder) {
+        return catalogRestService.getSellerSortedCatalogList(sellerId, sortBy, sortOrder);
+    }
 }

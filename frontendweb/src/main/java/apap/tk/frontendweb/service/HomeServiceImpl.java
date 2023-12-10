@@ -54,7 +54,7 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public List<CatalogDTO> getAllCatalog() {
         return webClientCatalog.get()
-                .uri(uriBuilder -> uriBuilder.path("/get-all").build())
+                .uri(uriBuilder -> uriBuilder.path("/getAll").build())
                 .retrieve()
                 .bodyToFlux(CatalogDTO.class)
                 .collectList()

@@ -103,18 +103,6 @@ public class CatalogRestService {
         return catalogDb.findBySellerAndPriceBetween(sellerId, lowerLimitPrice, higherLimitPrice);
     }
 
-    public List<Catalog> getSortedCatalogList(String sortBy, String sortOrder) {
-         List<Catalog> catalogList;
-         if("price".equalsIgnoreCase(sortBy)) {
-             catalogList = catalogDb.findAll(Sort.by(Sort.Direction.fromString(sortOrder), "price"));
-         } else if("name".equalsIgnoreCase(sortBy)) {
-             catalogList = catalogDb.findAll(Sort.by(Sort.Direction.fromString(sortOrder), "productName"));
-         } else {
-             catalogList = catalogDb.findAll();
-         }
-         return catalogList;
-    }
-
     public List<Catalog> getSellerSortedCatalogList(UUID sellerId, String sortBy, String sortOrder) {
         List<Catalog> catalogList;
         if("price".equalsIgnoreCase(sortBy)) {
@@ -123,7 +111,7 @@ public class CatalogRestService {
             } else {
                 catalogList = catalogDb.findBySellerOrderByPriceDesc(sellerId);
             }
-        } else if("name".equalsIgnoreCase(sortBy)) {
+        } else if("productName".equalsIgnoreCase(sortBy)) {
             if("asc".equalsIgnoreCase(sortOrder)) {
                 catalogList = catalogDb.findBySellerOrderByProductName(sellerId);
             } else {
