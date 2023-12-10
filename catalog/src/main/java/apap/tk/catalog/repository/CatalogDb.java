@@ -10,7 +10,7 @@ import java.util.List;
  
 @Repository
 public interface CatalogDb extends JpaRepository<Catalog, UUID>{
-     List<Catalog> findBySellerOrderByProductName(UUID seller);
+    List<Catalog> findBySellerOrderByProductName(UUID seller);
     List<Catalog> findAllByOrderByProductName();
     List<Catalog> findByProductNameContainingIgnoreCaseOrderByProductName(String productName);
     List<Catalog> findBySellerAndProductNameContainingIgnoreCaseOrderByProductName(UUID seller, String productName);

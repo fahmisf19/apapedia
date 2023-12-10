@@ -12,7 +12,6 @@ import apap.tk.catalog.model.Catalog;
 public interface CatalogMapper {
     Catalog updateCatalogRequestDTOToCatalog(UpdateCatalogDTO updateCatalogDTO);
 
-    Catalog createCatalogRequestDTOToCatalog(CreateCatalogRequestDTO createCatalogRequestDTO);
-
-    // Hapus method @AfterMapping karena penggunaan @Mapping(target = "image", ignore = true) sudah mencakupnya
+    @Mapping(target = "image", ignore = true)
+    Catalog createCatalogRequestDTOToCatalog(CreateCatalogRequestDTO createCatalogRequestDTO);   
 }
