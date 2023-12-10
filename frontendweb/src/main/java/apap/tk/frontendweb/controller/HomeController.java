@@ -9,8 +9,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import java.util.Map;
+=======
 import java.util.List;
+>>>>>>> 8e6ffbc5ea64de524207d46666efe294ead056b4
 import java.util.UUID;
+>>>>>>> 62692d7487122d1afddb2a42acc4852b1e312052
 
 @Controller
 public class HomeController {
