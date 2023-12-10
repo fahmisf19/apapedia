@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import apap.tk.order.model.Cart;
 import apap.tk.order.model.CartItem;
 import apap.tk.order.repository.CartDb;
 import apap.tk.order.repository.CartItemDb;

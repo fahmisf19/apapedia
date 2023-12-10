@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-// import apap.tk.order.dto.CartItemMapper;
 import apap.tk.order.dto.request.CreateCartItemRequestDTO;
 import apap.tk.order.dto.request.UpdateCartItemRequestDTO;
 import apap.tk.order.model.CartItem;
@@ -27,9 +26,6 @@ import apap.tk.order.restservice.CartItemRestService;
 @RestController
 @RequestMapping("/api")
 public class CartItemRestController {
-    // @Autowired
-    // private CartItemMapper cartItemMapper;
-
     @Autowired
     private CartItemRestService cartItemRestService;
 
