@@ -2,6 +2,7 @@ package apap.tk.frontendweb.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,12 @@ public class CatalogController {
 
         @PostMapping("/add")
         public String addCatalog(@RequestParam("image") String imageBase64, CatalogDTO catalogDTO, RedirectAttributes redirectAttributes) {
+            UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
             try {
                 // Decode base64 string to byte array
                 byte[] imageByteArray = Base64.getDecoder().decode(imageBase64);
+
+                catalogDTO.setSeller(sellerId);
 
                 // Create a CatalogDTO instance and set the image byte array
                 catalogDTO.setImage(imageByteArray);
