@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xlmns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://thymeleaf.org"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Form Add User</title>
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="card m-4 p-4">
+        <div class="card-body">
+          <div class="justify-content-center">
+            <h2>Form Add User</h2>
+            <br />
+            <form th:action="@{/user/add}" th:object="${userDTO}" method="POST">
+              Username: <br />
+              <input type="text" class="form-control" th:field="*{username}" />
+              <br />
+              Nama: <br />
+              <input type="text" class="form-control" th:field="*{name}" />
+              <br />
+              <br />
+              <select th:field="*{role}" name="role" class="form-control">
+                <option selected value="">--Pilih Role--</option>
+                <option
+                  th:each="role : ${listRole}"
+                  th:value="${role}"
+                  th:text="${role}"
+                ></option>
+              </select>
+              <br />
+
+              <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
