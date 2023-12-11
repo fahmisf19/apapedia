@@ -8,9 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 public class HomeController {
@@ -20,7 +18,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
-//        sellerId = null;
+        sellerId = null;
 
         if (sellerId != null) {
             var quantityPerDay = homeService.getChartSales(sellerId);
@@ -28,9 +26,15 @@ public class HomeController {
             model.addAttribute("quantityPerDay", quantityPerDay);
 
             List<CatalogDTO> catalogList = homeService.getCatalogBySellerId(sellerId);
+            var imageBase64 = homeService.getImage(catalogList);
+
+            model.addAttribute("imageBase64", imageBase64);
             model.addAttribute("catalogList", catalogList);
         } else {
             List<CatalogDTO> catalogList = homeService.getAllCatalog();
+
+            var imageBase64 = homeService.getImage(catalogList);
+            model.addAttribute("imageBase64", imageBase64);
             model.addAttribute("catalogList", catalogList);
         }
         return "home/home";
@@ -47,12 +51,16 @@ public class HomeController {
             model.addAttribute("quantityPerDay", quantityPerDay);
 
             List<CatalogDTO> catalogList = homeService.searchCatalogSeller(sellerId, name);
+            var imageBase64 = homeService.getImage(catalogList);
+
+            model.addAttribute("imageBase64", imageBase64);
             model.addAttribute("catalogList", catalogList);
         } else {
             List<CatalogDTO> catalogList = homeService.searchCatalog(name);
+            var imageBase64 = homeService.getImage(catalogList);
+            model.addAttribute("imageBase64", imageBase64);
             model.addAttribute("catalogList", catalogList);
         }
-
 
         return "home/home";
     }
@@ -70,6 +78,9 @@ public class HomeController {
             model.addAttribute("quantityPerDay", quantityPerDay);
 
             List<CatalogDTO> catalogList = homeService.searchCatalogPriceSeller(sellerId, lowerLimitPrice, higherLimitPrice);
+            var imageBase64 = homeService.getImage(catalogList);
+
+            model.addAttribute("imageBase64", imageBase64);
             model.addAttribute("catalogList", catalogList);
         } else {
             List<CatalogDTO> catalogList = homeService.searchCatalogPrice(lowerLimitPrice, higherLimitPrice);
@@ -92,9 +103,15 @@ public class HomeController {
             model.addAttribute("quantityPerDay", quantityPerDay);
 
             List<CatalogDTO> catalogList = homeService.getSortedCatalogListSeller(sellerId, sortBy, sortOrder);
+            var imageBase64 = homeService.getImage(catalogList);
+
+            model.addAttribute("imageBase64", imageBase64);
             model.addAttribute("catalogList", catalogList);
         } else {
             List<CatalogDTO> catalogList = homeService.getSortedCatalogList(sortBy, sortOrder);
+            var imageBase64 = homeService.getImage(catalogList);
+
+            model.addAttribute("imageBase64", imageBase64);
             model.addAttribute("catalogList", catalogList);
         }
         return "home/home";

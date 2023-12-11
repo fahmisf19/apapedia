@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import apap.tk.frontendweb.dto.response.catalog.CatalogDTO;
 import apap.tk.frontendweb.dto.response.catalog.CategoryDTO;
@@ -43,22 +44,30 @@ public class CatalogController {
         return "catalog/createCatalog";
     }
 
-    @PostMapping("/add")
-    public String addCatalog(@RequestParam("image") String imageBase64, CatalogDTO catalogDTO) {
-        try {
-            // Decode base64 string to byte array
-            byte[] imageByteArray = Base64.getDecoder().decode(imageBase64);
+        @PostMapping("/add")
+        public String addCatalog(@RequestParam("image") String imageBase64, CatalogDTO catalogDTO, RedirectAttributes redirectAttributes) {
+            try {
+                // Decode base64 string to byte array
+                byte[] imageByteArray = Base64.getDecoder().decode(imageBase64);
 
-            // Create a CatalogDTO instance and set the image byte array
-            catalogDTO.setImage(imageByteArray);
-            System.out.println("bytenya:"+imageByteArray);
-            // Call the service to add the catalog
-            catalogService.addCatalog(catalogDTO);
+                // Create a CatalogDTO instance and set the image byte array
+                catalogDTO.setImage(imageByteArray);
 
-            return "redirect:/";
-        } catch (Exception e) {
-            e.printStackTrace(); // Handle the exception
-            return "error-page"; // Redirect to an error page or appropriate handling
+                // Call the service to add the catalog
+                catalogService.addCatalog(catalogDTO);
+
+                // Tambahkan pesan sukses yang akan ditampilkan di halaman home
+                redirectAttributes.addFlashAttribute("successMessage", "Catalog added successfully.");
+
+                return "redirect:/";
+            } catch (Exception e) {
+                e.printStackTrace(); // Handle the exception
+
+                // Tambahkan pesan error yang akan ditampilkan di halaman error jika diperlukan
+                redirectAttributes.addFlashAttribute("errorMessage", "Error occurred while adding catalog.");
+
+                return "redirect:/error-page"; // Redirect to an error page or appropriate handling
+            }
         }
-    }
+
 }

@@ -38,7 +38,7 @@ public class OrderRestController {
             orderDTO.setUpdateAt(new Date());
             orderDTO.setStatus(0);
             orderDTO.setTotalPrice(orderRestService.calculateTotalPrice(orderDTO.getListOrderItem()));
-            Order order = orderMapper.createOrderRequestDTOToOrder(orderDTO);
+            var order = orderMapper.createOrderRequestDTOToOrder(orderDTO);
             orderRestService.createRestOrder(order);
 
             for (OrderItem orderItem : order.getListOrderItem()) {
@@ -88,10 +88,9 @@ public class OrderRestController {
         }
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "order/quantity-per-day/{sellerId}",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = {RequestMethod.GET}
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Map<Integer, Long>> getQuantityPerDayForCurrentMonth(@PathVariable UUID sellerId) {
         Map<Integer, Long> quantityPerDay = orderRestService.getQuantityPerDayForCurrentMonth(sellerId);
