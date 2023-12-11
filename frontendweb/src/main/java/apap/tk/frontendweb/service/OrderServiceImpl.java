@@ -32,10 +32,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<ReadOrderResponseDTO> getListOrder(UUID sellerId) throws IOException, InterruptedException {
         return webClientOrder.get()
-        .uri(uriBuilder -> uriBuilder.path("order/getBySellerId").queryParam("sellerId", sellerId).build())
-        .retrieve()
-        .bodyToFlux(ReadOrderResponseDTO.class)
-        .collectList()
-        .block();
+                .uri(uriBuilder -> uriBuilder.path("order/getBySellerId").queryParam("sellerId", sellerId).build())
+                .retrieve()
+                .bodyToFlux(ReadOrderResponseDTO.class)
+                .collectList()
+                .block();
     }
+
+    @Override
+    public void updateOrderStatus(UUID orderId, Integer newStatus) throws IOException, InterruptedException {
+        webClientOrder.put()
+                .uri(uriBuilder -> uriBuilder.path("order/{orderId}/update")
+                        .queryParam("newStatus", newStatus)
+                        .build(orderId))  // Menggunakan build(orderId) untuk mengisi nilai orderId ke dalam URI
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
 }
+
