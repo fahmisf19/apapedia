@@ -25,9 +25,13 @@ public class HomeController {
             try {
                 var quantityPerDay = homeService.getChartSales(sellerId);
                 List<CatalogDTO> catalogList = homeService.getCatalogBySellerId(sellerId);
+                var imageBase64 = homeService.getImage(catalogList);
+
+                model.addAttribute("imageBase64", imageBase64);
                 model.addAttribute("sellerId", sellerId);
                 model.addAttribute("quantityPerDay", quantityPerDay);
                 model.addAttribute("catalogList", catalogList);
+
             } catch (Exception e) {
                 // Handle any exceptions that may occur when retrieving data
                 e.printStackTrace(); // Log the exception or handle it as needed
@@ -36,6 +40,9 @@ public class HomeController {
         } else {
             try {
                 List<CatalogDTO> catalogList = homeService.getAllCatalog();
+                var imageBase64 = homeService.getImage(catalogList);
+
+                model.addAttribute("imageBase64", imageBase64);
                 model.addAttribute("catalogList", catalogList);
             } catch (Exception e) {
                 // Handle any exceptions that may occur when retrieving data
