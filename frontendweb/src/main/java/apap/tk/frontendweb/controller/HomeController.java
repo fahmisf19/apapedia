@@ -37,8 +37,10 @@ public class HomeController {
             model.addAttribute("imageBase64", imageBase64);
             model.addAttribute("catalogList", catalogList);
         }
+    
         return "home/home";
     }
+    
 
     @GetMapping("/search-catalog-name")
     public String filterCatalogName(@RequestParam("catalog") String name, Model model) {
