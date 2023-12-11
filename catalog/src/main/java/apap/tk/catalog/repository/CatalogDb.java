@@ -10,7 +10,13 @@ import java.util.List;
  
 @Repository
 public interface CatalogDb extends JpaRepository<Catalog, UUID>{
-    // List<Catalog> findBySellerId(UUID seller);
+    List<Catalog> findBySellerOrderByProductName(UUID seller);
+    List<Catalog> findAllByOrderByProductName();
     List<Catalog> findByProductNameContainingIgnoreCaseOrderByProductName(String productName);
+    List<Catalog> findBySellerAndProductNameContainingIgnoreCaseOrderByProductName(UUID seller, String productName);
     List<Catalog> findByPriceBetween(Integer lowerLimitPrice, Integer higherLimitPrice);
+    List<Catalog> findBySellerAndPriceBetween(UUID sellerId, Integer lowerLimitPrice, Integer higherLimitPrice);
+    List<Catalog> findBySellerOrderByProductNameDesc(UUID sellerId);
+    List<Catalog> findBySellerOrderByPrice(UUID sellerId);
+    List<Catalog> findBySellerOrderByPriceDesc(UUID sellerId);
 }

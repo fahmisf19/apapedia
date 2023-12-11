@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,8 +24,10 @@ import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
 import apap.tk.catalog.dto.request.UpdateCatalogDTO;
 import apap.tk.catalog.model.Catalog;
 import apap.tk.catalog.restservice.CatalogRestService;
+import ch.qos.logback.core.model.Model;
 import jakarta.validation.Valid;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -74,34 +77,37 @@ public class CatalogRestController {
     }
     
     // POST catalog
-    @PostMapping(value = "/catalog/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Catalog restAddCatalog(@Valid @RequestBody CreateCatalogRequestDTO catalogDTO, BindingResult bindingResult) {
+    @PostMapping(value = "/catalog/create")
+    public ResponseEntity<Catalog> addCatalog(@RequestBody CreateCatalogRequestDTO createCatalogRequestDTO, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             throw new ResponseStatusException(
-              HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"  
-            );
+                HttpStatus.BAD_REQUEST, "Request body has an invalid type or missing field");
         } else {
-            // if (image != null) {
-            //     catalogDTO.setImage(image);
-            // }
-
-            var catalog = catalogMapper.CreateCatalogRequestDTOToCatalog(catalogDTO);
+            var catalog = catalogMapper.createCatalogRequestDTOToCatalog(createCatalogRequestDTO); // Implement the mapping method.
+            catalog.setSeller(createCatalogRequestDTO.getSeller());
+            catalog.setPrice(createCatalogRequestDTO.getPrice());
+            catalog.setProductName(createCatalogRequestDTO.getProductName());
+            catalog.setProductDescription(createCatalogRequestDTO.getProductDescription());
+            catalog.setStock(createCatalogRequestDTO.getStock());
+            catalog.setCategory(createCatalogRequestDTO.getCategory());
+            catalog.setImage(createCatalogRequestDTO.getImage());
             catalogRestService.createRestCatalog(catalog);
-            return catalog;
+            return new ResponseEntity<>(catalog, HttpStatus.CREATED);
         }
     }
 
     // GET Catalog by seller id
-    // @GetMapping(value = "/catalog/{sellerId}")
-    // private List<Catalog> retrieveListCatalog(@PathVariable("sellerId") String sellerId) {
-    //     try {
-    //         return catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
-    //     } catch (NoSuchElementException e) {
-    //         throw new ResponseStatusException(
-    //           HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"  
-    //         );
-    //     }
-    // }
+    @GetMapping(value = "/catalog/sellerId/{sellerId}")
+    private ResponseEntity<List<Catalog>> getCatalogsBySellerId(@PathVariable("sellerId") String sellerId) {
+        try {
+            List<Catalog> listCatalog = catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
+            return new ResponseEntity<>(listCatalog, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+              HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"  
+            );
+        }
+    }
 
     @GetMapping(value = "/catalog/search-catalog-name")
     public List<Catalog> filterCatalogName(@RequestParam("catalog") String catalog) {
@@ -111,6 +117,17 @@ public class CatalogRestController {
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "catalog's name not found");
+        }
+    }
+
+    @GetMapping(value = "/catalog/search-catalog-name/{sellerId}")
+    public List<Catalog> filterCatalogSellerAndName(@PathVariable("sellerId") UUID sellerId, @RequestParam("catalog") String catalog) {
+        try{
+            List<Catalog> catalogs = catalogRestService.findCatalogBySellerAndName(sellerId, catalog);
+            return catalogs;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "catalog's name not found");
         }
     }
 
@@ -125,4 +142,77 @@ public class CatalogRestController {
         }
     }
 
+    @GetMapping(value = "/catalog/search-catalog-price/{sellerId}")
+    public List<Catalog> filterCatalogSellerPrice(@PathVariable("sellerId") UUID sellerId, @RequestParam("lowerLimitPrice") Integer lowerLimitPrice, @RequestParam("higherLimitPrice") Integer higherLimitPrice) {
+        try{
+            List<Catalog> catalogs = catalogRestService.findCatalogBySellerAndPrice(sellerId, lowerLimitPrice, higherLimitPrice);
+            return catalogs;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "catalog that's in range price between " + lowerLimitPrice + " - " + higherLimitPrice + " not found");
+        }
+    }
+
+
+    // GET All Catalog (default by name ASC) 
+    @GetMapping("/catalog/getAll")
+    public ResponseEntity<List<Catalog>> getListCatalog() {
+        try {
+            // Mendapatkan daftar katalog dari CatalogDb, diurutkan berdasarkan nama secara default
+            List<Catalog> catalogList = catalogRestService.getAllCatalog();
+            return new ResponseEntity<>(catalogList, HttpStatus.OK);
+        } catch (Exception e) {
+            // Tangani pengecualian jika terjadi kesalahan
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // GET Catalog by Catalog ID
+    @GetMapping("/catalog/getByCatalogId")
+    public ResponseEntity<Catalog> getCatalogByCatalogId(@RequestParam UUID catalogId) {
+        Catalog catalog = catalogRestService.getRestCatalogById(catalogId);
+    
+        if (catalog == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(catalog, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping(value = "/catalog/{id}")
+    public ResponseEntity<Catalog> findCatalogById(@PathVariable("id") UUID id) {
+        try {
+            Catalog catalog = catalogRestService.getRestCatalogById(id);
+            if (catalog != null) {
+                return ResponseEntity.ok().body(catalog);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Catalog with ID " + id + " not found");
+        }
+    }
+
+    // GET Catalog List Sort by Price or Name and Ascending or Descending Order
+    @GetMapping("/catalog/sort-by")
+    public ResponseEntity<List<Catalog>> getAllCatalogSorted(
+            @RequestParam(defaultValue = "productName") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
+        try {
+            // Mendapatkan daftar katalog yang diurutkan
+            List<Catalog> catalogList = catalogRestService.getAllCatalogSorted(sortBy, sortOrder);
+
+            // Mengembalikan daftar katalog dalam ResponseEntity
+            return new ResponseEntity<>(catalogList, HttpStatus.OK);
+        } catch (Exception e) {
+            // Tangani pengecualian jika terjadi kesalahan
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/catalog/sort-by/{sellerId}")
+    public List<Catalog> getSellerSortedCatalogList(@PathVariable UUID sellerId, @RequestParam String sortBy, @RequestParam String sortOrder) {
+        return catalogRestService.getSellerSortedCatalogList(sellerId, sortBy, sortOrder);
+    }
 }

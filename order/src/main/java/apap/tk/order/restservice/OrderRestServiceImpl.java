@@ -5,9 +5,7 @@ import apap.tk.order.model.OrderItem;
 import apap.tk.order.repository.OrderDb;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,7 +22,7 @@ public class OrderRestServiceImpl implements OrderRestService{
 
     @Override
     public Order updateRestOrder(Order orderDTO) {
-        Order order = getOrderRestById(orderDTO.getId());
+        var order = getOrderRestById(orderDTO.getId());
         order.setCustomerId(orderDTO.getCustomerId());
         order.setSellerId(orderDTO.getSellerId());
         order.setTotalPrice(orderDTO.getTotalPrice());
@@ -32,6 +30,13 @@ public class OrderRestServiceImpl implements OrderRestService{
         order.setUpdateAt(orderDTO.getUpdateAt());
         order.setStatus(orderDTO.getStatus());
         order.setListOrderItem(orderDTO.getListOrderItem());
+        if (orderDTO.getStatus() > 5) {
+            // Jika status adalah 5, atur kembali ke 0
+            order.setStatus(0);
+        } else {
+            // Jika status adalah 0 hingga 4, atur status seperti biasa
+            order.setStatus(orderDTO.getStatus());
+        }
         orderDb.save(order);
         return order;
     }
@@ -56,14 +61,14 @@ public class OrderRestServiceImpl implements OrderRestService{
     @Override
     public Map<Integer, Long> getQuantityPerDayForCurrentMonth(UUID sellerId) {
         // Get the first day of the current month
-        Calendar calendar = Calendar.getInstance();
+        var calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date startDate = calendar.getTime();
+        var startDate = calendar.getTime();
 
         // Get the last day of the current month
         calendar.add(Calendar.MONTH, 1);
         calendar.add(Calendar.DAY_OF_MONTH, -1);
-        Date endDate = calendar.getTime();
+        var endDate = calendar.getTime();
 
         // Fetch orders within the date range and for the specified sellerId
         List<Order> orders = orderDb.findByCreatedAtBetweenAndSellerId(startDate, endDate, sellerId);
@@ -84,4 +89,5 @@ public class OrderRestServiceImpl implements OrderRestService{
 
         return quantityPerDay;
     }
+    
 }

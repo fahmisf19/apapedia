@@ -6,63 +6,57 @@
 </head>
 
 <body>
-
-    <footer th:fragment="footer">
-        <div class="DesktopFooter5" style="width: 100%; height: 414px; background: #4154F1; flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-            <div class="Div" style="align-self: stretch; height: 338px; padding-left: 195px; padding-right: 195px; justify-content: center; align-items: center; display: inline-flex">
-              <div class="Container" style="flex: 1 1 0; align-self: stretch; padding-top: 80px; padding-bottom: 80px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: inline-flex">
-                <div class="Row" style="width: 1046px; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                  <div class="ColMd3" style="width: 295px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 25px; display: inline-flex">
-                    <div class="H3" style="color: white; font-size: 24px; font-family: Oswald; font-weight: 700; line-height: 32px; letter-spacing: 0.10px; word-wrap: break-word">Get In Touch</div>
-                    <div class="Paragraph" style="color: #8EC2F2; font-size: 14px; font-family: Oswald; font-weight: 400; line-height: 20px; letter-spacing: 0.20px; word-wrap: break-word">Get to know more about <br/>APAPEDIA</div>
-                    <!-- <div class="SocialMedia" style="justify-content: center; align-items: center; gap: 20px; display: inline-flex">
-                      <div class="Facebook" style="width: 24px; height: 24px; justify-content: center; align-items: center; display: flex">
-                        <div class="AntDesignFacebookFilled" style="width: 24px; height: 24px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                          <div class="Vector" style="width: 23px; height: 23px; background: white"></div>
-                        </div>
-                      </div>
-                      <div class="Instagram" style="width: 24px; height: 24px; justify-content: center; align-items: center; display: flex">
-                        <div class="AntDesignInstagramOutlined" style="width: 24px; height: 24px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                          <div class="Vector" style="width: 22px; height: 22px; background: white"></div>
-                        </div>
-                      </div>
-                      <div class="Twitter" style="width: 24px; height: 19.76px; justify-content: center; align-items: center; display: flex">
-                        <div class="AntDesignTwitterOutlined" style="width: 24px; height: 19.76px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                          <div class="Vector" style="width: 22px; height: 18px; background: white"></div>
-                        </div>
-                      </div>
-                    </div> -->
-                  </div>
-                  <div class="ColMd3" style="width: 241px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
-                    <div class="H3" style="color: white; font-size: 24px; font-family: Oswald; font-weight: 700; line-height: 32px; letter-spacing: 0.10px; word-wrap: break-word">Company info</div>
-                    <div class="Div" style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: flex">
-                      <div class="Link" style="color: #8EC2F2; font-size: 14px; font-family: Montserrat; font-weight: 700; line-height: 24px; letter-spacing: 0.20px; word-wrap: break-word">APAPEDIA</div>
-                    </div>
-                    <div class="Paragraph" style="color: #8EC2F2; font-size: 14px; font-family: Oswald; font-weight: 400; line-height: 20px; letter-spacing: 0.20px; word-wrap: break-word">We are here to help you sell your product and<br/>manage it. </div>
-                  </div>
-                  <div class="ColMd3" style="width: 240px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
-                    <div class="H3" style="color: white; font-size: 24px; font-family: Oswald; font-weight: 700; line-height: 32px; letter-spacing: 0.10px; word-wrap: break-word">Features</div>
-                    <div class="Div" style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: flex">
-                        <a class="a" th:href="@{/}" style="color: #8EC2F2; font-size: 14px; font-family: Oswald; font-weight: 400; line-height: 24px; letter-spacing: 0.20px; word-wrap: break-word; text-decoration: none;">Catalog</a>
-                        <a class="a" th:href="@{/}" style="color: #8EC2F2; font-size: 14px; font-family: Oswald; font-weight: 400; line-height: 24px; letter-spacing: 0.20px; word-wrap: break-word; text-decoration: none;">Order History</a>
-                        <a class="a" th:href="@{/}" style="color: #8EC2F2; font-size: 14px; font-family: Oswald; font-weight: 400; line-height: 24px; letter-spacing: 0.20px; word-wrap: break-word; text-decoration: none;">Login</a>
-                        <a class="a" th:href="@{/}" style="color: #8EC2F2; font-size: 14px; font-family: Oswald; font-weight: 400; line-height: 24px; letter-spacing: 0.20px; word-wrap: break-word; text-decoration: none;">Register</a>
-                    </div>
-                    
-                  </div>
-                </div>
+    <footer>
+        <footer style="background-color: #4154F1; font-family: 'Oswald', sans-serif;">
+          <div class="container p-4">
+            <div class="row">
+              <div class="col-lg-6 col-md-12 mb-4">
+                <h5 class="mb-3 text-light" style="font-family: 'Oswald', sans-serif;">Company Info</h5>
+                <h5 style="color: #8EC2F2; font-family: 'Oswald', sans-serif;">APAPEDIA</h5>
+                <p style="color: #8EC2F2; font-family: 'Oswald', sans-serif;">
+                  We are here to help you sell your product and manage it. 
+                </p>
               </div>
-            </div>
-            <div class="Div" style="align-self: stretch; height: 76px; padding-bottom: 2px; padding-left: 195px; padding-right: 195px; justify-content: center; align-items: center; display: inline-flex">
-              <div class="Container" style="flex: 1 1 0; padding-top: 25px; padding-bottom: 25px; flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div class="Row" style="justify-content: flex-start; align-items: center; gap: 213px; display: inline-flex">
-                  <div class="ColMd6" style="width: 513px; flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-                    <div class="MadeWithLoveByApapedia" style="color: white; font-size: 14px; font-family: Oswald; font-weight: 700; line-height: 24px; letter-spacing: 2px; word-wrap: break-word">Made With Love By APAPEDIA</div>
-                  </div>
-                </div>
+              <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="mb-3 text-light" style="font-family: 'Oswald', sans-serif;">Features</h5>
+                <ul class="list-unstyled mb-0">
+                  <li class="mb-1">
+                    <a th:href="@{/}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Catalog</a>
+                  </li>
+                  <li class="mb-1">
+                    <a th:if="${sellerId != null}" th:href="@{/order-history/{sellerId}(sellerId=${sellerId})}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Order History</a>
+                  </li>
+                  <li class="mb-1">
+                    <a th:href="@{/}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Login</a>
+                  </li>
+                  <li>
+                    <a th:href="@{/}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Register</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="mb-1 text-light" style="font-family: 'Oswald', sans-serif;">Opening Hours</h5>
+                <table class="table" style="border-color: #8EC2F2;">
+                  <tbody style="color: #8EC2F2;">
+                    <tr>
+                      <td>Mon - Fri:</td>
+                      <td>8am - 9pm</td>
+                    </tr>
+                    <tr>
+                      <td>Sat - Sun:</td>
+                      <td>8am - 1am</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
+          <div class="text-center p-3" style="background-color: white; color: #4154F1; font-family: 'Oswald', sans-serif;">
+            © 2023 Copyright:
+            <a th:href="@{/}" style="text-decoration: none; font-family: 'Oswald', sans-serif;">APAPEDIA</a>
+          </div>
+          <!-- Copyright -->
+        </footer>
     </footer>
 </body>
 
