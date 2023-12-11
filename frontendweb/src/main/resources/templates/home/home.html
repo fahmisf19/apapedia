@@ -18,7 +18,14 @@
 
 <body class="bg-light">
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div th:if="${successMessage}" class="alert alert-success">
+  <p th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}" class="alert alert-danger">
+  <p th:text="${errorMessage}"></p>
+</div>
 <div class="container-fluid" style="max-width:1500px">
+
   <!-- Sales Graph -->
   <div th:if="${sellerId} != null" class="container m-5">
     <div class="row rounded bg-white" style="-webkit-box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1); -moz-box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1); box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);">

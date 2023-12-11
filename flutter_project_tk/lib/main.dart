@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
 
       routes: {
-        '/catalog/productDetail': (context) => ProductDetailPage(productId: "07ed63cb-f32a-4d97-a97b-60d2a827ebdf",),
+        '/catalog/productDetail': (context) => ProductDetailPage(productId: "5f79fc3f-0ab7-4085-aefb-3c0cf2f83157",),
         // ... routes lainnya
       },
       
