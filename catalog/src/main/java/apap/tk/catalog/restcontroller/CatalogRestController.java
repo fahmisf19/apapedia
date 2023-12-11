@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -77,12 +78,11 @@ public class CatalogRestController {
     
     // POST catalog
     @PostMapping(value = "/catalog/create")
-    public Catalog addCatalog(@RequestBody CreateCatalogRequestDTO createCatalogRequestDTO, BindingResult bindingResult) {
+    public ResponseEntity<Catalog> addCatalog(@RequestBody CreateCatalogRequestDTO createCatalogRequestDTO, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST, "Request body has an invalid type or missing field");
         } else {
-            
             var catalog = catalogMapper.createCatalogRequestDTOToCatalog(createCatalogRequestDTO); // Implement the mapping method.
             catalog.setSeller(createCatalogRequestDTO.getSeller());
             catalog.setPrice(createCatalogRequestDTO.getPrice());
@@ -92,25 +92,22 @@ public class CatalogRestController {
             catalog.setCategory(createCatalogRequestDTO.getCategory());
             catalog.setImage(createCatalogRequestDTO.getImage());
             catalogRestService.createRestCatalog(catalog);
-            return catalog;
+            return new ResponseEntity<>(catalog, HttpStatus.CREATED);
         }
     }
 
-    @GetMapping(value = "/catalog/get-all")
-    public List<Catalog> getAllCatalogs() {
-        return catalogRestService.getAllCatalog();
+    // GET Catalog by seller id
+    @GetMapping(value = "/catalog/sellerId/{sellerId}")
+    private ResponseEntity<List<Catalog>> getCatalogsBySellerId(@PathVariable("sellerId") String sellerId) {
+        try {
+            List<Catalog> listCatalog = catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
+            return new ResponseEntity<>(listCatalog, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+              HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"  
+            );
+        }
     }
-
-     @GetMapping(value = "/catalog/sellerId/{sellerId}")
-     private List<Catalog> retrieveListCatalog(@PathVariable("sellerId") String sellerId) {
-         try {
-             return catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
-         } catch (NoSuchElementException e) {
-             throw new ResponseStatusException(
-               HttpStatus.NOT_FOUND, "Id Seller " + sellerId + " tidak terdaftar"
-             );
-         }
-     }
 
     @GetMapping(value = "/catalog/search-catalog-name")
     public List<Catalog> filterCatalogName(@RequestParam("catalog") String catalog) {
@@ -156,6 +153,32 @@ public class CatalogRestController {
         }
     }
 
+
+    // GET All Catalog (default by name ASC) 
+    @GetMapping("/catalog/getAll")
+    public ResponseEntity<List<Catalog>> getListCatalog() {
+        try {
+            // Mendapatkan daftar katalog dari CatalogDb, diurutkan berdasarkan nama secara default
+            List<Catalog> catalogList = catalogRestService.getAllCatalog();
+            return new ResponseEntity<>(catalogList, HttpStatus.OK);
+        } catch (Exception e) {
+            // Tangani pengecualian jika terjadi kesalahan
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // GET Catalog by Catalog ID
+    @GetMapping("/catalog/getByCatalogId")
+    public ResponseEntity<Catalog> getCatalogByCatalogId(@RequestParam UUID catalogId) {
+        Catalog catalog = catalogRestService.getRestCatalogById(catalogId);
+    
+        if (catalog == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(catalog, HttpStatus.OK);
+        }
+    }
+
     @GetMapping(value = "/catalog/{id}")
     public ResponseEntity<Catalog> findCatalogById(@PathVariable("id") UUID id) {
         try {
@@ -171,9 +194,21 @@ public class CatalogRestController {
         }
     }
 
-    @GetMapping(value = "/catalog/sort-by")
-    public List<Catalog> getSortedCatalogList(@RequestParam String sortBy, @RequestParam String sortOrder) {
-        return catalogRestService.getSortedCatalogList(sortBy, sortOrder);
+    // GET Catalog List Sort by Price or Name and Ascending or Descending Order
+    @GetMapping("/catalog/sort-by")
+    public ResponseEntity<List<Catalog>> getAllCatalogSorted(
+            @RequestParam(defaultValue = "productName") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
+        try {
+            // Mendapatkan daftar katalog yang diurutkan
+            List<Catalog> catalogList = catalogRestService.getAllCatalogSorted(sortBy, sortOrder);
+
+            // Mengembalikan daftar katalog dalam ResponseEntity
+            return new ResponseEntity<>(catalogList, HttpStatus.OK);
+        } catch (Exception e) {
+            // Tangani pengecualian jika terjadi kesalahan
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = "/catalog/sort-by/{sellerId}")

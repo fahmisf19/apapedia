@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
+import org.springframework.data.domain.Sort;
+
 
 @Service
 @Transactional
@@ -41,7 +43,6 @@ public class CatalogRestService {
                 return catalog;
             }
         }
-
         return null;
     }
 
@@ -90,20 +91,16 @@ public class CatalogRestService {
         return catalogDb.findByPriceBetween(lowerLimitPrice, higherLimitPrice);
     }
 
+    public List<Catalog> getAllCatalogSorted(String sortBy, String sortOrder) {
+        // Menentukan metode sort berdasarkan harga atau nama
+        Sort sort = Sort.by(sortOrder.equals("asc") ? Sort.Order.asc(sortBy) : Sort.Order.desc(sortBy));
+
+        // Mengambil semua katalog dari database dengan urutan yang ditentukan
+        return catalogDb.findAll(sort);
+    }
+    
     public List<Catalog> findCatalogBySellerAndPrice(UUID sellerId, Integer lowerLimitPrice, Integer higherLimitPrice){
         return catalogDb.findBySellerAndPriceBetween(sellerId, lowerLimitPrice, higherLimitPrice);
-    }
-
-    public List<Catalog> getSortedCatalogList(String sortBy, String sortOrder) {
-         List<Catalog> catalogList;
-         if("price".equalsIgnoreCase(sortBy)) {
-             catalogList = catalogDb.findAll(Sort.by(Sort.Direction.fromString(sortOrder), "price"));
-         } else if("name".equalsIgnoreCase(sortBy)) {
-             catalogList = catalogDb.findAll(Sort.by(Sort.Direction.fromString(sortOrder), "productName"));
-         } else {
-             catalogList = catalogDb.findAll();
-         }
-         return catalogList;
     }
 
     public List<Catalog> getSellerSortedCatalogList(UUID sellerId, String sortBy, String sortOrder) {
@@ -114,7 +111,7 @@ public class CatalogRestService {
             } else {
                 catalogList = catalogDb.findBySellerOrderByPriceDesc(sellerId);
             }
-        } else if("name".equalsIgnoreCase(sortBy)) {
+        } else if("productName".equalsIgnoreCase(sortBy)) {
             if("asc".equalsIgnoreCase(sortOrder)) {
                 catalogList = catalogDb.findBySellerOrderByProductName(sellerId);
             } else {
@@ -125,5 +122,4 @@ public class CatalogRestService {
         }
         return catalogList;
     }
-
 }

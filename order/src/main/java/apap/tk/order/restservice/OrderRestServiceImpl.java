@@ -5,9 +5,7 @@ import apap.tk.order.model.OrderItem;
 import apap.tk.order.repository.OrderDb;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,6 +30,13 @@ public class OrderRestServiceImpl implements OrderRestService{
         order.setUpdateAt(orderDTO.getUpdateAt());
         order.setStatus(orderDTO.getStatus());
         order.setListOrderItem(orderDTO.getListOrderItem());
+        if (orderDTO.getStatus() > 5) {
+            // Jika status adalah 5, atur kembali ke 0
+            order.setStatus(0);
+        } else {
+            // Jika status adalah 0 hingga 4, atur status seperti biasa
+            order.setStatus(orderDTO.getStatus());
+        }
         orderDb.save(order);
         return order;
     }
@@ -83,39 +88,6 @@ public class OrderRestServiceImpl implements OrderRestService{
         }
 
         return quantityPerDay;
-    }
-
-    // @Override
-    // public void updateOrderStatus(UUID orderId, Integer newStatus) {
-    //     Order order = getOrderRestById(orderId);
-    //     if (order == null) {
-    //         throw new ResponseStatusException(
-    //                 HttpStatus.NOT_FOUND, "Order not found with id: " + orderId
-    //         );
-    //     }
-    
-    //     order.setStatus(newStatus);
-    //     orderDb.save(order);
-    // }
-        
-    @Override
-    public void updateOrderStatus(UUID orderId, Integer newStatus) {
-        Order order = getOrderRestById(orderId);
-        if (order == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Order not found with id: " + orderId
-            );
-        }
-    
-        if (newStatus > 4) {
-            // Jika status adalah 5, atur kembali ke 0
-            order.setStatus(0);
-        } else {
-            // Jika status adalah 0 hingga 4, atur status seperti biasa
-            order.setStatus(newStatus);
-        }
-    
-        orderDb.save(order);
     }
     
 }

@@ -41,11 +41,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateOrderStatus(UUID orderId, Integer newStatus) throws IOException, InterruptedException {
-        webClientOrder.patch()
-                .uri(uriBuilder -> uriBuilder.path("order/" + orderId + "/updateStatus").queryParam("newStatus", newStatus).build())
+        webClientOrder.put()
+                .uri(uriBuilder -> uriBuilder.path("order/{orderId}/update")
+                        .queryParam("newStatus", newStatus)
+                        .build(orderId))  // Menggunakan build(orderId) untuk mengisi nilai orderId ke dalam URI
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
     }
-    
+
 }

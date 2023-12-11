@@ -1,7 +1,6 @@
 package apap.tk.frontendweb.controller;
 
 import apap.tk.frontendweb.dto.response.catalog.CatalogDTO;
-import apap.tk.frontendweb.service.CatalogService;
 import apap.tk.frontendweb.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +20,6 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
-
 //        sellerId = null;
 
         if (sellerId != null) {
