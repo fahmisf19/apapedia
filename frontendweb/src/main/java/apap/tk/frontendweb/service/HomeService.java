@@ -16,4 +16,5 @@ public interface HomeService {
     List<CatalogDTO> searchCatalogPriceSeller(UUID sellerId, Integer lowerLimitPrice, Integer higherLimitPrice);
     List<CatalogDTO> getSortedCatalogList(String sortBy, String sortOrder);
     List<CatalogDTO> getSortedCatalogListSeller(UUID sellerId, String sortBy, String sortOrder);
+    List<byte[]> getImage(List<CatalogDTO> catalogDto);
 }

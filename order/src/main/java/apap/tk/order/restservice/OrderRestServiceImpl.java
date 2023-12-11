@@ -22,7 +22,7 @@ public class OrderRestServiceImpl implements OrderRestService{
 
     @Override
     public Order updateRestOrder(Order orderDTO) {
-        Order order = getOrderRestById(orderDTO.getId());
+        var order = getOrderRestById(orderDTO.getId());
         order.setCustomerId(orderDTO.getCustomerId());
         order.setSellerId(orderDTO.getSellerId());
         order.setTotalPrice(orderDTO.getTotalPrice());
@@ -61,14 +61,14 @@ public class OrderRestServiceImpl implements OrderRestService{
     @Override
     public Map<Integer, Long> getQuantityPerDayForCurrentMonth(UUID sellerId) {
         // Get the first day of the current month
-        Calendar calendar = Calendar.getInstance();
+        var calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date startDate = calendar.getTime();
+        var startDate = calendar.getTime();
 
         // Get the last day of the current month
         calendar.add(Calendar.MONTH, 1);
         calendar.add(Calendar.DAY_OF_MONTH, -1);
-        Date endDate = calendar.getTime();
+        var endDate = calendar.getTime();
 
         // Fetch orders within the date range and for the specified sellerId
         List<Order> orders = orderDb.findByCreatedAtBetweenAndSellerId(startDate, endDate, sellerId);

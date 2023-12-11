@@ -11,9 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class HomeServiceImpl implements HomeService {
@@ -142,5 +140,19 @@ public class HomeServiceImpl implements HomeService {
                 .bodyToFlux(CatalogDTO.class)
                 .collectList()
                 .block();
+    }
+
+    @Override
+    public List<byte[]> getImage(List<CatalogDTO> catalogList) {
+        List<byte[]> imageBase64 = new ArrayList<>();
+        for (CatalogDTO catalogDTO : catalogList) {
+            if (catalogDTO.getImage() != null) {
+                byte[] imageBytes = Base64.getDecoder().decode(catalogDTO.getImage());
+                imageBase64.add(imageBytes);
+            } else {
+                imageBase64.add(null);
+            }
+        }
+        return imageBase64;
     }
 }
