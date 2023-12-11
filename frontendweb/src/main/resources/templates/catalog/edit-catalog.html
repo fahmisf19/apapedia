@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/img/icon.png}" />
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+            integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    ></script>
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <title>Update Catalog</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        select {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Update Catalog</h1>
+    <form action="/update" th:action="@{/update}" th:object="${catalogDTO}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}" >
+        <!-- <input type="hidden" th:field="*{seller}" th:value="${null}" > -->
+
+        <label>Product Name:</label>
+        <input type="text" th:field="*{productName}" th:value="${catalogDTO.productName}"/>
+
+        <label>Price:</label>
+        <input type="number" th:field="*{price}" th:value="${catalogDTO.price}"/>
+
+        <label>Product Description:</label>
+        <input type="text" th:field="*{productDescription}" th:value="${catalogDTO.productDescription}"/>
+
+        <label>Stock:</label>
+        <input type="number" th:field="*{stock}" th:value="${catalogDTO.stock}"/>
+
+        <input type="hidden" id="imageByteArray" name="image" />
+
+        <label>Image:</label>
+        <input type="file" id="imageBase64" onchange="handleFileSelect(event)" />
+
+        <label>Category:</label>
+        <select th:field="*{category.idCategory}">
+            <option th:each="category : ${categories}" th:value="${category.idCategory}" th:text="${category.name}"
+                    th:selected="${category.idCategory eq catalogDTO.category.idCategory}"></option>
+        </select>
+
+
+        <button type="submit">Edit</button>
+    </form>
+</body>
+</html>

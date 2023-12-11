@@ -32,4 +32,30 @@ public class CatalogServiceImpl implements CatalogService {
                 .bodyToMono(CatalogDTO.class)
                 .block();
     }
+
+    @Override
+    public CatalogDTO getCatalogByCatalogId(UUID catalogId) {
+        return webClient.get()
+                .uri("/getByCatalogId?catalogId={catalogId}", catalogId)
+                .retrieve()
+                .bodyToMono(CatalogDTO.class)
+                .block();
+    }
+
+    @Override
+    public CatalogDTO updateCatalog(CatalogDTO request) {
+        UUID idCatalog = request.getId(); // Ambil ID dari objek CatalogDTO
+        return webClient.put()
+                .uri(uriBuilder -> uriBuilder.path("/{id}/update").build(idCatalog))
+                .body(BodyInserters.fromValue(request))
+                .retrieve()
+                .onStatus(
+                        status -> status.is4xxClientError() || status.is5xxServerError(),
+                        response -> response.bodyToMono(String.class).map(RuntimeException::new)
+                )
+                .bodyToMono(CatalogDTO.class)
+                .block();
+    }
+
+
 }
