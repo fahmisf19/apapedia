@@ -35,4 +35,14 @@ public class CategoryRestService {
         return categoryDb.findAll();
     }
 
+    public Category getCategoryById(UUID categoryId){
+        for(Category category : getAllCategory()){
+            if(category.getIdCategory().equals(categoryId)){
+                return category;
+            }
+        }
+
+        return null;
+    }
+
 }

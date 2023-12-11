@@ -3,6 +3,7 @@ package apap.tk.catalog.restcontroller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -10,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import apap.tk.catalog.model.Category;
 import apap.tk.catalog.restservice.CategoryRestService;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.List;
 
 @RestController
@@ -28,5 +30,16 @@ public class CategoryRestController {
                 HttpStatus.NOT_FOUND, "Category not found");
         }
     }
+
+    // @GetMapping(value = "/category/{categoryId}")
+    // public Category getCategoryById(@PathVariable("id") UUID id){
+    //     try{
+    //         Category categories = categoryRestService.getCategoryById(id);
+    //         return categories;
+    //     } catch (NoSuchElementException e) {
+    //         throw new ResponseStatusException(
+    //             HttpStatus.NOT_FOUND, "Category not found");
+    //     }
+    // }
     
 }

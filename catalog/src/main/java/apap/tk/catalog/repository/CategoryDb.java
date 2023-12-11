@@ -9,5 +9,4 @@ import apap.tk.catalog.model.Category;
 
 @Repository
 public interface CategoryDb extends JpaRepository<Category, UUID>{
-    
 }

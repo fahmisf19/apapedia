@@ -55,7 +55,7 @@ public class CatalogController {
             // Call the service to add the catalog
             catalogService.addCatalog(catalogDTO);
 
-            return "catalog/createCatalog-success";
+            return "redirect:/";
         } catch (Exception e) {
             e.printStackTrace(); // Handle the exception
             return "error-page"; // Redirect to an error page or appropriate handling

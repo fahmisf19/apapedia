@@ -70,13 +70,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Price: \$${product['price']}',
-                    style: TextStyle(fontSize: 18),
+                    'Category: ${product['productDescription']}',
+                    style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
                   Text(
                     'Description: ${product['productDescription']}',
                     style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Price: \$${product['price']}',
+                    style: TextStyle(fontSize: 18),
                   ),
                   SizedBox(height: 16),
                   Row(
