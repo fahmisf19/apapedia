@@ -76,7 +76,7 @@ public class CatalogApplication {
 			catalogDTO.setProductName(faker.commerce().productName());
 			catalogDTO.setProductDescription(faker.lorem().sentence());
 			catalogDTO.setStock(faker.number().numberBetween(1, 100));
-			byte[] byteArray = fakeString.getBytes();
+			byte[] byteArray = null;
 			// catalogDTO.setCategory(categoryDTO);
 			catalogDTO.setImage(byteArray);
 			catalogRestService.createRestCatalog(catalogDTO);

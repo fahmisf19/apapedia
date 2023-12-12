@@ -1,7 +1,8 @@
-package main.java.apap.tk.user.model;
+package apap.tk.user.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,11 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.UUID;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,7 +23,7 @@ import java.util.UUID;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "user")
-public class User {
+public class UserEntity {
 
     @Id
     private UUID id = UUID.randomUUID();
@@ -26,20 +32,22 @@ public class User {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role", referencedColumnName = "id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Role role;
+
     @NotNull
-    @Column(unique=true)
-    @Column(name = "username", nullable = false)
+    @Column(unique=true, name = "username", nullable = false)
     private String username;
 
     @NotNull
-    @Column(unique=true)
-    @Column(name = "password", nullable = false)
+    @Column(unique=true, name = "password", nullable = false)
     private String password;
-    // TODO: encrypt password with jwt token
 
     @NotNull
-    @Column(unique=true)
-    @Column(name = "email", nullable = false)
+    @Column(unique=true, name = "email", nullable = false)
     private String email;
 
     @NotNull
@@ -53,4 +61,8 @@ public class User {
     @NotNull
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
+
+    @NotNull
+    @Column(name = "is_Sso", nullable = false)
+    private Boolean isSso;
 }
