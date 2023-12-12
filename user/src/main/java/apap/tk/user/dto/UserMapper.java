@@ -1,10 +1,10 @@
-package main.java.apap.tk.user.dto;
+package apap.tk.user.dto;
 
 import apap.tk.user.dto.request.CreateUserRequestDto;
-import apap.tk.user.model.User;
+import apap.tk.user.model.UserEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    User createOrderRequestDTOToUser(CreateUserRequestDto createUserRequestDto);
+    UserEntity createUserRequestDTOToUser(CreateUserRequestDto createUserRequestDto);
 }
