@@ -1,7 +1,7 @@
-package main.java.apap.tk.user.dto.request;
+package apap.tk.user.dto.request;
 
-import apap.tk.user.model.User;
-
+import apap.tk.user.model.UserEntity;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +18,8 @@ public class CreateUserRequestDto {
     private UUID userId;
     @NotNull
     private String name;
+    @NotNull
+    private String role;
     @NotNull
     private String username;
     @NotNull

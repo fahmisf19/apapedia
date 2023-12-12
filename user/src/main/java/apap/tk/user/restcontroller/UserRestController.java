@@ -1,9 +1,10 @@
-package main.java.apap.tk.user.restcontroller;
+package apap.tk.user.restcontroller;
 
-import apap.tk.user.model.User;
-import main.java.apap.tk.user.dto.UserMapper;
+import apap.tk.user.model.UserEntity;
+import apap.tk.user.dto.UserMapper;
 import apap.tk.user.dto.request.CreateUserRequestDto;
 import apap.tk.user.restservice.UserRestService;
+import jakarta.validation.Valid;
 
 import java.util.Date;
 import java.util.NoSuchElementException;
@@ -24,11 +25,11 @@ public class UserRestController {
     private UserMapper userMapper;
 
     @Autowired
-    private main.java.apap.tk.user.restservice.UserRestService userRestService;
+    private apap.tk.user.restservice.UserRestService userRestService;
 
     // User Service #1: GET User by Id
     @GetMapping(value = "user/{id}")
-    private User retrieveUser(@PathVariable("id") String id) {
+    private UserEntity retrieveUser(@PathVariable("id") String id) {
         try {
             return userRestService.getRestUserById(UUID.fromString(id));
         } catch (NoSuchElementException e) {
@@ -44,7 +45,7 @@ public class UserRestController {
         } else {
             userDTO.setCreatedAt(new Date());
             userDTO.setUpdatedAt(new Date());
-            User user = userMapper.createUserRequestDtoToUser(userDTO);
+            UserEntity user = userMapper.createUserRequestDTOToUser(userDTO);
             userRestService.createRestUser(user);
         }
     }
