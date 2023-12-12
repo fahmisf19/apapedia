@@ -1,4 +1,5 @@
 package apap.tk.user.restservice;
+import apap.tk.user.dto.request.UpdateUserRequestDto;
 import apap.tk.user.model.UserEntity;
 import apap.tk.user.repository.UserDb;
 
@@ -11,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -36,6 +38,31 @@ public class UserRestServiceImpl implements UserRestService {
     public UserEntity getRestUserById(UUID id) {
         Optional<UserEntity> user = userDb.findById(id);
         return user.get();
+    }
+
+    // User Service #4: PUT Ubah Data User
+    // @Override
+    // public UserEntity updateUser(UpdateUserRequestDto updatedUser, String token) {
+    //     if (isSameUser(updatedUser.getId(), token)){
+    //         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to update this user");
+    //     }
+
+    //     UserEntity oldUser = userDb.findById(updatedUser.getId()).get();
+    //     oldUser.setName(updatedUser.getName());
+    //     oldUser.setUsername(updatedUser.getUsername());
+    //     oldUser.setPassword(encrypt(updatedUser.getPassword()));
+    //     oldUser.setEmail(updatedUser.getEmail());
+    //     oldUser.setBalance(updatedUser.getBalance());
+    //     oldUser.setAddress(updatedUser.getAddress());
+    //     oldUser.setUpdatedAt(updatedUser.getUpdatedAt());
+    //     return userDb.save(oldUser);
+    // }
+
+    // User Service #5: DELETE User
+    @Override
+    public void deleteUser(UUID id, String token) {
+        // Add Condition and Exception
+        userDb.deleteById(id);
     }
 
     // @Override

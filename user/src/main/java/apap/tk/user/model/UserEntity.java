@@ -36,7 +36,7 @@ public class UserEntity {
     @JoinColumn(name = "role", referencedColumnName = "id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private Role role;
+    private Long roleid;
 
     @NotNull
     @Column(unique=true, name = "username", nullable = false)
