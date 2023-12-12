@@ -1,8 +1,5 @@
 package apap.tk.user.restservice;
-<<<<<<< HEAD
 import apap.tk.user.dto.request.UpdateUserRequestDto;
-=======
->>>>>>> d31e0feb0e76c049ff3e109873f2753fdc21bff3
 import apap.tk.user.model.UserEntity;
 import apap.tk.user.repository.UserDb;
 
@@ -15,10 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 import java.util.List;
-<<<<<<< HEAD
 import java.util.NoSuchElementException;
-=======
->>>>>>> d31e0feb0e76c049ff3e109873f2753fdc21bff3
 import java.util.Optional;
 
 @Service
@@ -46,7 +40,6 @@ public class UserRestServiceImpl implements UserRestService {
         return user.get();
     }
 
-<<<<<<< HEAD
     // User Service #4: PUT Ubah Data User
     // @Override
     // public UserEntity updateUser(UpdateUserRequestDto updatedUser, String token) {
@@ -72,8 +65,6 @@ public class UserRestServiceImpl implements UserRestService {
         userDb.deleteById(id);
     }
 
-=======
->>>>>>> d31e0feb0e76c049ff3e109873f2753fdc21bff3
     // @Override
     // public Optional<User> getRestUserById(UUID id){
     // //     for (User user : retrieveRestAllUser()) {
