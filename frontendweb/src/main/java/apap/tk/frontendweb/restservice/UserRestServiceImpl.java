@@ -7,8 +7,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import apap.tk.frontendweb.dto.auth.LoginRequestDTO;
 import apap.tk.frontendweb.dto.auth.TokenDTO;
-import apap.tk.frontendweb.dto.auth.request.UserRequestDTO;
-import apap.tk.frontendweb.dto.auth.response.UserResponseDTO;
+import apap.tk.frontendweb.dto.auth.request.CreateUserRequestDTO;
+import apap.tk.frontendweb.dto.auth.response.ReadUserResponseDTO;
 
 @Service
 public class UserRestServiceImpl implements UserRestService{
@@ -38,20 +38,20 @@ public class UserRestServiceImpl implements UserRestService{
     }
 
     @Override
-    public UserResponseDTO sendUser(UserRequestDTO userDTO, String jwtToken) {
+    public ReadUserResponseDTO sendUser(CreateUserRequestDTO userDTO, String jwtToken) {
         try {
             var response = this.webClient
                     .post()
-                    .uri("/api/user/add")
+                    .uri("/api/user/create")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(userDTO)
                     .retrieve()
-                    .bodyToMono(UserResponseDTO.class);
+                    .bodyToMono(ReadUserResponseDTO.class);
 
             return response.block();
         } catch (Exception e) {
-            return new UserResponseDTO();
+            return new ReadUserResponseDTO();
         }
     }
 }

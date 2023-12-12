@@ -19,17 +19,16 @@ public class WebSecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/validate-ticket")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/logout-sso")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/user/add")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/user/auth")).permitAll()
                         .anyRequest().authenticated()
                 )
-                // .formLogin((form) -> form
-                //         .loginPage("/login-sso")
-                //         .permitAll()
-                //         .defaultSuccessUrl("/")
-                // )
+                .formLogin((form) -> form
+                        .loginPage("/login-sso")
+                        .permitAll()
+                        .defaultSuccessUrl("/validate-ticket")
+                )
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/user/auth")
+                        .logoutSuccessUrl("/login-sso")
                 );
         return http.build();
     }

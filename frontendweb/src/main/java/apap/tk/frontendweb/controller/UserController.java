@@ -9,43 +9,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import apap.tk.frontendweb.dto.auth.request.UserRequestDTO;
-import apap.tk.frontendweb.dto.auth.response.UserResponseDTO;
+import apap.tk.frontendweb.dto.auth.request.CreateUserRequestDTO;
+import apap.tk.frontendweb.dto.auth.response.ReadUserResponseDTO;
 import apap.tk.frontendweb.restservice.UserRestService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class UserController {
     @Autowired
     UserRestService userRestService;
 
-    @GetMapping("/user/auth")
-    public String authenticationPage() {
-        return "user/auth";
-    }
-
     @GetMapping("/user/add")
     public String formAddUser(Model model) {
-        UserRequestDTO userDTO = new UserRequestDTO();
-
-        List<String> roles = new ArrayList<>();
-        roles.add("Admin");
-        roles.add("User");
-        roles.add("Pustakawan");
-
-        model.addAttribute("listCategory", roles);
+        CreateUserRequestDTO userDTO = new CreateUserRequestDTO();
         model.addAttribute("userDTO", userDTO);
 
         return "user/form-add-user";
     }
 
     @PostMapping("/user/add")
-    public String submitUser(@ModelAttribute UserRequestDTO userDTO, Model model, HttpServletRequest request) {
+    public String submitUser(@ModelAttribute CreateUserRequestDTO createUserRequestDTO, Model model, HttpServletRequest request) {
+        createUserRequestDTO.setRole(2L);
         HttpSession session = request.getSession(false);
         String jwtToken = (String) session.getAttribute("token");
-        UserResponseDTO userResultDTO = userRestService.sendUser(userDTO, jwtToken);
+        ReadUserResponseDTO userResultDTO = userRestService.sendUser(createUserRequestDTO, jwtToken);
 
         if (userResultDTO.getId() == null) {
             return "user/error-add-user";

@@ -49,7 +49,7 @@ public class PageController {
         Attributes attributes = serviceResponse.getAuthenticationSuccess().getAttributes();
         String username = serviceResponse.getAuthenticationSuccess().getUser();
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, "webadmin", null);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(username, "dummy", null);
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(authentication);
 
