@@ -21,17 +21,13 @@ public class UserApplication {
 	@Transactional
 	CommandLineRunner run(UserRestService userService, RoleService roleService) {
 		try {
-			var roleUser = new Role();
-			roleUser.setRole("User");
-			roleService.addRole(roleUser);
+			var roleCustomer = new Role();
+			roleCustomer.setRole("Customer");
+			roleService.addRole(roleCustomer);
 		 
-			var roleAdmin = new Role();
-			roleAdmin.setRole("Admin");
-			roleService.addRole(roleAdmin);
-		 
-			var rolePustakawan = new Role();
-			rolePustakawan.setRole("Pustakawan");
-			roleService.addRole(rolePustakawan);
+			var roleSeller = new Role();
+			roleSeller.setRole("Seller");
+			roleService.addRole(roleSeller);
 		   } catch (Exception ignored) {}
 		return null;
 	}
