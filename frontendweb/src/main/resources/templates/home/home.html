@@ -18,7 +18,14 @@
 
 <body class="bg-light">
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div th:if="${successMessage}" class="alert alert-success">
+  <p th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}" class="alert alert-danger">
+  <p th:text="${errorMessage}"></p>
+</div>
 <div class="container-fluid" style="max-width:1500px">
+
   <!-- Sales Graph -->
   <div th:if="${sellerId} != null" class="container m-5">
     <div class="row rounded bg-white" style="-webkit-box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1); -moz-box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1); box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);">
@@ -29,7 +36,7 @@
       </div>
     </div>
   </div>
-  <div class="container m-5">
+  <div class="container m-5" th:if="${sellerId} != null">
     <div class="row">
       <div class="text-center mb-2">
         <a type="button"
@@ -102,13 +109,13 @@
         <div class="container-sm row mt-3">
           <div th:each="catalog, iterStat : ${catalogList}" class="col-md-2" th:style="${iterStat.index >= 6} ? 'margin-top: 20px;' : 'margin-top: 10px;'">
             <div class="card rounded" style="height: 280px; display: flex; flex-direction: column;">
-              <!--              <img th:src="'data:image/png;base64,' + ${catalog.image}" alt="" class="rounded-top" style="max-height: 150px; width: 100%; object-fit: cover;">-->
-              <img src="https://images.pexels.com/photos/1459505/pexels-photo-1459505.jpeg" alt="" class="rounded-top" style="height: 100px; width: 100%; object-fit: cover;">
+              <img th:if="${imageBase64 != null and imageBase64[iterStat.index] != null}" th:src="'data:image/jpeg;base64,' + ${imageBase64[iterStat.index]}" alt="" class="rounded-top" style="height: 100px; width: 100%; object-fit: cover;">
+              <img th:unless="${imageBase64 != null and imageBase64[iterStat.index] != null}" src="https://images.pexels.com/photos/1459505/pexels-photo-1459505.jpeg" alt="" class="rounded-top" style="height: 100px; width: 100%; object-fit: cover;">
               <div class="card-body" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
                 <!-- Use a utility method to truncate productName if it exceeds 24 characters -->
                 <p class="card-title mb-0 pb-1" th:utext="${#strings.length(catalog.productName) > 24 ? #strings.substring(catalog.productName, 0, 20) + '...' : catalog.productName}"></p>
                 <h6 th:text="'Rp' + ${catalog.price}"></h6>
-                <h6 th:text="${catalog.category.name}" style="font-weight: lighter; font-size: smaller;"></h6>
+                <h6 th:if="${catalog.category} != null" th:text="${catalog.category.name}" style="font-weight: lighter; font-size: smaller;"></h6>
                 <div class="row mt-3">
                   <div class="col-md-12">
                     <a th:href="@{'#'}" class="btn btn-card btn-primary float-end">Ubah</a>
@@ -181,6 +188,8 @@
       }
   });
 </script>
+
+
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>

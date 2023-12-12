@@ -74,7 +74,14 @@
             </table>
         </div>
     </div>
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
     <div id="error-container" style="color: red;"></div>
+>>>>>>> f196c3c8cae3f1573c7b8b0cacb215be260e01b5
+=======
+    <div id="error-container" style="color: red;"></div>
+>>>>>>> 4e65f6e90e252aaef1b8aeed13686d07b9c52072
     <script>
         $(document).ready(function () {
             $('#orderTable').DataTable({
@@ -88,8 +95,46 @@
                     var counter = startIndex + index + 1;
                     $('td:eq(0)', row).html(counter);
                 }
+<<<<<<< HEAD
+            });
+
+        //   // Apply custom CSS to change title column text color
+        //   $('#gudangTable thead th').css('color', 'black');
+            
+        });
+<<<<<<< HEAD
+    </script>
+
+=======
             });            
         });
+=======
+
+        
+        // function updateStatus(button) {
+        //     var orderId = button.getAttribute("data-order-id");
+        //     var currentStatus = parseInt(button.getAttribute("data-current-status"));
+        //     var newStatus = currentStatus + 1;
+
+        //     // Panggil endpoint untuk pembaruan status
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/order/update-status/" + orderId + "/" + newStatus,
+        //         success: function (response) {
+        //             // Handle success, jika diperlukan
+        //             alert("Status updated successfully!");
+        //             location.reload(); // Refresh halaman setelah pembaruan status
+        //         },
+        //         // error: function (error) {
+        //         //     // Handle error, jika diperlukan
+        //         //     alert("Failed to update status: " + error.responseText);
+        //         // }
+        //         error: function (error) {
+        //             error.responseText;
+        //         }
+        //     });
+        // }
+>>>>>>> 4e65f6e90e252aaef1b8aeed13686d07b9c52072
 
         function updateStatus(button) {
             var orderId = button.getAttribute("data-order-id");
@@ -119,6 +164,10 @@
     </script>
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
+<<<<<<< HEAD
+>>>>>>> f196c3c8cae3f1573c7b8b0cacb215be260e01b5
+=======
+>>>>>>> 4e65f6e90e252aaef1b8aeed13686d07b9c52072
 </body>
 
 </html>
