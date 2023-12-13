@@ -1,13 +1,12 @@
 package apap.tk.frontendweb.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import apap.tk.frontendweb.dto.auth.request.CreateUserRequestDTO;
 import apap.tk.frontendweb.dto.auth.response.ReadUserResponseDTO;
@@ -27,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/user/add")
-    public String submitUser(@ModelAttribute CreateUserRequestDTO createUserRequestDTO, Model model) {
+    public String submitUser(@ModelAttribute CreateUserRequestDTO createUserRequestDTO, Model model, @RequestParam(name = "error", required = false) String error) {
         createUserRequestDTO.setRole("SELLER");
 
         ReadUserResponseDTO userResultDTO = userRestService.createSeller(createUserRequestDTO);
@@ -37,6 +36,7 @@ public class UserController {
         }
 
         model.addAttribute("user", userResultDTO);
+        model.addAttribute("error", error);
         return "user/success-add-user";
     }
 }
