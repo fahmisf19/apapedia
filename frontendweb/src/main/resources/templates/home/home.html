@@ -109,8 +109,11 @@
         <div class="container-sm row mt-3">
           <div th:each="catalog, iterStat : ${catalogList}" class="col-md-2" th:style="${iterStat.index >= 6} ? 'margin-top: 20px;' : 'margin-top: 10px;'">
             <div class="card rounded" style="height: 280px; display: flex; flex-direction: column;">
-              <img th:if="${imageBase64 != null and imageBase64[iterStat.index] != null}" th:src="'data:image/jpeg;base64,' + ${imageBase64[iterStat.index]}" alt="" class="rounded-top" style="height: 100px; width: 100%; object-fit: cover;">
-              <img th:unless="${imageBase64 != null and imageBase64[iterStat.index] != null}" src="https://images.pexels.com/photos/1459505/pexels-photo-1459505.jpeg" alt="" class="rounded-top" style="height: 100px; width: 100%; object-fit: cover;">
+               <!-- Menggunakan ekspresi Thymeleaf untuk menampilkan gambar -->
+              <img th:if="${imageBase64List != null and imageBase64List[iterStat.index] != null}" th:src="'data:image/jpeg;base64,' + ${imageBase64List[iterStat.index]}" alt="" class="rounded-top" style="height: 100px; width: 100%; object-fit: cover;">
+              <!-- Gambar default jika tidak ada gambar dalam imageBase64List -->
+              <img th:unless="${imageBase64List != null and imageBase64List[iterStat.index] != null}" src="https://images.pexels.com/photos/1459505/pexels-photo-1459505.jpeg" alt="" class="rounded-top" style="height: 100px; width: 100%; object-fit: cover;">
+
               <div class="card-body" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
                 <!-- Use a utility method to truncate productName if it exceeds 24 characters -->
                 <p class="card-title mb-0 pb-1" th:utext="${#strings.length(catalog.productName) > 24 ? #strings.substring(catalog.productName, 0, 20) + '...' : catalog.productName}"></p>
@@ -188,6 +191,8 @@
       }
   });
 </script>
+
+
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>

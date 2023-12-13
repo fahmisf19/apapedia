@@ -1,4 +1,7 @@
-package main.java.apap.tk.user.model;
+package apap.tk.users.model;
+
+import java.util.Date;
+import java.util.UUID;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,18 +10,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name = "user")
+@Table(name="users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
-
     @Id
     private UUID id = UUID.randomUUID();
 
@@ -27,30 +26,38 @@ public class User {
     private String name;
 
     @NotNull
-    @Column(unique=true)
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
     @NotNull
-    @Column(unique=true)
     @Column(name = "password", nullable = false)
     private String password;
-    // TODO: encrypt password with jwt token
 
     @NotNull
-    @Column(unique=true)
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @NotNull
+    @Column(name = "balance", nullable = false)
+    private Long balance = (long) 0;
+
+    @NotNull
     @Column(name = "address", nullable = false)
-    private Date address;
+    private String address;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+    private Date createdAt = new Date();
 
     @NotNull
     @Column(name = "updated_at", nullable = false)
-    private Date updatedAt;
+    private Date updatedAt = new Date();
+
+    @NotNull
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted = false;
+
+    @NotNull
+    @Column(name = "role", nullable = false)
+    private String role;
 }
