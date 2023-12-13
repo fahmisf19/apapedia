@@ -1,12 +1,7 @@
 package apap.tk.frontendweb.dto.response.catalog;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.UUID;
-
-import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
