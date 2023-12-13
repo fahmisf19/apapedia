@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class CreateUserResponseDto {
     private UUID userId;
     private String name;
-    private Role role;
+    private Long role;
     private String username;
     private String password;
     private String email;
