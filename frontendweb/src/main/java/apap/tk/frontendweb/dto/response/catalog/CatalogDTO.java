@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CatalogDTO {
     private UUID seller;
+    private UUID id;
     private BigInteger price;
     private String productName;
     private String productDescription;
