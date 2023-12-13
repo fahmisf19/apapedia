@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" th:href="@{/img/icon.png}" />
-    <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
             integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-    ></script>
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
     <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
     <title>Update Catalog</title>
@@ -19,10 +17,17 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             height: 100vh;
             background-color: #f4f4f4;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
 
         form {
@@ -65,13 +70,34 @@
         button[type="submit"]:hover {
             background-color: #0056b3;
         }
+
+        /* Menyesuaikan lebar navbar dan footer */
+        .navbar {
+            width: 100%;
+        }
+
+        footer {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
     </style>
 </head>
+
 <body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<main>
     <h1>Update Catalog</h1>
-    <form action="/update" th:action="@{/update}" th:object="${catalogDTO}" method="post" enctype="multipart/form-data">
-        <input type="hidden" th:field="*{id}" >
-        <!-- <input type="hidden" th:field="*{seller}" th:value="${null}" > -->
+    <form action="/update" th:action="@{/update}" th:object="${catalogDTO}" method="post"
+          enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
 
         <label>Product Name:</label>
         <input type="text" th:field="*{productName}" th:value="${catalogDTO.productName}"/>
@@ -85,19 +111,23 @@
         <label>Stock:</label>
         <input type="number" th:field="*{stock}" th:value="${catalogDTO.stock}"/>
 
-        <input type="hidden" id="imageByteArray" name="image" />
+        <input type="hidden" id="imageByteArray" name="image"/>
 
         <label>Image:</label>
         <input type="file" id="imageBase64" onchange="handleFileSelect(event)" />
 
         <label>Category:</label>
         <select th:field="*{category.idCategory}">
-            <option th:each="category : ${categories}" th:value="${category.idCategory}" th:text="${category.name}"
+            <option th:each="category : ${categories}" th:value="${category.idCategory}"
+                    th:text="${category.name}"
                     th:selected="${category.idCategory eq catalogDTO.category.idCategory}"></option>
         </select>
 
-
         <button type="submit">Edit</button>
     </form>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
+
 </html>

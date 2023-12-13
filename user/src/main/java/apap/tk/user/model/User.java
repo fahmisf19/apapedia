@@ -53,4 +53,8 @@ public class User {
     @NotNull
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
+
+    @NotNull
+    @Column(name = "balance", nullable = false)
+    private long balance;
 }

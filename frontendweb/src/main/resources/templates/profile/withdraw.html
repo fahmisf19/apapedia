@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/img/icon.png}" />
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+    <title>Withdraw Page</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald&display=swap">
+    <style>
+        body {
+            font-family: 'Oswald', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: space-between;
+            height: 100vh;
+            margin: 0;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            width: 80%;
+            max-width: 600px; /* Tambahkan ini untuk membatasi lebar form */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        /* Menyesuaikan lebar navbar dan footer */
+        .navbar {
+            width: 100%;
+        }
+
+        footer {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+    <main>
+        <form class="bg-light" action="/withdraw" method="post">
+            <h2 class="text-center mb-4">Withdraw Form</h2>
+            <div class="form-group">
+                <label for="withdrawAmount">Jumlah Tarikan:</label>
+                <input type="text" class="form-control" id="withdrawAmount" name="withdrawAmount" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-4">Withdraw</button>
+        </form>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>
