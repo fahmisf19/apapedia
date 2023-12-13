@@ -16,7 +16,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.ModelAndView;
 
 import apap.tk.frontendweb.restservice.UserRestService;
-import apap.tk.frontendweb.security.xml.Attributes;
 import apap.tk.frontendweb.security.xml.ServiceResponse;
 import apap.tk.frontendweb.setting.Setting;
 

@@ -1,7 +1,5 @@
 package apap.tk.frontendweb.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,9 +37,6 @@ public class UserController {
 
         model.addAttribute("user", userResultDTO);
         model.addAttribute("error", error);
-
-        // Tambahkan log untuk memeriksa nilai parameter error
-        System.out.println("Error parameter value: " + error);
         return "user/success-add-user";
     }
 }
