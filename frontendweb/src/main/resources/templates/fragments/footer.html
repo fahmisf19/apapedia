@@ -27,10 +27,10 @@
                     <a th:if="${sellerId != null}" th:href="@{/order-history/{sellerId}(sellerId=${sellerId})}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Order History</a>
                   </li>
                   <li class="mb-1">
-                    <a th:href="@{/}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Login</a>
+                    <a th:unless="${sellerId != null}" th:href="@{/login-sso}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Login</a>
                   </li>
                   <li>
-                    <a th:href="@{/}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Register</a>
+                    <a th:href="@{/user/add}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Register</a>
                   </li>
                 </ul>
               </div>
