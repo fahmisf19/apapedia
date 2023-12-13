@@ -8,4 +8,6 @@ import apap.tk.frontendweb.dto.response.catalog.CategoryDTO;
 
 public interface CatalogService {
     CatalogDTO addCatalog(CatalogDTO catalogDTO);
+    CatalogDTO getCatalogByCatalogId(UUID catalogId);
+    CatalogDTO updateCatalog(CatalogDTO catalogDTO);    
 }
