@@ -143,15 +143,16 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public List<byte[]> getImage(List<CatalogDTO> catalogList) {
-        List<byte[]> imageBase64 = new ArrayList<>();
+    public List<String> getImage(List<CatalogDTO> catalogList) {
+        List<String> imageBase64 = new ArrayList<>();
         for (CatalogDTO catalogDTO : catalogList) {
-            if (catalogDTO.getImage() != null) {
-                byte[] imageBytes = Base64.getDecoder().decode(catalogDTO.getImage());
-                imageBase64.add(imageBytes);
-            } else {
-                imageBase64.add(null);
-            }
+            imageBase64.add(Base64.getEncoder().encodeToString(catalogDTO.getImage()));
+            // if (catalogDTO.getImage() != null) {
+            //     byte[] imageBytes = Base64.getDecoder().decode(catalogDTO.getImage());
+            //     imageBase64.add(imageBytes);
+            // } else {
+            //     imageBase64.add(null);
+            // }
         }
         return imageBase64;
     }
