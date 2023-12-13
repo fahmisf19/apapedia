@@ -43,6 +43,7 @@ public class UserRestServiceImpl implements UserRestService{
 
     @Override
     public Seller createSeller (Seller seller) {
+        seller.setPassword("APAPEDIA");
         sellerDb.save(seller);
         return seller;
     }
