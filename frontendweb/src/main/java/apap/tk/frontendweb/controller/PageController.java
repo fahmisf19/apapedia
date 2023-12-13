@@ -38,27 +38,32 @@ public class PageController {
             @RequestParam(value = "ticket", required = false) String ticket,
             HttpServletRequest request
     ) {
-        ServiceResponse serviceResponse = this.webClient.get().uri(
-                String.format(
-                        Setting.SERVER_VALIDATE_TICKET,
-                        ticket,
-                        Setting.CLIENT_LOGIN
-                )
-        ).retrieve().bodyToMono(ServiceResponse.class).block();
+        try {
+                ServiceResponse serviceResponse = this.webClient.get().uri(
+                        String.format(
+                                Setting.SERVER_VALIDATE_TICKET,
+                                ticket,
+                                Setting.CLIENT_LOGIN
+                        )
+                ).retrieve().bodyToMono(ServiceResponse.class).block();
+        
+                String username = serviceResponse.getAuthenticationSuccess().getUser();
+        
+                Authentication authentication = new UsernamePasswordAuthenticationToken(username, "SELLER", null);
+                SecurityContext securityContext = SecurityContextHolder.getContext();
+                securityContext.setAuthentication(authentication);
+        
+                var token = userRestService.getToken(username, "APAPEDIA");
+        
+                HttpSession httpSession = request.getSession(true);
+                httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
+                httpSession.setAttribute("token", token);
+        
+                return new ModelAndView("redirect:/");              
+        } catch (Exception e) {
+                return new ModelAndView("redirect:/user/add?error=1");
+        }
 
-        String username = serviceResponse.getAuthenticationSuccess().getUser();
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, "SELLER", null);
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
-        var token = userRestService.getToken(username, "APAPEDIA");
-
-        HttpSession httpSession = request.getSession(true);
-        httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
-        httpSession.setAttribute("token", token);
-
-        return new ModelAndView("redirect:/");
     }
 
     @GetMapping("/login-sso")
