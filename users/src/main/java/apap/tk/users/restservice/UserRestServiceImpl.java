@@ -12,19 +12,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import apap.tk.users.dto.request.CreateCartRequestDTO;
-import apap.tk.users.dto.request.CreateUserRequestDTO;
+import apap.tk.users.dto.request.LoginJwtRequestDTO;
 import apap.tk.users.model.Customer;
 import apap.tk.users.model.Seller;
 import apap.tk.users.model.User;
 import apap.tk.users.repository.CustomerDb;
 import apap.tk.users.repository.SellerDb;
 import apap.tk.users.repository.UserDb;
+import apap.tk.users.security.jwt.JwtUtils;
 
 @Service
 public class UserRestServiceImpl implements UserRestService{
@@ -37,6 +38,9 @@ public class UserRestServiceImpl implements UserRestService{
     @Autowired
     private CustomerDb customerDb;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     @Override
     public Seller createSeller (Seller seller) {
         sellerDb.save(seller);
@@ -45,7 +49,7 @@ public class UserRestServiceImpl implements UserRestService{
 
     @Override
     public Customer createCustomer(Customer customer) {
-        // customer.setPassword(encrypt(customer.getPassword()));
+        customer.setPassword(encrypt(customer.getPassword()));
         customerDb.save(customer);
     
         // Set up the request body
@@ -91,9 +95,22 @@ public class UserRestServiceImpl implements UserRestService{
         }
     }    
 
-    // @Override
-    // public String encrypt(String password) {
-    //     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    //     return passwordEncoder.encode(password);
-    // }
+    @Override
+    public String encrypt(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.encode(password);
+    }
+
+    @Override
+    public String loginJwtAdmin(LoginJwtRequestDTO loginJwtRequestDTO) {
+        String username = loginJwtRequestDTO.getUsername();
+
+        var user = userDb.findByUsername(username);
+
+        if (user != null) {
+            return jwtUtils.generateJwtToken(loginJwtRequestDTO.getUsername());
+        } else {
+            throw new NoSuchElementException("User not found");
+        }
+    }
 }
