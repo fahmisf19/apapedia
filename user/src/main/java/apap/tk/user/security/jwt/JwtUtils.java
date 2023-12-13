@@ -13,10 +13,10 @@ public class JwtUtils {
     
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${tk.app.jwtSecret}")
+    @Value("${apapedia.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${tk.app.jwtExpirationMs}")
+    @Value("${apapedia.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(String username) {
