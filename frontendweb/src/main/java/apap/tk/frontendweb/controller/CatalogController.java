@@ -34,6 +34,7 @@ public class CatalogController {
 
     @GetMapping("/catalog/create-catalog")
     public String showCatalogForm(Model model) {
+        UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
         List<CategoryDTO> categories = categoryService.getAllCategories();
 
         // Membuat objek CatalogDTO baru untuk form
@@ -42,36 +43,66 @@ public class CatalogController {
         // Menambahkan daftar kategori ke dalam model
         model.addAttribute("categories", categories);
         model.addAttribute("catalogDTO", catalogDTO);
+        model.addAttribute("sellerId", sellerId);
         return "catalog/createCatalog";
     }
 
-        @PostMapping("/add")
-        public String addCatalog(@RequestParam("image") String imageBase64, CatalogDTO catalogDTO, RedirectAttributes redirectAttributes) {
-            UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
-            try {
-                // Decode base64 string to byte array
-                byte[] imageByteArray = Base64.getDecoder().decode(imageBase64);
+    // @PostMapping("/add")
+    // public String addCatalog(@RequestParam("imageFile") MultipartFile imageFile, CatalogDTO catalogDTO, RedirectAttributes redirectAttributes) {
+    //     UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
+    //     try {
+    //         catalogDTO.setSeller(sellerId);
+            
+    //         // Mengambil byte[] dari MultipartFile
+    //         byte[] imageBytes = imageFile.getBytes();
+    //         catalogDTO.setImage(imageBytes);
+            
+    //         // Panggil layanan untuk menambahkan katalog
+    //         catalogService.addCatalog(catalogDTO);
 
-                catalogDTO.setSeller(sellerId);
+    //         // Tambahkan pesan sukses yang akan ditampilkan di halaman home
+    //         redirectAttributes.addFlashAttribute("successMessage", "Catalog added successfully.");
 
-                // Create a CatalogDTO instance and set the image byte array
-                catalogDTO.setImage(imageByteArray);
+    //         return "redirect:/";
+    //     } catch (Exception e) {
+    //         e.printStackTrace(); // Tangani pengecualian
 
-                // Call the service to add the catalog
-                catalogService.addCatalog(catalogDTO);
+    //         // Tambahkan pesan error yang akan ditampilkan di halaman error jika diperlukan
+    //         redirectAttributes.addFlashAttribute("errorMessage", "Error occurred while adding catalog.");
 
-                // Tambahkan pesan sukses yang akan ditampilkan di halaman home
-                redirectAttributes.addFlashAttribute("successMessage", "Catalog added successfully.");
+    //         return "redirect:/error-page"; // Redirect ke halaman error atau penanganan yang sesuai
+    //     }
+    // }
 
-                return "redirect:/";
-            } catch (Exception e) {
-                e.printStackTrace(); // Handle the exception
+    @PostMapping("/add")
+    public String addCatalog(@RequestParam("imageFile") MultipartFile imageFile, CatalogDTO catalogDTO, RedirectAttributes redirectAttributes) {
+        UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
+        try {
+            catalogDTO.setSeller(sellerId);
 
-                // Tambahkan pesan error yang akan ditampilkan di halaman error jika diperlukan
-                redirectAttributes.addFlashAttribute("errorMessage", "Error occurred while adding catalog.");
+            // Mengambil byte[] dari MultipartFile
+            byte[] imageBytes = imageFile.getBytes();
 
-                return "redirect:/error-page"; // Redirect to an error page or appropriate handling
-            }
+            catalogDTO.setImage(imageBytes);
+
+            // Panggil layanan untuk menambahkan katalog
+            catalogService.addCatalog(catalogDTO);
+
+            // Tambahkan pesan sukses yang akan ditampilkan di halaman home
+            redirectAttributes.addFlashAttribute("successMessage", "Catalog added successfully.");
+
+            return "redirect:/";
+        } catch (Exception e) {
+            e.printStackTrace(); // Tangani pengecualian
+
+            // Tambahkan pesan error yang akan ditampilkan di halaman error jika diperlukan
+            redirectAttributes.addFlashAttribute("errorMessage", "Error occurred while adding catalog.");
+
+            return "redirect:/error-page"; // Redirect ke halaman error atau penanganan yang sesuai
         }
+    }
+
+
+
 
 }
