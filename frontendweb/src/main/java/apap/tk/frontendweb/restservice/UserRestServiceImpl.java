@@ -5,32 +5,32 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import apap.tk.frontendweb.dto.auth.LoginRequestDTO;
-import apap.tk.frontendweb.dto.auth.TokenDTO;
 import apap.tk.frontendweb.dto.auth.request.CreateUserRequestDTO;
+import apap.tk.frontendweb.dto.auth.request.LoginJwtRequestDTO;
 import apap.tk.frontendweb.dto.auth.response.ReadUserResponseDTO;
+import apap.tk.frontendweb.dto.auth.response.LoginJwtResponseDTO;
 
 @Service
 public class UserRestServiceImpl implements UserRestService{
     private final WebClient webClient;
 
     public UserRestServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8080")
+        this.webClient = webClientBuilder.baseUrl("http://localhost:8084")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
 
     @Override
-    public String getToken(String username, String name) {
-        var body = new LoginRequestDTO(username, name);
+    public String getToken(String username, String password) {
+        var body = new LoginJwtRequestDTO(username, password);
 
         var response = this.webClient
                 .post()
-                .uri("/api/auth/login-jwt-webadmin")
+                .uri("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(body)
                 .retrieve()
-                .bodyToMono(TokenDTO.class)
+                .bodyToMono(LoginJwtResponseDTO.class)
                 .block();
         
         var token = response.getToken();
@@ -38,12 +38,11 @@ public class UserRestServiceImpl implements UserRestService{
     }
 
     @Override
-    public ReadUserResponseDTO sendUser(CreateUserRequestDTO userDTO, String jwtToken) {
+    public ReadUserResponseDTO createSeller(CreateUserRequestDTO userDTO) {
         try {
             var response = this.webClient
                     .post()
                     .uri("/api/user/create")
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(userDTO)
                     .retrieve()

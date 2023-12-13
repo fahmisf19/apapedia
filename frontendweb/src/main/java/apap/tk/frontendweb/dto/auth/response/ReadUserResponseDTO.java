@@ -16,9 +16,10 @@ public class ReadUserResponseDTO {
     private String username;
     private String password;
     private String email;
+    private Long balance;
     private String address;
-    private Long role;
-    private Date updated_at;
     private Date created_at;
+    private Date updated_at;
+    private String role;
     private String category;
 }

@@ -46,15 +46,13 @@ public class PageController {
                 )
         ).retrieve().bodyToMono(ServiceResponse.class).block();
 
-        Attributes attributes = serviceResponse.getAuthenticationSuccess().getAttributes();
         String username = serviceResponse.getAuthenticationSuccess().getUser();
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, "dummy", null);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(username, "SELLER", null);
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(authentication);
 
-        String name = attributes.getNama();
-        var token = userRestService.getToken(username, name);
+        var token = userRestService.getToken(username, "APAPEDIA");
 
         HttpSession httpSession = request.getSession(true);
         httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);

@@ -27,11 +27,10 @@ public class UserController {
     }
 
     @PostMapping("/user/add")
-    public String submitUser(@ModelAttribute CreateUserRequestDTO createUserRequestDTO, Model model, HttpServletRequest request) {
-        createUserRequestDTO.setRole(2L);
-        HttpSession session = request.getSession(false);
-        String jwtToken = (String) session.getAttribute("token");
-        ReadUserResponseDTO userResultDTO = userRestService.sendUser(createUserRequestDTO, jwtToken);
+    public String submitUser(@ModelAttribute CreateUserRequestDTO createUserRequestDTO, Model model) {
+        createUserRequestDTO.setRole("SELLER");
+
+        ReadUserResponseDTO userResultDTO = userRestService.createSeller(createUserRequestDTO);
 
         if (userResultDTO.getId() == null) {
             return "user/error-add-user";
