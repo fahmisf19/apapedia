@@ -50,4 +50,6 @@ public class UserRestController {
         var user = userRestService.getUserById(userId);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    
 }
