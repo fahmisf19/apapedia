@@ -32,8 +32,11 @@ public class UserRestServiceImpl implements UserRestService{
                 .retrieve()
                 .bodyToMono(LoginJwtResponseDTO.class)
                 .block();
-        
-        var token = response.getToken();
+
+        String token = null;
+        if (response != null) {
+            token = response.getToken();
+        }
         return token;
     }
 

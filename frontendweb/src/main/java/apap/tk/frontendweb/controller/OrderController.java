@@ -26,7 +26,6 @@ public class OrderController {
     private JwtUtils jwtUtils;
 
     @GetMapping("order/viewall")
-    // public String getOrderHistory(Model model, @RequestParam("sellerId") UUID sellerId) throws IOException, InterruptedException {
     public String getOrderHistory(Model model, HttpServletRequest request) throws IOException, InterruptedException {
         HttpSession session = request.getSession(false);
         String jwtToken = null;
@@ -34,7 +33,7 @@ public class OrderController {
         if (jwtToken != null && !jwtToken.isBlank()) {
             String userId = jwtUtils.getUserIdFromToken(jwtToken);
             UUID sellerID = UUID.fromString(userId);           
-            List<ReadOrderResponseDTO> orderList = orderService.getListOrder(sellerID, jwtToken);
+            var orderList = orderService.getListOrder(sellerID, jwtToken);
             model.addAttribute("orderList", orderList);
             model.addAttribute("sellerId", sellerID);
         }

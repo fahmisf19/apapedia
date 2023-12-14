@@ -19,7 +19,7 @@ public class UserController {
 
     @GetMapping("/user/add")
     public String formAddUser(Model model) {
-        CreateUserRequestDTO userDTO = new CreateUserRequestDTO();
+        var userDTO = new CreateUserRequestDTO();
         model.addAttribute("userDTO", userDTO);
 
         return "user/form-add-user";

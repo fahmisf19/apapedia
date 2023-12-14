@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +22,8 @@ public class HomeController {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    private final UUID id = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
     
     @GetMapping("/")
     public String home(Model model, HttpServletRequest request) {
@@ -31,15 +32,15 @@ public class HomeController {
         if (session != null) jwtToken = (String) session.getAttribute("token");
         if (jwtToken != null && !jwtToken.isBlank()) {
             String userId = jwtUtils.getUserIdFromToken(jwtToken);
-            UUID sellerID = UUID.fromString(userId);           
+            var sellerID = UUID.fromString(userId);
             model.addAttribute("sellerId", sellerID);
         }
-        UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
-    
+        UUID sellerId = id;
+
         if (sellerId != null) {
              try {
                 var quantityPerDay = homeService.getChartSales(sellerId);
-                List<CatalogDTO> catalogList = homeService.getCatalogBySellerId(sellerId);
+                var catalogList = homeService.getCatalogBySellerId(sellerId);
                 var imageBase64List = homeService.getImage(catalogList);
 
                 model.addAttribute("imageBase64List", imageBase64List);
@@ -54,10 +55,10 @@ public class HomeController {
              }
         } else {
             try {
-                List<CatalogDTO> catalogList = homeService.getAllCatalog();
-                var imageBase64 = homeService.getImage(catalogList);
+                var catalogList = homeService.getAllCatalog();
+                var imageBase64List = homeService.getImage(catalogList);
 
-                model.addAttribute("imageBase64", imageBase64);
+                model.addAttribute("imageBase64List", imageBase64List);
                 model.addAttribute("catalogList", catalogList);
             } catch (Exception e) {
                 // Handle any exceptions that may occur when retrieving data
@@ -72,23 +73,22 @@ public class HomeController {
 
     @GetMapping("/search-catalog-name")
     public String filterCatalogName(@RequestParam("catalog") String name, Model model) {
-        UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
-//        sellerId = null;
+        UUID sellerId = id;
 
         if (sellerId != null) {
             var quantityPerDay = homeService.getChartSales(sellerId);
             model.addAttribute("sellerId", sellerId);
             model.addAttribute("quantityPerDay", quantityPerDay);
 
-            List<CatalogDTO> catalogList = homeService.searchCatalogSeller(sellerId, name);
-            var imageBase64 = homeService.getImage(catalogList);
+            var catalogList = homeService.searchCatalogSeller(sellerId, name);
+            var imageBase64List = homeService.getImage(catalogList);
 
-            model.addAttribute("imageBase64", imageBase64);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         } else {
-            List<CatalogDTO> catalogList = homeService.searchCatalog(name);
-            var imageBase64 = homeService.getImage(catalogList);
-            model.addAttribute("imageBase64", imageBase64);
+            var catalogList = homeService.searchCatalog(name);
+            var imageBase64List = homeService.getImage(catalogList);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         }
 
@@ -99,18 +99,17 @@ public class HomeController {
     public String filterCatalogPrice(@RequestParam("lowerLimitPrice") Integer lowerLimitPrice,
                                      @RequestParam("higherLimitPrice") Integer higherLimitPrice,
                                      Model model) {
-        UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
-//        sellerId = null;
+        UUID sellerId = id;
 
         if (sellerId != null) {
             var quantityPerDay = homeService.getChartSales(sellerId);
             model.addAttribute("sellerId", sellerId);
             model.addAttribute("quantityPerDay", quantityPerDay);
 
-            List<CatalogDTO> catalogList = homeService.searchCatalogPriceSeller(sellerId, lowerLimitPrice, higherLimitPrice);
-            var imageBase64 = homeService.getImage(catalogList);
+            var catalogList = homeService.searchCatalogPriceSeller(sellerId, lowerLimitPrice, higherLimitPrice);
+            var imageBase64List = homeService.getImage(catalogList);
 
-            model.addAttribute("imageBase64", imageBase64);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         } else {
             List<CatalogDTO> catalogList = homeService.searchCatalogPrice(lowerLimitPrice, higherLimitPrice);
@@ -120,8 +119,7 @@ public class HomeController {
     }
     @GetMapping("/get-catalog")
     public String filterCatalogPrice(@RequestParam("sort") String sort, Model model) {
-        UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
-//        sellerId = null;
+        UUID sellerId = id;
 
         String[] parts = sort.split("-");
         String sortBy = parts[0];
@@ -133,15 +131,15 @@ public class HomeController {
             model.addAttribute("quantityPerDay", quantityPerDay);
 
             List<CatalogDTO> catalogList = homeService.getSortedCatalogListSeller(sellerId, sortBy, sortOrder);
-            var imageBase64 = homeService.getImage(catalogList);
+            var imageBase64List = homeService.getImage(catalogList);
 
-            model.addAttribute("imageBase64", imageBase64);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         } else {
             List<CatalogDTO> catalogList = homeService.getSortedCatalogList(sortBy, sortOrder);
-            var imageBase64 = homeService.getImage(catalogList);
+            var imageBase64List = homeService.getImage(catalogList);
 
-            model.addAttribute("imageBase64", imageBase64);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         }
         return "home/home";

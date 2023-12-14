@@ -1,7 +1,5 @@
 package apap.tk.frontendweb.dto.auth.request;
 
-import java.util.Date;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
