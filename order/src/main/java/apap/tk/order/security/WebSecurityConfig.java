@@ -30,19 +30,18 @@ public class WebSecurityConfig {
                 .authorizeRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("api/order/**").permitAll()
                         .requestMatchers("api/cart/**").permitAll()
-                        .requestMatchers("api/cart-item").permitAll()
+                        .requestMatchers("api/cart-item/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    } 
+    }
 
     @Bean
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
-    }   
+    }
 
 }
-

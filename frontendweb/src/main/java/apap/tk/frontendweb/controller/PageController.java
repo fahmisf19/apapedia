@@ -48,7 +48,7 @@ public class PageController {
 
                 String username = "";
                 try {
-                    username = serviceResponse.getAuthenticationSuccess().getUser();
+                    username = serviceResponse != null ? serviceResponse.getAuthenticationSuccess().getUser() : null;
                 } catch (NullPointerException e) {
                     return new ModelAndView("redirect:/user/add?error=1");
                 }

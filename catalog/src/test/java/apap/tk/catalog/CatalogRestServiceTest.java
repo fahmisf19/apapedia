@@ -75,7 +75,7 @@ public class CatalogRestServiceTest {
         UUID catalogId = UUID.randomUUID();
         Catalog mockCatalog = new Catalog();
         mockCatalog.setId(catalogId);
-        when(catalogDb.findById(catalogId)).thenReturn(Optional.of(mockCatalog));
+        when(catalogDb.findById(any(UUID.class))).thenReturn(Optional.of(mockCatalog));
 
         Catalog result = catalogRestService.getRestCatalogById(catalogId);
 
@@ -92,7 +92,7 @@ public class CatalogRestServiceTest {
         updatedCatalog.setId(catalogId);
         updatedCatalog.setProductName("Updated Product");
 
-        when(catalogDb.findById(catalogId)).thenReturn(Optional.of(existingCatalog));
+        when(catalogDb.findById(any(UUID.class))).thenReturn(Optional.of(existingCatalog));
         when(catalogDb.save(any(Catalog.class))).thenReturn(updatedCatalog);
 
         Catalog result = catalogRestService.updateRestCatalog(catalogId, updatedCatalog);
