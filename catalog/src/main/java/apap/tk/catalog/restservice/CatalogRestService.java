@@ -1,6 +1,5 @@
 package apap.tk.catalog.restservice;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,21 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
 import apap.tk.catalog.model.Catalog;
 import apap.tk.catalog.model.Category;
 import apap.tk.catalog.repository.CatalogDb;
 import apap.tk.catalog.repository.CategoryDb;
 import jakarta.transaction.Transactional;
-
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
-
-import reactor.core.publisher.Mono;
-import org.springframework.data.domain.Sort;
-
 
 @Service
 @Transactional
@@ -47,7 +36,7 @@ public class CatalogRestService {
     }
 
     public Catalog updateRestCatalog(UUID idCatalog, Catalog catalogFromDto) {
-        Catalog catalog = getRestCatalogById(idCatalog);
+        var catalog = getRestCatalogById(idCatalog);
         if (catalog != null) {
             var category = new Category();
             catalog.setProductName(catalogFromDto.getProductName());
@@ -93,7 +82,7 @@ public class CatalogRestService {
 
     public List<Catalog> getAllCatalogSorted(String sortBy, String sortOrder) {
         // Menentukan metode sort berdasarkan harga atau nama
-        Sort sort = Sort.by(sortOrder.equals("asc") ? Sort.Order.asc(sortBy) : Sort.Order.desc(sortBy));
+        var sort = Sort.by(sortOrder.equals("asc") ? Sort.Order.asc(sortBy) : Sort.Order.desc(sortBy));
 
         // Mengambil semua katalog dari database dengan urutan yang ditentukan
         return catalogDb.findAll(sort);

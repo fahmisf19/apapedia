@@ -23,23 +23,10 @@ public class CategoryRestController {
     @GetMapping(value = "/category/all-categories")
     public List<Category> getAllCategory(){
         try{
-            List<Category> categories = categoryRestService.getAllCategory();
-            return categories;
+            return categoryRestService.getAllCategory();
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Category not found");
         }
     }
-
-    // @GetMapping(value = "/category/{categoryId}")
-    // public Category getCategoryById(@PathVariable("id") UUID id){
-    //     try{
-    //         Category categories = categoryRestService.getCategoryById(id);
-    //         return categories;
-    //     } catch (NoSuchElementException e) {
-    //         throw new ResponseStatusException(
-    //             HttpStatus.NOT_FOUND, "Category not found");
-    //     }
-    // }
-    
 }
