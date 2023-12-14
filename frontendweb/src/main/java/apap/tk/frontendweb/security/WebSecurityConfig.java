@@ -19,6 +19,7 @@ public class WebSecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/validate-ticket")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/logout-sso")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/user/add")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/order/update-status/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -28,7 +29,7 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/validate-ticket")
                 )
                 .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout-sso"))
                         .logoutSuccessUrl("/")
                 );
         return http.build();
