@@ -15,8 +15,6 @@ import apap.tk.catalog.model.Catalog;
 import apap.tk.catalog.model.Category;
 import apap.tk.catalog.restservice.CatalogRestService;
 import apap.tk.catalog.restservice.CategoryRestService;
-import apap.tk.catalog.dto.CategoryMapper;
-import apap.tk.catalog.dto.request.CreateCategoryRequestDTO;
 import jakarta.transaction.Transactional;
 
 @SpringBootApplication
@@ -70,14 +68,12 @@ public class CatalogApplication {
 				categoryRestService.addCategory(categoryDTO);
 			}
 			var catalogDTO = new Catalog();
-			String fakeString = faker.lorem().sentence();
 
 			catalogDTO.setPrice(BigInteger.valueOf(faker.number().randomDigitNotZero()));
 			catalogDTO.setProductName(faker.commerce().productName());
 			catalogDTO.setProductDescription(faker.lorem().sentence());
 			catalogDTO.setStock(faker.number().numberBetween(1, 100));
 			byte[] byteArray = null;
-			// catalogDTO.setCategory(categoryDTO);
 			catalogDTO.setImage(byteArray);
 			catalogRestService.createRestCatalog(catalogDTO);
 		};

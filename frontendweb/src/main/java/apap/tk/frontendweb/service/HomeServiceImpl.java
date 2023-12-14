@@ -16,10 +16,10 @@ import java.util.*;
 @Service
 public class HomeServiceImpl implements HomeService {
     private final WebClient webClientCatalog;
-    private final WebClient webClientOrder;
+    final WebClient webClientOrder;
 
-    private final String baseUrlCatalog = "http://localhost:8081/api/catalog";
-    private final String baseUrlOrder = "http://localhost:8082/api/order";
+    private static final String baseUrlCatalog = "http://localhost:8081/api/catalog";
+    private static final String baseUrlOrder = "http://localhost:8082/api/order";
 
     public HomeServiceImpl(WebClient.Builder webClientBuilder) {
         this.webClientCatalog = webClientBuilder.baseUrl(baseUrlCatalog).build();
@@ -33,20 +33,22 @@ public class HomeServiceImpl implements HomeService {
                 .header("Accept", "application/json")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
-        try {
-            HttpResponse<String> response = HttpClient.newHttpClient().send(request,
-                    HttpResponse.BodyHandlers.ofString());
-
-            // Assuming the response body is a JSON string like {"1": 0, "2": 0, ...}
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<Integer, Long> salesPerDay = objectMapper.readValue(response.body(),
-                    new TypeReference<Map<Integer, Long>>() {
-                    });
-
-            return salesPerDay;
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+                
+                try {
+                    HttpResponse<String> response = HttpClient.newHttpClient().send(request,
+                            HttpResponse.BodyHandlers.ofString());
+                
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    return objectMapper.readValue(response.body(),
+                            new TypeReference<Map<Integer, Long>>() {});
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Re-interrupt the thread
+                    throw new RuntimeException(e);
+                }
+                
+                
     }
 
     @Override
@@ -147,12 +149,6 @@ public class HomeServiceImpl implements HomeService {
         List<String> imageBase64 = new ArrayList<>();
         for (CatalogDTO catalogDTO : catalogList) {
             imageBase64.add(Base64.getEncoder().encodeToString(catalogDTO.getImage()));
-            // if (catalogDTO.getImage() != null) {
-            //     byte[] imageBytes = Base64.getDecoder().decode(catalogDTO.getImage());
-            //     imageBase64.add(imageBytes);
-            // } else {
-            //     imageBase64.add(null);
-            // }
         }
         return imageBase64;
     }

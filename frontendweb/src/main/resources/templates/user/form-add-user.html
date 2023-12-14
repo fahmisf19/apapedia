@@ -17,6 +17,8 @@
         <div class="card-body">
           <div class="justify-content-center">
             <h2>Form Add User</h2>
+            <br>
+            <p th:if="${error == '1'}" class="text-danger">Anda belum memiliki akun. Silakan mendaftar terlebih dahulu.</p>
             <br />
             <form th:action="@{/user/add}" th:object="${userDTO}" method="POST">
               Username: <br />

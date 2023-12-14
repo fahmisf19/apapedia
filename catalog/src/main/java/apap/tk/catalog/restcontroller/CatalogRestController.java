@@ -2,21 +2,17 @@ package apap.tk.catalog.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import apap.tk.catalog.dto.CatalogMapper;
@@ -24,10 +20,6 @@ import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
 import apap.tk.catalog.dto.request.UpdateCatalogDTO;
 import apap.tk.catalog.model.Catalog;
 import apap.tk.catalog.restservice.CatalogRestService;
-import ch.qos.logback.core.model.Model;
-import jakarta.validation.Valid;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -98,7 +90,7 @@ public class CatalogRestController {
 
     // GET Catalog by seller id
     @GetMapping(value = "/catalog/sellerId/{sellerId}")
-    private ResponseEntity<List<Catalog>> getCatalogsBySellerId(@PathVariable("sellerId") String sellerId) {
+    public ResponseEntity<List<Catalog>> getCatalogsBySellerId(@PathVariable("sellerId") String sellerId) {
         try {
             List<Catalog> listCatalog = catalogRestService.retrieveListCatalogBySellerId(UUID.fromString(sellerId));
             return new ResponseEntity<>(listCatalog, HttpStatus.OK);
@@ -112,8 +104,7 @@ public class CatalogRestController {
     @GetMapping(value = "/catalog/search-catalog-name")
     public List<Catalog> filterCatalogName(@RequestParam("catalog") String catalog) {
         try{
-            List<Catalog> catalogs = catalogRestService.findCatalogByName(catalog);
-            return catalogs;
+            return catalogRestService.findCatalogByName(catalog);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "catalog's name not found");
@@ -123,8 +114,7 @@ public class CatalogRestController {
     @GetMapping(value = "/catalog/search-catalog-name/{sellerId}")
     public List<Catalog> filterCatalogSellerAndName(@PathVariable("sellerId") UUID sellerId, @RequestParam("catalog") String catalog) {
         try{
-            List<Catalog> catalogs = catalogRestService.findCatalogBySellerAndName(sellerId, catalog);
-            return catalogs;
+            return catalogRestService.findCatalogBySellerAndName(sellerId, catalog);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "catalog's name not found");
@@ -134,8 +124,7 @@ public class CatalogRestController {
     @GetMapping(value = "/catalog/search-catalog-price")
     public List<Catalog> filterCatalogPrice(@RequestParam("lowerLimitPrice") Integer lowerLimitPrice, @RequestParam("higherLimitPrice") Integer higherLimitPrice) {
         try{
-            List<Catalog> catalogs = catalogRestService.findCatalogByPrice(lowerLimitPrice, higherLimitPrice);
-            return catalogs;
+            return catalogRestService.findCatalogByPrice(lowerLimitPrice, higherLimitPrice);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "catalog that's in range price between " + lowerLimitPrice + " - " + higherLimitPrice + " not found");
@@ -145,8 +134,7 @@ public class CatalogRestController {
     @GetMapping(value = "/catalog/search-catalog-price/{sellerId}")
     public List<Catalog> filterCatalogSellerPrice(@PathVariable("sellerId") UUID sellerId, @RequestParam("lowerLimitPrice") Integer lowerLimitPrice, @RequestParam("higherLimitPrice") Integer higherLimitPrice) {
         try{
-            List<Catalog> catalogs = catalogRestService.findCatalogBySellerAndPrice(sellerId, lowerLimitPrice, higherLimitPrice);
-            return catalogs;
+            return catalogRestService.findCatalogBySellerAndPrice(sellerId, lowerLimitPrice, higherLimitPrice);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "catalog that's in range price between " + lowerLimitPrice + " - " + higherLimitPrice + " not found");
@@ -170,7 +158,7 @@ public class CatalogRestController {
     // GET Catalog by Catalog ID
     @GetMapping("/catalog/getByCatalogId")
     public ResponseEntity<Catalog> getCatalogByCatalogId(@RequestParam UUID catalogId) {
-        Catalog catalog = catalogRestService.getRestCatalogById(catalogId);
+        var catalog = catalogRestService.getRestCatalogById(catalogId);
     
         if (catalog == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -182,7 +170,7 @@ public class CatalogRestController {
     @GetMapping(value = "/catalog/{id}")
     public ResponseEntity<Catalog> findCatalogById(@PathVariable("id") UUID id) {
         try {
-            Catalog catalog = catalogRestService.getRestCatalogById(id);
+            var catalog = catalogRestService.getRestCatalogById(id);
             if (catalog != null) {
                 return ResponseEntity.ok().body(catalog);
             } else {

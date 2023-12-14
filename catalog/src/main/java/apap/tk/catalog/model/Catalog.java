@@ -1,19 +1,12 @@
 package apap.tk.catalog.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.UUID;
-
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -29,10 +22,6 @@ public class Catalog {
     // @NotNull
     @Column(name = "seller", nullable = true)
     private UUID seller = UUID.randomUUID();
-    
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "seller_id", referencedColumnName = "id")
-    // private Seller seller;
 
     // @NotNull
     @Column(name = "price", nullable = false)

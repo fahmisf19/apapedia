@@ -8,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import apap.tk.users.dto.UserMapper;
@@ -51,5 +53,16 @@ public class UserRestController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    
+    @PutMapping("/user/update-balance/{userId}")
+    public String updateBalance(
+            @PathVariable UUID userId,
+            @RequestParam Long amount
+    ) {
+        try {
+            userRestService.updateBalance(userId, amount);
+            return "Withdraw berhasil dilakukan";
+        } catch (Exception e) {
+            return "Withdraw gagal dilakukan";
+        }
+    }
 }
