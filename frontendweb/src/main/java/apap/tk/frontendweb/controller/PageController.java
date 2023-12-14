@@ -38,16 +38,21 @@ public class PageController {
             HttpServletRequest request
     ) {
         try {
-                ServiceResponse serviceResponse = this.webClient.get().uri(
+                var serviceResponse = this.webClient.get().uri(
                         String.format(
                                 Setting.SERVER_VALIDATE_TICKET,
                                 ticket,
                                 Setting.CLIENT_LOGIN
                         )
                 ).retrieve().bodyToMono(ServiceResponse.class).block();
-        
-                String username = serviceResponse.getAuthenticationSuccess().getUser();
-        
+
+                String username = "";
+                try {
+                    username = serviceResponse.getAuthenticationSuccess().getUser();
+                } catch (NullPointerException e) {
+                    return new ModelAndView("redirect:/user/add?error=1");
+                }
+
                 Authentication authentication = new UsernamePasswordAuthenticationToken(username, "SELLER", null);
                 SecurityContext securityContext = SecurityContextHolder.getContext();
                 securityContext.setAuthentication(authentication);

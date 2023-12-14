@@ -25,7 +25,7 @@ public class JwtUtils {
     }
 
     public String getUserIdFromToken(String token) {
-        Claims claims = getAllClaimsFromToken(token);
+        var claims = getAllClaimsFromToken(token);
         return claims.get("id", String.class);
     }
     

@@ -23,12 +23,12 @@ public class WebSecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin((form) -> form
+                .formLogin(form -> form
                         .loginPage("/login-sso")
                         .permitAll()
                         .defaultSuccessUrl("/validate-ticket")
                 )
-                .logout((logout) -> logout
+                .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout-sso"))
                         .logoutSuccessUrl("/")
                 );
