@@ -8,5 +8,6 @@ import apap.tk.order.model.CartItem;
 
 @Mapper(componentModel = "spring")
 public interface CartItemMapper {
-    CartItem createCartItemRequestDTOtoCartItem(UpdateCartItemRequestDTO updateDTO);
+    CartItem createCartItemRequestDTOtoCartItem(CreateCartItemRequestDTO updateDTO);
+    CartItem updateCartItemRequestDTOtoCartItem(UpdateCartItemRequestDTO updateDTO);
 }
