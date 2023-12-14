@@ -56,9 +56,9 @@ public class HomeController {
         } else {
             try {
                 var catalogList = homeService.getAllCatalog();
-                var imageBase64 = homeService.getImage(catalogList);
+                var imageBase64List = homeService.getImage(catalogList);
 
-                model.addAttribute("imageBase64", imageBase64);
+                model.addAttribute("imageBase64List", imageBase64List);
                 model.addAttribute("catalogList", catalogList);
             } catch (Exception e) {
                 // Handle any exceptions that may occur when retrieving data
@@ -81,14 +81,14 @@ public class HomeController {
             model.addAttribute("quantityPerDay", quantityPerDay);
 
             var catalogList = homeService.searchCatalogSeller(sellerId, name);
-            var imageBase64 = homeService.getImage(catalogList);
+            var imageBase64List = homeService.getImage(catalogList);
 
-            model.addAttribute("imageBase64", imageBase64);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         } else {
             var catalogList = homeService.searchCatalog(name);
-            var imageBase64 = homeService.getImage(catalogList);
-            model.addAttribute("imageBase64", imageBase64);
+            var imageBase64List = homeService.getImage(catalogList);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         }
 
@@ -107,9 +107,9 @@ public class HomeController {
             model.addAttribute("quantityPerDay", quantityPerDay);
 
             var catalogList = homeService.searchCatalogPriceSeller(sellerId, lowerLimitPrice, higherLimitPrice);
-            var imageBase64 = homeService.getImage(catalogList);
+            var imageBase64List = homeService.getImage(catalogList);
 
-            model.addAttribute("imageBase64", imageBase64);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         } else {
             List<CatalogDTO> catalogList = homeService.searchCatalogPrice(lowerLimitPrice, higherLimitPrice);
@@ -131,15 +131,15 @@ public class HomeController {
             model.addAttribute("quantityPerDay", quantityPerDay);
 
             List<CatalogDTO> catalogList = homeService.getSortedCatalogListSeller(sellerId, sortBy, sortOrder);
-            var imageBase64 = homeService.getImage(catalogList);
+            var imageBase64List = homeService.getImage(catalogList);
 
-            model.addAttribute("imageBase64", imageBase64);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         } else {
             List<CatalogDTO> catalogList = homeService.getSortedCatalogList(sortBy, sortOrder);
-            var imageBase64 = homeService.getImage(catalogList);
+            var imageBase64List = homeService.getImage(catalogList);
 
-            model.addAttribute("imageBase64", imageBase64);
+            model.addAttribute("imageBase64List", imageBase64List);
             model.addAttribute("catalogList", catalogList);
         }
         return "home/home";
