@@ -13,13 +13,13 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
-    private final String urlUser = "http://localhost:8080/api/";
-    private final String urlCatalog = "http://localhost:8081/api/";
-    private final String urlOrder = "http://localhost:8082/api/";
+    private static final String urlUser = "http://localhost:8080/api/";
+    private static final String urlCatalog = "http://localhost:8081/api/";
+    private static final String urlOrder = "http://localhost:8082/api/";
 
 
-    private final WebClient webClientUser;
-    private final WebClient webClientCatalog;
+    final WebClient webClientUser;
+    final WebClient webClientCatalog;
     private final WebClient webClientOrder;
 
 

@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 public class HomeController {
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+
     @Autowired
     HomeService homeService;
 
@@ -38,21 +42,22 @@ public class HomeController {
         UUID sellerId = id;
 
         if (sellerId != null) {
-             try {
-                var quantityPerDay = homeService.getChartSales(sellerId);
-                var catalogList = homeService.getCatalogBySellerId(sellerId);
-                var imageBase64List = homeService.getImage(catalogList);
+            try {
+            var quantityPerDay = homeService.getChartSales(sellerId);
+            var catalogList = homeService.getCatalogBySellerId(sellerId);
+            var imageBase64List = homeService.getImage(catalogList);
 
-                model.addAttribute("imageBase64List", imageBase64List);
-                model.addAttribute("sellerId", sellerId);
-                model.addAttribute("quantityPerDay", quantityPerDay);
-                model.addAttribute("catalogList", catalogList);
+            model.addAttribute("imageBase64List", imageBase64List);
+            model.addAttribute("sellerId", sellerId);
+            model.addAttribute("quantityPerDay", quantityPerDay);
+            model.addAttribute("catalogList", catalogList);
 
-             } catch (Exception e) {
-                 // Handle any exceptions that may occur when retrieving data
-                 e.printStackTrace(); // Log the exception or handle it as needed
-                 model.addAttribute("errorMessage", "Error occurred while loading data.");
-             }
+            } catch (Exception e) {
+                // Handle any exceptions that may occur when retrieving data
+                logger.error("Erro occured while showing chart.", e);
+
+                model.addAttribute("errorMessage", "Error occurred while loading data.");
+            }
         } else {
             try {
                 var catalogList = homeService.getAllCatalog();
@@ -62,7 +67,7 @@ public class HomeController {
                 model.addAttribute("catalogList", catalogList);
             } catch (Exception e) {
                 // Handle any exceptions that may occur when retrieving data
-                e.printStackTrace(); // Log the exception or handle it as needed
+                logger.error("Erro occured while try to show catalog.", e);
                 model.addAttribute("errorMessage", "Error occurred while loading data.");
             }
         }

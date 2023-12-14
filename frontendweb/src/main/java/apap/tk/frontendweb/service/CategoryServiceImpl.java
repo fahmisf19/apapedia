@@ -15,7 +15,7 @@ import apap.tk.frontendweb.dto.response.catalog.CategoryDTO;
 public class CategoryServiceImpl implements CategoryService {
 
     private final RestTemplate restTemplate;
-    private final String BASE_URL = "http://localhost:8081/api/category/all-categories";
+    private static final String BASE_URL = "http://localhost:8081/api/category/all-categories";
 
     public CategoryServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
