@@ -64,8 +64,8 @@
                         <td>
                             <button th:attr="data-order-id=${#strings.toString(order.id)}, data-current-status=${order.status}" 
                                 onclick="updateStatus(this)"
-                                class="btn btn-md btn-primary" th:disabled="${order.status == 5}>Update Status
-                            </button>    
+                                class="btn btn-md btn-primary" th:disabled="${order.status == 5}">Update Status
+                            </button>
                         </td>
                     </tr>
                 </tbody>

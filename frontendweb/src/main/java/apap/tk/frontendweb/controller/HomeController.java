@@ -1,7 +1,11 @@
 package apap.tk.frontendweb.controller;
 
 import apap.tk.frontendweb.dto.response.catalog.CatalogDTO;
+import apap.tk.frontendweb.security.jwt.JwtUtils;
 import apap.tk.frontendweb.service.HomeService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +21,19 @@ public class HomeController {
     @Autowired
     HomeService homeService;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+    
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String jwtToken = null;
+        if (session != null) jwtToken = (String) session.getAttribute("token");
+        if (jwtToken != null && !jwtToken.isBlank()) {
+            String userId = jwtUtils.getUserIdFromToken(jwtToken);
+            UUID sellerID = UUID.fromString(userId);           
+            model.addAttribute("sellerId", sellerID);
+        }
         UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
     
         if (sellerId != null) {
@@ -50,7 +65,7 @@ public class HomeController {
                 model.addAttribute("errorMessage", "Error occurred while loading data.");
             }
         }
-    
+
         return "home/home";
     }
     
