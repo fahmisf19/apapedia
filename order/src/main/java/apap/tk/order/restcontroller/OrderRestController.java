@@ -2,12 +2,12 @@ package apap.tk.order.restcontroller;
 
 import apap.tk.order.dto.OrderMapper;
 import apap.tk.order.dto.request.CreateOrderRequestDTO;
-import apap.tk.order.dto.request.UpdateOrderRequestDTO;
 import apap.tk.order.model.Order;
 import apap.tk.order.model.OrderItem;
 import apap.tk.order.restservice.OrderRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -37,7 +38,7 @@ public class OrderRestController {
             orderDTO.setUpdateAt(new Date());
             orderDTO.setStatus(0);
             orderDTO.setTotalPrice(orderRestService.calculateTotalPrice(orderDTO.getListOrderItem()));
-            Order order = orderMapper.createOrderRequestDTOToOrder(orderDTO);
+            var order = orderMapper.createOrderRequestDTOToOrder(orderDTO);
             orderRestService.createRestOrder(order);
 
             for (OrderItem orderItem : order.getListOrderItem()) {
@@ -51,33 +52,18 @@ public class OrderRestController {
 
     @PutMapping(value = "order/{idOrder}/update")
     public ResponseEntity<Order> restUpdateOrder(@PathVariable("idOrder") UUID idOrder,
-                                 @RequestBody UpdateOrderRequestDTO orderDTO,
-                                 BindingResult bindingResult){
-        if(bindingResult.hasFieldErrors()){
+                                @RequestParam("newStatus") Integer newStatus){
+        var existingOrder = orderRestService.getOrderRestById(idOrder);
+        if (existingOrder == null) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"
+                    HttpStatus.NOT_FOUND, "Order not found with id: " + idOrder
             );
-        } else {
-            var existingOrder = orderRestService.getOrderRestById(idOrder);
-            if (existingOrder == null) {
-                throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Order not found with id: " + idOrder
-                );
-            }
-            orderDTO.setId(idOrder);
-            orderDTO.setCreatedAt(existingOrder.getCreatedAt());
-            orderDTO.setCustomerId(existingOrder.getCustomerId());
-            orderDTO.setSellerId(existingOrder.getSellerId());
-            orderDTO.setTotalPrice(existingOrder.getTotalPrice());
-
-            // Set the updated listOrderItem from the DTO
-            orderDTO.setListOrderItem(existingOrder.getListOrderItem());
-
-            orderDTO.setUpdateAt(new Date());
-            var order = orderMapper.updateOrderRequestDTOToOrder(orderDTO);
-            orderRestService.updateRestOrder(order);
-            return ResponseEntity.ok().body(order);
         }
+
+        existingOrder.setUpdateAt(new Date());
+        existingOrder.setStatus(newStatus);
+        orderRestService.updateRestOrder(existingOrder);
+        return ResponseEntity.ok().body(existingOrder);
     }
 
     @GetMapping("order/getByCustomerId")
@@ -102,4 +88,12 @@ public class OrderRestController {
         }
     }
 
+    @GetMapping(
+            value = "order/quantity-per-day/{sellerId}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Map<Integer, Long>> getQuantityPerDayForCurrentMonth(@PathVariable UUID sellerId) {
+        Map<Integer, Long> quantityPerDay = orderRestService.getQuantityPerDayForCurrentMonth(sellerId);
+        return new ResponseEntity<>(quantityPerDay, HttpStatus.OK);
+    }
 }

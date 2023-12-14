@@ -4,6 +4,7 @@ import apap.tk.order.model.Order;
 import apap.tk.order.model.OrderItem;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface OrderRestService {
@@ -13,4 +14,5 @@ public interface OrderRestService {
     Integer calculateTotalPrice(List<OrderItem> listOrderItem);
     List<Order> getOrdersByCustomerId(UUID customerId);
     List<Order> getOrdersBySellerId(UUID sellerId);
+    Map<Integer, Long> getQuantityPerDayForCurrentMonth(UUID sellerId);
 }

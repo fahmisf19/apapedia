@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xlmns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://thymeleaf.org"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcom to APAPEDIA</title>
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+  </head>
+
+  <body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h2 class="card-title mb-4">Welcome to APAPEDIA</h2>
+                        <p class="card-text">Choose an option:</p>
+                        <a th:href="@{/user/add}" class="btn btn-primary btn-lg btn-block mb-3">Create an Account</a>
+                        <a th:href="@{/login-sso}" class="btn btn-success btn-lg btn-block">Login with SSO</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

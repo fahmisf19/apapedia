@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "category")
+@JsonIgnoreProperties(value = { "listCatalog" }, allowSetters = true)
 public class Category {
     @Id
     private UUID idCategory = UUID.randomUUID();
@@ -27,5 +30,6 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties
     List<Catalog> listCatalog = new ArrayList<>();
 }

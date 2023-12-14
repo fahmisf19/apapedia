@@ -32,6 +32,6 @@ public class Cart {
     @Column(name = "total_price", nullable = false)
     private Integer totalPrice = 0;
 
-    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
     private List<CartItem> listCartItem = new ArrayList<>();
 }

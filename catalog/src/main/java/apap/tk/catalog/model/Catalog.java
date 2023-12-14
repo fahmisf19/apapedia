@@ -1,11 +1,11 @@
 package apap.tk.catalog.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.math.BigInteger;
 import java.util.UUID;
 
 @Getter
@@ -18,24 +18,24 @@ public class Catalog {
     @Id
     private UUID id = UUID.randomUUID();
     
-    // msh belom pix
-    @NotNull
-    @Column(name = "seller", nullable = false)
-    private UUID seller = UUID.randomUUID(); //hrsny merefer ke user
-    
-    @NotNull
+    // msh belom fix
+    // @NotNull
+    @Column(name = "seller", nullable = true)
+    private UUID seller = UUID.randomUUID();
+
+    // @NotNull
     @Column(name = "price", nullable = false)
-    private int price;
+    private BigInteger price;
     
-    @NotNull
+    // @NotNull
     @Column(name = "productName", nullable = false)
     private String productName;
     
-    @NotNull
+    // @NotNull
     @Column(name = "productDescription", nullable = false)
     private String productDescription;
   
-    @NotNull
+    // @NotNull
     @Column(name = "stock", nullable = false)
     private int stock;
 
@@ -43,7 +43,7 @@ public class Catalog {
     @JoinColumn(name = "id_category", referencedColumnName = "idCategory")
     Category category;
 
-    @NotNull
+    // @NotNull
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
@@ -52,4 +52,3 @@ public class Catalog {
     private byte[] image;
     
 }
-
