@@ -22,7 +22,7 @@ public class HomeController {
         UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
     
         if (sellerId != null) {
-            // try {
+             try {
                 var quantityPerDay = homeService.getChartSales(sellerId);
                 List<CatalogDTO> catalogList = homeService.getCatalogBySellerId(sellerId);
                 var imageBase64List = homeService.getImage(catalogList);
@@ -32,11 +32,11 @@ public class HomeController {
                 model.addAttribute("quantityPerDay", quantityPerDay);
                 model.addAttribute("catalogList", catalogList);
 
-            // } catch (Exception e) {
-            //     // Handle any exceptions that may occur when retrieving data
-            //     e.printStackTrace(); // Log the exception or handle it as needed
-            //     model.addAttribute("errorMessage", "Error occurred while loading data.");
-            // }
+             } catch (Exception e) {
+                 // Handle any exceptions that may occur when retrieving data
+                 e.printStackTrace(); // Log the exception or handle it as needed
+                 model.addAttribute("errorMessage", "Error occurred while loading data.");
+             }
         } else {
             try {
                 List<CatalogDTO> catalogList = homeService.getAllCatalog();
