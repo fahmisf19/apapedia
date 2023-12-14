@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class OrderRestServiceTest {
+class OrderRestServiceTest {
     @Mock
     private OrderDb orderDb;
 
@@ -29,7 +29,7 @@ public class OrderRestServiceTest {
     OrderRestServiceImpl orderRestServiceImpl;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         UUID customerId = UUID.fromString("86b01434-4894-4ec4-8f3e-f4d79da4412a");
         UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
         Date date;
@@ -93,21 +93,21 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    public void findOrderByCustomerId() {
+    void findOrderByCustomerId() {
         UUID customerId = UUID.fromString("86b01434-4894-4ec4-8f3e-f4d79da4412a");
         List<Order> orders = orderRestServiceImpl.getOrdersByCustomerId(customerId);
         assertEquals(2, orders.size());
     }
 
     @Test
-    public void findOrderBySellerId() {
+    void findOrderBySellerId() {
         UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
         List<Order> orders = orderRestServiceImpl.getOrdersBySellerId(sellerId);
         assertEquals(2, orders.size());
     }
 
     @Test
-    public void findOrderById() {
+    void findOrderById() {
         Order mockOrder = new Order();
         UUID orderId = UUID.randomUUID();
         mockOrder.setId(orderId);
@@ -127,7 +127,7 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    public void testCalculateTotalPrice() {
+    void testCalculateTotalPrice() {
         List<OrderItem> orderItems = new ArrayList<>();
         OrderItem orderItem1 = new OrderItem();
         orderItem1.setQuantity(3);
@@ -146,7 +146,7 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    public void testGetQuantityPerDayForCurrentMonth() {
+    void testGetQuantityPerDayForCurrentMonth() {
         UUID sellerId = UUID.fromString("eb385f70-862b-479b-b2e2-933d471c5a4e");
         List<Order> orders = orderRestServiceImpl.getOrdersBySellerId(sellerId);
 
@@ -171,15 +171,15 @@ public class OrderRestServiceTest {
     }
 
     @Test
-    public void testCreateRestOrder() {
+    void testCreateRestOrder() {
         Order sampleOrder = new Order();
         orderRestServiceImpl.createRestOrder(sampleOrder);
-        verify(orderDb, times(1)).save(eq(sampleOrder));
+        verify(orderDb, times(1)).save(sampleOrder);
         verifyNoMoreInteractions(orderDb);
     }
 
     @Test
-    public void testUpdateRestOrder() {
+    void testUpdateRestOrder() {
         // Create a sample Order object for testing
         Order sampleOrder = new Order();
         UUID orderId = UUID.randomUUID();
@@ -198,10 +198,10 @@ public class OrderRestServiceTest {
         Order updatedOrder = orderRestServiceImpl.updateRestOrder(sampleOrder);
 
         // Verify that findById was called exactly once with the correct order ID
-        verify(orderDb, times(1)).findById(eq(orderId));
+        verify(orderDb, times(1)).findById(orderId);
 
         // Verify that orderDb.save() was called exactly once with the correct Order object
-        verify(orderDb, times(1)).save(eq(sampleOrder));
+        verify(orderDb, times(1)).save(sampleOrder);
 
         // Perform assertions on the updatedOrder or other conditions as needed
         assertEquals(5, updatedOrder.getStatus());

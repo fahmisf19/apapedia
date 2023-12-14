@@ -13,5 +13,5 @@ public interface OrderMapper {
 
     Order updateOrderRequestDTOToOrder(UpdateOrderRequestDTO updateOrderRequestDTO);
 
-    UpdateOrderRequestDTO orderToUpdateOrderRequestDTO(Order Order);
+    UpdateOrderRequestDTO orderToUpdateOrderRequestDTO(Order order);
 }
