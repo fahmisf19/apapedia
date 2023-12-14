@@ -26,6 +26,7 @@ import apap.tk.users.repository.CustomerDb;
 import apap.tk.users.repository.SellerDb;
 import apap.tk.users.repository.UserDb;
 import apap.tk.users.security.jwt.JwtUtils;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserRestServiceImpl implements UserRestService{
@@ -112,6 +113,25 @@ public class UserRestServiceImpl implements UserRestService{
             return jwtUtils.generateJwtToken(loginJwtRequestDTO.getUsername());
         } else {
             throw new NoSuchElementException("User not found");
+        }
+    }
+
+    @Override
+    @Transactional
+    public User updateBalance(UUID userId, Long amount) {
+        Optional<User> userOptional = userDb.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Long currentBalance = user.getBalance();
+            if (currentBalance >= amount) {
+                user.setBalance(currentBalance - amount);
+                userDb.save(user);
+            } else {
+                throw new RuntimeException("Balance tidak mencukupi");
+            }
+            return user;
+        } else {
+            throw new RuntimeException("User dengan ID " + userId + " tidak ditemukan");
         }
     }
 }

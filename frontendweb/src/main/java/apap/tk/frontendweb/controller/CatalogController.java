@@ -156,10 +156,10 @@ public class CatalogController {
             // Call the service method to update the catalog
             catalogService.updateCatalog(catalogDTO);
 
-            return "catalog/success-update-catalog";
+            return "redirect:/";
         } catch (Exception e) {
             e.printStackTrace(); // Handle the exception
-            return "error-page"; // Redirect to an error page or appropriate handling
+            return "redirect:/"; // Redirect to an error page or appropriate handling
         }
     }
 }
