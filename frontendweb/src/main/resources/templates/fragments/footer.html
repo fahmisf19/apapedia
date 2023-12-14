@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <footer>
+        <footer style="background-color: #4154F1; font-family: 'Oswald', sans-serif;">
+          <div class="container p-4">
+            <div class="row">
+              <div class="col-lg-6 col-md-12 mb-4">
+                <h5 class="mb-3 text-light" style="font-family: 'Oswald', sans-serif;">Company Info</h5>
+                <h5 style="color: #8EC2F2; font-family: 'Oswald', sans-serif;">APAPEDIA</h5>
+                <p style="color: #8EC2F2; font-family: 'Oswald', sans-serif;">
+                  We are here to help you sell your product and manage it. 
+                </p>
+              </div>
+              <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="mb-3 text-light" style="font-family: 'Oswald', sans-serif;">Features</h5>
+                <ul class="list-unstyled mb-0">
+                  <li class="mb-1">
+                    <a th:href="@{/}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Catalog</a>
+                  </li>
+                  <li class="mb-1">
+                    <a th:if="${sellerId != null}" th:href="@{/order-history/{sellerId}(sellerId=${sellerId})}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Order History</a>
+                  </li>
+                  <li class="mb-1">
+                    <a th:unless="${sellerId != null}" th:href="@{/login-sso}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Login</a>
+                  </li>
+                  <li>
+                    <a th:href="@{/user/add}" style="color: #8EC2F2; text-decoration: none; font-family: 'Oswald', sans-serif;">Register</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="mb-1 text-light" style="font-family: 'Oswald', sans-serif;">Opening Hours</h5>
+                <table class="table" style="border-color: #8EC2F2;">
+                  <tbody style="color: #8EC2F2;">
+                    <tr>
+                      <td>Mon - Fri:</td>
+                      <td>8am - 9pm</td>
+                    </tr>
+                    <tr>
+                      <td>Sat - Sun:</td>
+                      <td>8am - 1am</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="text-center p-3" style="background-color: white; color: #4154F1; font-family: 'Oswald', sans-serif;">
+            © 2023 Copyright:
+            <a th:href="@{/}" style="text-decoration: none; font-family: 'Oswald', sans-serif;">APAPEDIA</a>
+          </div>
+          <!-- Copyright -->
+        </footer>
+    </footer>
+</body>
+
+</html>
