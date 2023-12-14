@@ -1,7 +1,6 @@
 package apap.tk.catalog;
 
 import apap.tk.catalog.model.Catalog;
-import apap.tk.catalog.model.Category;
 import apap.tk.catalog.repository.CatalogDb;
 import apap.tk.catalog.repository.CategoryDb;
 import apap.tk.catalog.restservice.CatalogRestService;
