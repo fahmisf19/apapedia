@@ -6,10 +6,9 @@ import java.util.UUID;
 import apap.tk.order.model.CartItem;
 
 public interface CartItemRestService {
-    void createRestCartItem(CartItem cartItem);
+    void saveRestCartItem(CartItem cartItem);
     List<CartItem> getRestAllCartItem();
-    void updateRestCartItem(CartItem cartItem);
-    CartItem getCartItemById(UUID Id);
+    CartItem getCartItemById(UUID id);
     List<CartItem>  getCartItemByUserId(UUID userId);
     void deteleRestCartItem(CartItem cartItem);
 }

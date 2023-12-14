@@ -28,7 +28,7 @@ public class CartItemRestServiceImpl implements CartItemRestService{
 
     @Override
     @Transactional
-    public void createRestCartItem(CartItem cartItem) {
+    public void saveRestCartItem(CartItem cartItem) {
         updateTotalPrice(cartItem);
         cartItemDb.save(cartItem);
     }
@@ -44,13 +44,6 @@ public class CartItemRestServiceImpl implements CartItemRestService{
     }
 
     @Override
-    @Transactional
-    public void updateRestCartItem(CartItem cartItem) {
-        updateTotalPrice(cartItem);
-        cartItemDb.save(cartItem);
-    }    
-
-    @Override
     public List<CartItem>  getCartItemByUserId(UUID userId) {
         return cartItemDb.findByCart_UserId(userId);
     }
@@ -60,7 +53,7 @@ public class CartItemRestServiceImpl implements CartItemRestService{
     public void deteleRestCartItem(CartItem cartItem){
         updateTotalPriceDelete(cartItem);
         cartItemDb.deleteHard(cartItem.getId());
-    };
+    }
 
     private void updateTotalPrice(CartItem cartItem) {
         var cart = cartItem.getCart();

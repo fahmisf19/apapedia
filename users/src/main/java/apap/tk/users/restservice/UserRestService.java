@@ -13,4 +13,5 @@ public interface UserRestService {
     User getUserById(UUID id);
     String encrypt(String password);
     String loginJwtAdmin(LoginJwtRequestDTO loginJwtRequestDTO);
+    User updateBalance(UUID userId, Long amount);
 }

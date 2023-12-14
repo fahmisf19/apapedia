@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/catalog.main.iml" filepath="$PROJECT_DIR$/.idea/modules/catalog.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/tk_b_ajs_19.iml" filepath="$PROJECT_DIR$/.idea/tk_b_ajs_19.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tk_b_ajs_19_catalog.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tk_b_ajs_19_catalog.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/tk_b_ajs_19_order.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tk_b_ajs_19_order.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/users.main.iml" filepath="$PROJECT_DIR$/.idea/modules/users.main.iml" />
     </modules>
   </component>
 </project>

@@ -45,7 +45,7 @@ public class CartItemRestController {
             cartItem.setCart(cart);
             cartItem.setProductName(cartItemDto.getProductName());
             cartItem.setProductPrice(cartItemDto.getProductPrice());
-            cartItemRestService.createRestCartItem(cartItem);
+            cartItemRestService.saveRestCartItem(cartItem);
             return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(
@@ -54,9 +54,9 @@ public class CartItemRestController {
     }
 
     @PutMapping("/cart-item/update")
-    public ResponseEntity<?> updateCartItemQuantity(@RequestBody UpdateCartItemRequestDTO updateDTO) {
+    public ResponseEntity<CartItem> updateCartItemQuantity(@RequestBody UpdateCartItemRequestDTO updateDTO) {
         try {
-            CartItem cartItem = cartItemRestService.getCartItemById(updateDTO.getCartItemId());
+            var cartItem = cartItemRestService.getCartItemById(updateDTO.getCartItemId());
     
             if (cartItem == null) {
                 throw new ResponseStatusException(
@@ -66,15 +66,12 @@ public class CartItemRestController {
     
             // Update quantity
             cartItem.setQuantity(updateDTO.getNewQuantity());
-            cartItemRestService.updateRestCartItem(cartItem);
+            cartItemRestService.saveRestCartItem(cartItem);
     
             return new ResponseEntity<>(cartItem, HttpStatus.OK);
         } catch (ResponseStatusException e) {
             // If it's a known exception, rethrow it
             throw e;
-        } catch (Exception e) {
-            // Handle other unexpected exceptions
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -91,7 +88,7 @@ public class CartItemRestController {
 
     @DeleteMapping("/cart-item/{idCartItem}")
     public ResponseEntity<String> deleteCartItem(@PathVariable("idCartItem") UUID idCartItem){
-        CartItem cartItem = cartItemRestService.getCartItemById(idCartItem);
+        var cartItem = cartItemRestService.getCartItemById(idCartItem);
         
         if (cartItem == null) {
             throw new ResponseStatusException(
