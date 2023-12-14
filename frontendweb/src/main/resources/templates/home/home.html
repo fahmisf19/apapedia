@@ -121,7 +121,7 @@
                 <h6 th:if="${catalog.category} != null" th:text="${catalog.category.name}" style="font-weight: lighter; font-size: smaller;"></h6>
                 <div class="row mt-3">
                   <div class="col-md-12">
-                    <a th:if="sellerId != null" th:href="@{'catalog.id'}" class="btn btn-card btn-primary float-end">Ubah</a>
+                    <a th:if="sellerId != null" th:href="@{'catalog/update/' + ${catalog.id}}" class="btn btn-card btn-primary float-end">Ubah</a>
                   </div>
                 </div>
               </div>
