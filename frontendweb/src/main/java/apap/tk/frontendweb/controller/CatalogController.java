@@ -22,10 +22,13 @@ import apap.tk.frontendweb.service.CatalogService;
 import apap.tk.frontendweb.service.CategoryService;
 import jakarta.transaction.Transactional;
 import org.springframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 @Transactional
 public class CatalogController {
+    private static final Logger logger = LoggerFactory.getLogger(CatalogController.class);
 
     @Autowired
     CatalogService catalogService;
@@ -67,7 +70,7 @@ public class CatalogController {
 
             return "redirect:/";
         } catch (Exception e) {
-            e.printStackTrace(); // Tangani pengecualian
+            logger.error("Erro occured while adding catalog.", e);
 
             // Tambahkan pesan error yang akan ditampilkan di halaman error jika diperlukan
             redirectAttributes.addFlashAttribute("errorMessage", "Error occurred while adding catalog.");
@@ -126,7 +129,7 @@ public class CatalogController {
 
             return "redirect:/";
         } catch (Exception e) {
-            e.printStackTrace(); // Handle the exception
+            logger.error("Erro occured while updating catalog.", e);
             return "redirect:/"; // Redirect to an error page or appropriate handling
         }
     }
