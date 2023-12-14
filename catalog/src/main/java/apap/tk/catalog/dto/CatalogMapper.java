@@ -2,8 +2,6 @@ package apap.tk.catalog.dto;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.springframework.stereotype.Component;
 
 import apap.tk.catalog.dto.request.CreateCatalogRequestDTO;
 import apap.tk.catalog.dto.request.UpdateCatalogDTO;
